@@ -1,0 +1,45 @@
+<div class="">
+    <h2>Bienvenido al Sistema de Gestión de Bajas de AFT</h2>
+    <p>
+        Este sistema le permite cargar un archivo Excel con la información de los activos fijos tangibles (AFT) a dar de
+        baja,
+        y genera automáticamente los dictámenes y documentos requeridos, grantizando asi, un trabajo eficiente en la
+        creación de un espediente de baja de activo fijo.
+    </p>
+    <h4 style="color: red;">¿Qué formato y estructura debe cumplir el Excel?</h4>
+    <ul>
+        <li>El archivo debe ser formato <strong>.xlsx</strong></li>
+        <li>Debe contener las siguientes columnas:
+            <ul>
+                <li><strong>NO.</strong></li>
+                <li><strong>NO. INVENTARIO</strong></li>
+                <li><strong>AFT</strong></li>
+                <li><strong>ÁREAS DE RESPONSABILIDAD</strong></li>
+                <li><strong>NO. DICTAMEN</strong></li>
+                <li><strong>CARACTERÍSTICA</strong></li>
+                <li><strong>DESTINO FINAL</strong></li>
+                <li><strong>CLASIFICACIÓN</strong></li>
+                <li><strong>ARGUMENTACIÓN TÉCNICA</strong></li>
+            </ul>
+        </li>
+        <li>Las columnas deben estar en el orden mostrado en la imagen.</li>
+        <li>No debe presentar celdas vacías.</li>
+    </ul>
+
+    <div class="excel-preview-container">
+        <label>Ejemplo de Excel</label>
+        <img src="ejemplo-excel.png" alt="Ejemplo de Excel" class="excel-thumb" (click)="showZoom = true" />
+    </div>
+
+    <!-- Modal de zoom -->
+    <div class="zoom-modal" *ngIf="showZoom" (click)="showZoom = false">
+        <img src="ejemplo-excel.png" alt="Ejemplo de Excel ampliado" class="zoomed-img" />
+    </div>
+
+
+    <p>
+        Una vez listo, vaya a la sección
+        <strong><a routerLink="/cargar" class="blinking-colors">Cargar Excel</a></strong> para procesar su archivo.
+    </p>
+
+</div>

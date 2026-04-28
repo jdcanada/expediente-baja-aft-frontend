@@ -1,0 +1,87 @@
+.persona-form {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(25, 118, 210, 0.08);
+  padding: 2rem 2.5rem;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.persona-form h2 {
+  text-align: center;
+  color: #1976d2;
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-group {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #1565c0;
+}
+
+input, select {
+  border: 1px solid #bdbdbd;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+  background: #f8fafc;
+}
+
+input:focus, select:focus {
+  border-color: #1976d2;
+  background: #fff;
+}
+
+.invalid {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  margin-top: 0.2rem;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #1976d2, #42a5f5 90%);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.7rem 2.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1565c0, #1976d2 90%);
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.20);
+}

@@ -1,0 +1,142 @@
+/* Título de la sección */
+h2 {
+  color: #2c3e50; /* Color oscuro para el título */
+  font-size: 2.2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  border-bottom: 2px solid #e0e7eb; /* Línea de separación sutil */
+  padding-bottom: 0.8rem;
+}
+
+/* Estilo del botón "Nuevo" */
+.btn-new {
+  background-color: #1abc9c; /* Verde esmeralda */
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(26, 188, 156, 0.3); /* Sombra para el botón */
+}
+
+.btn-new:hover {
+  background-color: #16a085; /* Verde más oscuro al pasar el mouse */
+  transform: translateY(-2px); /* Pequeño efecto de elevación */
+}
+
+/* Estilos de la tabla */
+table {
+  width: 75%;
+  border-collapse: separate; /* Permite border-radius en las celdas */
+  border-spacing: 0; /* Elimina espacio entre celdas */
+  background-color: #ffffff; /* Fondo blanco para la tabla */
+  border-radius: 10px; /* Bordes redondeados para toda la tabla */
+  overflow: hidden; /* Asegura que los bordes redondeados se apliquen bien */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Sombra más pronunciada para la tabla */
+}
+
+/* Encabezados de la tabla */
+thead th {
+  background-color: #34495e; /* Azul oscuro para los encabezados */
+  color: white;
+  padding: 1rem 1.2rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+/* Redondeado de los encabezados de las esquinas */
+thead th:first-child {
+  border-top-left-radius: 10px;
+}
+
+thead th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Celdas del cuerpo de la tabla */
+tbody td {
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid #eceff1; /* Línea divisoria entre filas */
+  color: #34495e;
+  font-size: 0.9rem;
+  vertical-align: middle; /* Alineación vertical para evitar desfases */
+}
+
+/* Estilo para filas impares (cebreado) */
+tbody tr:nth-child(odd) {
+  background-color: #fcfdfe; /* Color más claro para filas impares */
+}
+
+/* Efecto hover en las filas */
+tbody tr:hover {
+  background-color: #e8f5e9; /* Verde muy suave al pasar el mouse */
+  transition: background-color 0.2s ease;
+}
+
+/* Última fila sin borde inferior */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Ajuste de altura mínima para filas */
+tr.mat-row {
+  min-height: 56px; /* Ajusta según contenido */
+  height: auto;
+}
+
+/* Botones de acción dentro de la tabla */
+td button {
+  background-color: #3498db; /* Azul para editar */
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+  margin-right: 0.5rem; /* Espacio entre botones de acción */
+}
+
+td button:last-child {
+  background-color: #e74c3c; /* Rojo para eliminar */
+}
+
+td button:hover {
+  filter: brightness(1.1); /* Ligero brillo al pasar el mouse */
+}
+
+/* Estilos para la columna de acciones */
+
+/* Mantener estructura de tabla para celdas y encabezados */
+.actions-cell {
+  vertical-align: middle !important; /* Alinea verticalmente */
+  padding: 1rem 8px !important;       /* Padding consistente */
+  box-sizing: border-box;
+}
+
+/* Encabezado alineado igual que celdas */
+th.actions-cell {
+  vertical-align: middle !important;
+  padding: 1rem 8px !important;
+  box-sizing: border-box;
+}
+
+
+
+
+/* Opcional: altura mínima para filas para consistencia */
+tr.mat-row {
+  min-height: 56px;
+  height: auto;
+}
+
+/* Asegurar que todas las celdas tengan alineación vertical igual */
+tbody td {
+  vertical-align: middle;
+}

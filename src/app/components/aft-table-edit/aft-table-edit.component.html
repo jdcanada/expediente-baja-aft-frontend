@@ -1,0 +1,32 @@
+<div style="overflow-x: auto;">
+<table>
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>Inventario</th>
+      <th>Descripción</th>
+      <th>Área</th>
+      <th>Dictamen</th>
+      <th>Característica</th>
+      <th>Destino Final</th>
+      <th>Clasificación</th>
+      <th>Argumentación</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let reg of registros; let i = index">
+      <td>{{reg.consecutivo}}</td>
+      <td><input [(ngModel)]="reg.mb"></td>
+      <td><input [(ngModel)]="reg.aft"></td>
+      <td><input [(ngModel)]="reg.area"></td>
+      <td><input [(ngModel)]="reg.noDictamen"></td>
+      <td><input [(ngModel)]="reg.caracteristica"></td>
+      <td><input [(ngModel)]="reg.destinoFinal"></td>
+      <td><input [(ngModel)]="reg.clasificacion"></td>
+      <td><input [(ngModel)]="reg.argumentacion"></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<button class="btn-submit"  (click)="emitEdited()">Guardar Cambios</button>

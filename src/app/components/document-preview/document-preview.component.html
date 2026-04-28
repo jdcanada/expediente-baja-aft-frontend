@@ -1,0 +1,241 @@
+<div style="margin-top:30px;">
+  <button type="button" class="btn btn-outline-success" (click)="generarPDF()">
+    <i class="bi bi-cloud-download"></i> Descargar PDF</button>
+</div>
+<!-- PÁGINA 1: Resumen del expediente? -->
+<div>
+  <div style="text-align:center; font-weight:bold;">MINISTERIO DE EDUCACIÓN SUPERIOR</div>
+  <div><strong>Expediente No.:</strong> {{ expediente?.no_expediente }}</div>
+  <div><strong>Fecha:</strong> {{ expediente?.fecha_creacion | date: 'd - MM - yyy' }}</div>
+  <div><strong>Empresa o Unidad Presupuestada:</strong> Universidad de las Ciencias Informáticas.</div>
+  <h3 style="text-align:center;">RESUMEN DEL EXPEDIENTE POR BAJAS DE ACTIVOS FIJOS TANGIBLES (AFT)</h3>
+  <p>
+    Por este medio solicitamos a la Dirección de Contabilidad que se tramite la baja de los siguientes <strong>{{
+      registros.length }}</strong> AFT que se encuentran en mal estado perteneciente al centro de costo <strong>{{
+      expediente?.centroCostoCodigo }} - {{ expediente?.centroCostoNombre }}</strong>, en las áreas de responsabilidad:
+  </p>
+  <ol>
+    <li *ngFor="let area of obtenerAreasResponsabilidad()">{{ area }}</li>
+  </ol>
+  <p>
+    Las causas que dieron origen a las bajas son las siguientes: El deterioro por rotura, por lo cual no están aptos
+    para su uso.
+  </p>
+  <p><strong>Documentos que componen el expediente:</strong></p>
+  <ul>
+    <li>RESUMEN DEL EXPEDIENTE POR BAJAS DE ACTIVOS FIJOS TANGIBLES (AFT).</li>
+    <li>Carta de solicitud a la comisión de baja de AFT-UCI.</li>
+    <li>Modelo de propuesta de baja de los AFT. (Anexo I)</li>
+    <li>Modelo de Solicitud de Dictamen Técnico de los AFT propuestos a baja a la Dirección de Mantenimiento u Otras
+      Direcciones. (Anexo II)</li>
+    <li>Resumen de dictamen técnicos (Anexo III)</li>
+    <li>Acta de Entrega de los AFT a la Dirección de Servicios Generales. (Anexo IV)</li>
+    <li>Copia de la factura de la Empresa Materia Prima para concluir su destino final. (Anexo V)</li>
+    <li>Modelos de movimientos de los AFT propuesto a baja. (Anexo VI)</li>
+    <li>Certificación y Aprobación de la comisión de baja de AFT-UCI. (Anexo VII)</li>
+  </ul>
+  <div style="margin: 1.5em 0; border-top: 2px solid #000; width: 100%;"></div>
+  <div>
+    <strong>Autorizado por:</strong> {{ expediente?.cargoSolicitante }} {{ expediente?.nombreSolicitante }}<br>
+    <strong>Aprobado por:</strong> {{ expediente?.cargoJefeAprueba }} {{ expediente?.nombreJefeAprueba }}<br>
+    <strong>Jefe de la Comisión de baja de AFT-UCI:</strong> {{ expediente?.jefeComision || '' }}
+  </div>
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 2: Acta de Solicitud de Bajas de los AFT -->
+<div>
+  <div><strong>A:</strong> COMISIÓN DE BAJAS DE AFT-UCI</div>
+  <div><strong>DE:</strong> {{ expediente?.direccionSolicita }}</div>
+  <h4 style="text-align:center;">Acta de Solicitud de Bajas de los AFT</h4>
+  <p>
+    Por medio de la presente, solicitamos la presencia de la Comisión de Bajas de los AFT en nuestra área, <strong>{{
+      expediente?.centroCostoCodigo }} - {{ expediente?.centroCostoNombre }}</strong> de las áreas de responsabilidad:
+  </p>
+  <ol>
+    <li *ngFor="let area of obtenerAreasResponsabilidad()">{{ area }}</li>
+  </ol>
+  <p>
+    Para valorar y proceder las bajas por deterioro o en mal estado de los que no están aptos para su uso.
+  </p>
+  <p>Y para que así conste y en espera de su atención,</p>
+  <div>
+    <strong>Aprobado por:</strong> {{ expediente?.nombreSolicitante }}<br>
+    <strong>Cargo:</strong> {{ expediente?.cargoSolicitante }}
+  </div>
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 3: ANEXO I. Tabla de medios -->
+<div>
+  <h4>ANEXO I. Modelo de propuesta a baja de los AFT que se encuentran en mal estado o deteriorados totalmente.</h4>
+  <div style="overflow-x: auto;">
+    <table class="tabla-preview">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>No. Inventario</th>
+          <th>AFT</th>
+          <th>Áreas de Responsabilidad</th>
+          <th>No. Dictamen</th>
+          <th>Característica</th>
+          <th>Destino Final</th>
+          <th>Clasificación</th>
+          <th>Argumentación Técnica</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of registros">
+          <td>{{ reg.consecutivo }}</td>
+          <td>{{ reg.mb }}</td>
+          <td>{{ reg.aft }}</td>
+          <td>{{ reg.area }}</td>
+          <td>{{ reg.noDictamen }}</td>
+          <td>{{ reg.caracteristica }}</td>
+          <td>{{ reg.destinoFinal }}</td>
+          <td>{{ reg.clasificacion }}</td>
+          <td>{{ reg.argumentacion }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:1em;">
+    <strong>Aprobado por:</strong> {{ expediente?.nombreSolicitante }}<br>
+    <strong>Cargo:</strong> {{ expediente?.cargoSolicitante }}
+  </div>
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 4: ANEXO II. Solicitud de Dictamen Técnico -->
+<div>
+  <h4>ANEXO II. Modelo de Solicitud de Dictamen Técnico de los AFT propuestos a baja a la Dirección de Mantenimiento u
+    Otras Direcciones.</h4>
+  <div><strong>A:</strong> Jefe de la Comisión de AFT</div>
+  <div><strong>De:</strong> {{ expediente?.direccionSolicita }}</div>
+  <h5 style="text-align:center;">Acta de Solicitud de Dictamen Técnico de los AFT</h5>
+  <p>
+    Por medio de la presente solicitamos a su comisión el dictamen técnico de los <strong>{{ registros.length
+      }}</strong> AFT perteneciente al centro de costo <strong>{{ expediente?.centroCostoCodigo }} - {{
+      expediente?.centroCostoNombre }}</strong>, de las áreas de Responsabilidad:
+  </p>
+  <ol>
+    <li *ngFor="let area of obtenerAreasResponsabilidad()">{{ area }}</li>
+  </ol>
+  <p>
+    Para valorar y proceder las bajas por deterioro o mal estado de los mismos que no están aptos para su uso.
+  </p>
+  <p>Y para que así conste y en espera de su atención,</p>
+  <div>
+    <strong>Aprobado por:</strong> {{ expediente?.nombreSolicitante }}<br>
+    <strong>Cargo:</strong> {{ expediente?.cargoSolicitante }}
+  </div>
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 5: ANEXO III. Resumen de los Dictámenes Técnicos -->
+<div>
+  <h4>ANEXO III. Resumen de los Dictámenes Técnicos</h4>
+  <div style="overflow-x: auto;">
+    <table class="tabla-preview">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>No. Inventario</th>
+          <th>AFT</th>
+          <th>Áreas de Responsabilidad</th>
+          <th>No. Dictamen</th>
+          <th>Fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of registros">
+          <td>{{ reg.consecutivo }}</td>
+          <td>{{ reg.mb }}</td>
+          <td>{{ reg.aft }}</td>
+          <td>{{ reg.area }}</td>
+          <td>{{ reg.noDictamen }}</td>
+          <td>{{ expediente?.fecha_creacion | date: 'd - M - yyy'}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 6: ANEXO IV. Acta de Entrega de AFT -->
+<div>
+  <h4>ANEXO IV. Acta de Entrega de los AFT a la Dirección de Servicios Generales.</h4>
+
+  <p>
+    Siendo las _____ horas del día ____________________________del año _______ se realiza la entrega de los <strong>{{
+      registros.length }}</strong> AFT pertenecientes al centro de costo <strong>{{ expediente?.centroCostoCodigo }} -
+      {{ expediente?.centroCostoNombre }}</strong> que aprobados por la comisión de bajas de la Universidad
+    ______________________dictaminó como deteriorados y en mal estado con el objetivo de concluir su destino Final.
+  </p>
+  <div style="overflow-x: auto;">
+    <table class="tabla-preview">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th>No. Inventario</th>
+          <th>AFT</th>
+          <th>Áreas de Responsabilidad</th>
+          <th>Destino Final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reg of registros">
+          <td>{{ reg.consecutivo }}</td>
+          <td>{{ reg.mb }}</td>
+          <td>{{ reg.aft }}</td>
+          <td>{{ reg.area }}</td>
+          <td>{{ reg.destinoFinal }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="display: flex; gap: 2em; justify-content: space-between; margin: 2em;">
+    <div>
+      <strong>Área que entrega:</strong> ___________________________<br><br>
+      <strong>Nombres y Apellidos:</strong> ___________________________<br><br>
+      <strong>Firma y Cuño:</strong> ___________________________
+    </div>
+    <div>
+      <strong>Área que recibe:</strong> ___________________________<br><br>
+      <strong>Nombres y Apellidos:</strong> ___________________________<br><br>
+      <strong>Firma y Cuño:</strong> ___________________________
+    </div>
+  </div>
+
+
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 7: ANEXO V -->
+<div>
+  <h4>ANEXO V. Copia de la factura de la Empresa Materia Prima para concluir su destino final.</h4>
+  <!-- Aquí puedes dejar el espacio para adjuntar la copia o una nota -->
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 8: ANEXO VI -->
+<div>
+  <h4>ANEXO VI. Modelos de movimientos de los AFT propuesto a baja.</h4>
+  <!-- Aquí puedes agregar la tabla o el modelo según lo que necesites mostrar -->
+</div>
+
+<hr class="page-break" />
+
+<!-- PÁGINA 9: ANEXO VII -->
+<div>
+  <h4>ANEXO VII. Certificación y Aprobación de la Comisión de Bajas de AFT-UCI.</h4>
+  <!-- Aquí puedes agregar el contenido de la certificación y aprobación -->
+</div>
+<!-- BOTÓN PARA DESCARGAR PDF -->

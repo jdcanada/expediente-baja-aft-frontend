@@ -1,0 +1,208 @@
+<div class="area-management-container">
+  <!-- Header -->
+  <div class="titulo-gestion">
+    <mat-icon class="titulo-icono">business</mat-icon>
+    <span>Gestionar Áreas</span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar-card">
+    <div class="toolbar-content">
+      <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevaArea()"
+        matTooltip="Crear nueva área">
+        <mat-icon>add</mat-icon>
+        Nuevo Área
+      </button>
+
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar área...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)"
+            placeholder="Buscar por cualquier campo...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando áreas...</p>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <div   *ngIf="!loading" class="table-container">
+      <table mat-table [dataSource]="dataSource" class="modern-table">
+
+        <!-- Código Area Column -->
+        <ng-container matColumnDef="codigo_area">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('codigo_area') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div *ngIf="!isEditing(area, 'codigo_area')" class="cell-content editable-cell"
+              (click)="startEdit(area, 'codigo_area')" matTooltip="Click para editar">
+              <span>{{ area.codigo_area }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(area, 'codigo_area')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" #editInput>
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nombre Area Column -->
+        <ng-container matColumnDef="nombre_area">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_area') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div *ngIf="!isEditing(area, 'nombre_area')" class="cell-content editable-cell"
+              (click)="startEdit(area, 'nombre_area')" matTooltip="Click para editar">
+              <span>{{ area.nombre_area }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(area, 'nombre_area')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nombre Estructura Column -->
+        <ng-container matColumnDef="nombre_estructura">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_estructura') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div *ngIf="!isEditing(area, 'nombre_estructura')" class="cell-content editable-cell"
+              (click)="startEdit(area, 'nombre_estructura')" matTooltip="Click para editar">
+              <span>{{ area.nombre_estructura }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(area, 'nombre_estructura')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Código Centro Costo Column -->
+        <ng-container matColumnDef="codigo_centro_costo">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('codigo_centro_costo') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div *ngIf="!isEditing(area, 'codigo_centro_costo')" class="cell-content editable-cell"
+              (click)="startEdit(area, 'codigo_centro_costo')" matTooltip="Click para editar">
+              <span>{{ area.codigo_centro_costo }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(area, 'codigo_centro_costo')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nombre Entidad Column -->
+        <ng-container matColumnDef="nombre_entidad">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_entidad') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div *ngIf="!isEditing(area, 'nombre_entidad')" class="cell-content editable-cell"
+              (click)="startEdit(area, 'nombre_entidad')" matTooltip="Click para editar">
+              <span>{{ area.nombre_entidad }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(area, 'nombre_entidad')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('acciones') }}
+          </th>
+          <td mat-cell *matCellDef="let area" class="table-cell">
+            <div class="actions-container">
+              <a (click)="editarArea(area)" aria-label="Editar area" class="icon-link text-primary"
+                title="Editar" matTooltip="Editar área completa">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <a (click)="eliminarArea(area)" aria-label="Eliminar area" class="icon-link text-danger" title="Eliminar" matTooltip="Eliminar área">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageSize" showFirstLastButtons
+      class="custom-paginator">
+    </mat-paginator>
+    <p *ngIf="searchShow">
+      No hay áreas que coincidan con tu búsqueda "{{ searchTerm }}".
+    </p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">business</mat-icon>
+    <h3>No se encontraron áreas</h3>
+    
+    <ng-template #noAreasMessage>
+      <p>Comienza creando una nueva área.</p>
+    </ng-template>
+    <button mat-raised-button color="primary" (click)="abrirFormularioNuevaArea()" class="empty-action-btn">
+      <mat-icon>add</mat-icon>
+      Crear Primera Área
+    </button>
+  </div>
+</div>

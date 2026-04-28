@@ -1,0 +1,74 @@
+<div class="">
+    <form [formGroup]="form" (ngSubmit)="submitForm()" class="persona-form">
+
+        <h2>Registro de Persona</h2>
+        <input type="hidden" formControlName="idpersona" />
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="solapin">Solapín</label>
+                <input id="solapin" formControlName="solapin" maxlength="10" placeholder="Ejemplo: 12345" />
+                <div class="invalid" *ngIf="form.get('solapin')?.touched && form.get('solapin')?.invalid">
+                    El solapín es obligatorio y debe tener máximo 10 caracteres.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" formControlName="nombre" placeholder="Nombre" />
+                <div class="invalid" *ngIf="form.get('nombre')?.touched && form.get('nombre')?.invalid">
+                    El nombre es obligatorio.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input id="apellidos" formControlName="apellidos" placeholder="Apellidos" />
+                <div class="invalid" *ngIf="form.get('apellidos')?.touched && form.get('apellidos')?.invalid">
+                    Los apellidos son obligatorios.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo</label>
+                <input id="correo" formControlName="correo" placeholder="correo@ejemplo.com" />
+                <div class="invalid" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+                    Ingrese un correo válido.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="cargo_id">Cargo</label>
+                <select id="cargo_id" formControlName="cargo_id">
+                    <option value="">Seleccione un cargo</option>
+                    <option *ngFor="let cargo of cargos" [value]="cargo.idcargo">{{ cargo.nombre_cargo }}</option>
+                </select>
+                <div class="invalid" *ngIf="form.get('cargo_id')?.touched && form.get('cargo_id')?.invalid">
+                    Seleccione un cargo.
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="estructura_id">Estructura</label>
+                <select id="estructura_id" formControlName="estructura_id">
+                    <option value="">Seleccione una estructura</option>
+                    <option *ngFor="let estructura of estruturas" [value]="estructura.idestructura">{{
+                        estructura.nombre_estructura }}</option>
+                </select>
+                <div class="invalid" *ngIf="form.get('estructura_id')?.touched && form.get('estructura_id')?.invalid">
+                    Seleccione una estructura.
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" [disabled]="form.invalid" class="btn-primary">{{ edit ? 'Editar' : 'Guardar'}}</button>
+
+            <button type="button" class="btn-primary" (click)="cerrar()">Cerrar</button>
+        </div>
+    </form>
+</div>

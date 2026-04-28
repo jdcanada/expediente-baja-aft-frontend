@@ -1,0 +1,14 @@
+
+<div class="">
+
+
+  <h2>{{ id ? 'Editar' : 'Nueva' }} Clasificación</h2>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>Descripción:</label>
+    <input formControlName="descripcion" required>
+    <button type="submit" [disabled]="form.invalid">Guardar</button>
+    <button type="button" [routerLink]="['/clasificacion/all']">Cancelar</button>
+  </form>
+  
+  
+</div>

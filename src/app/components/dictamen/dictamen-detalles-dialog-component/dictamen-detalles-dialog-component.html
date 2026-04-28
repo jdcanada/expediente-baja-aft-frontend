@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>
+  Detalles del Dictamen N° {{ dictamen.no_dictamen }}
+</h2>
+
+<mat-dialog-content>
+  <table class="vertical-detail-table">
+    <tr><th>Expediente</th><td>{{ dictamen.expediente?.no_expediente }}</td></tr>
+    <tr><th>Fecha dictamen</th><td>{{ dictamen.fecha_dictamen | date:'shortDate' }}</td></tr>
+    <tr><th>Medio Básico</th><td>{{ dictamen.mediobasico?.no_inventario }}</td></tr>
+    <tr><th>AFT</th><td>{{ dictamen.mediobasico?.aft }}</td></tr>
+    <tr><th>Clasificación</th><td>{{ dictamen.mediobasico?.clasificacion?.descripcion }}</td></tr>
+    <tr><th>Característica </th><td>{{ dictamen.caracteristica_en_dictamen?.descripcion_c }}</td></tr>
+    <tr><th>Área</th><td>{{ dictamen.mediobasico?.area?.nombre_area }}</td></tr>
+    <tr><th>Comisión</th><td>{{ dictamen.comision?.nombre_comision }}</td></tr>
+    <tr><th>Directivo solicita</th><td>{{ dictamen.directivo_solicita?.nombre }} {{ dictamen.directivo_solicita?.apellidos }}</td></tr>
+    <tr><th>Cargo</th><td>{{ dictamen.directivo_solicita?.cargo?.nombre_cargo }}</td></tr>
+    <tr><th>Tel. Corporativo</th><td>{{ dictamen.directivo_solicita?.telefono_corporativo }}</td></tr>
+    <tr><th>Argumentación técnica</th><td>{{ dictamen.argumentacion_tecnica }}</td></tr>
+    <tr><th>Destino final</th><td>{{ dictamen.destino_final }}</td></tr>
+    <tr><th>¿Reparable?</th><td>{{ dictamen.conclusion_reparable ? 'Sí' : 'No' }}</td></tr>
+    <!-- ...agrega cualquier campo extra que quieras mostrar... -->
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close color="primary">Cerrar</button>
+</mat-dialog-actions>

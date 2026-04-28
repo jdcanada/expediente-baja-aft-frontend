@@ -1,0 +1,11 @@
+
+
+<app-navigation *ngIf="showNav"></app-navigation>
+
+<!-- Si es login, que el router-outlet NO esté dentro de container -->
+<router-outlet *ngIf="esLogin"></router-outlet>
+
+<!-- Para el resto de las rutas, SÍ pones el container -->
+<div class="container" *ngIf="!esLogin">
+    <router-outlet></router-outlet>
+</div>

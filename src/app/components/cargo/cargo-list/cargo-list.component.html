@@ -1,0 +1,134 @@
+<div class="cargo-management-container">
+    <!-- Header -->
+    <div class="titulo-gestion">
+        <mat-icon class="titulo-icono">badge</mat-icon>
+        <span>Gestionar Cargos</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar-card">
+        <div class="toolbar-content">
+            <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevoCargo()"
+                matTooltip="Crear nuevo cargo">
+                <mat-icon>add</mat-icon>
+                Nuevo Cargo
+            </button>
+
+            <div class="search-container">
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Buscar cargo...</mat-label>
+                    <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)"
+                        placeholder="Buscar por cualquier campo...">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Cargando cargos...</p>
+    </div>
+
+    <!-- Table Card -->
+    <div class="table-card">
+        <div  *ngIf="!loading" class="table-container">
+            <table mat-table [dataSource]="dataSource" class="modern-table">
+
+                <!-- Nombre Cargo Column -->
+                <ng-container matColumnDef="nombre_cargo">
+                    <th mat-header-cell *matHeaderCellDef class="table-header">
+                        {{ getColumnDisplayName('nombre_cargo') }}
+                    </th>
+                    <td mat-cell *matCellDef="let cargo" class="table-cell">
+                        <div *ngIf="!isEditing(cargo, 'nombre_cargo')" class="cell-content editable-cell"
+                            (click)="startEdit(cargo, 'nombre_cargo')" matTooltip="Click para editar">
+                            {{ cargo.nombre_cargo }}
+                            <mat-icon class="edit-icon">edit</mat-icon>
+                        </div>
+                        <div *ngIf="isEditing(cargo, 'nombre_cargo')" class="edit-container">
+                            <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+                            <div class="edit-actions">
+                                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                                    <mat-icon>check</mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Es Directivo Column -->
+                <ng-container matColumnDef="es_directivo">
+                    <th mat-header-cell *matHeaderCellDef class="table-header">
+                        {{ getColumnDisplayName('es_directivo') }}
+                    </th>
+                    <td mat-cell *matCellDef="let cargo" class="table-cell">
+                        <div *ngIf="!isEditing(cargo, 'es_directivo')" class="cell-content editable-cell"
+                            (click)="startEdit(cargo, 'es_directivo')" matTooltip="Click para alternar">
+                            <mat-icon [color]="cargo.es_directivo ? 'primary' : 'warn'">
+                                {{ cargo.es_directivo ? 'check_circle' : 'cancel' }}
+                            </mat-icon>
+                            <span>{{ cargo.es_directivo ? 'Sí' : 'No' }}</span>
+                        </div>
+                        <div *ngIf="isEditing(cargo, 'es_directivo')" class="edit-container">
+                            <mat-slide-toggle [(ngModel)]="tempValue" color="primary"></mat-slide-toggle>
+                            <div class="edit-actions">
+                                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                                    <mat-icon>check</mat-icon>
+                                </button>
+                                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <!-- Actions Column -->
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="table-header-actions actions-cell">Acciones</th>
+                    <td mat-cell *matCellDef="let cargo" class="actions-cell">
+                        <div class="actions-container">
+                            <a [routerLink]="['/cargos/edit', cargo.idcargo]" aria-label="Editar cargo"
+                                class="icon-link text-primary" title="Editar" matTooltip="Editar cargo">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a (click)="eliminarCargo(cargo)" aria-label="Eliminar cargo"
+                                class="icon-link text-danger" title="Eliminar" matTooltip="Eliminar cargo">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </ng-container>
+
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+            </table>
+        </div>
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageSize" showFirstLastButtons
+            class="custom-paginator">
+        </mat-paginator>
+    </div>
+    <p *ngIf="searchShow">
+        No hay cargos que coincidan con tu búsqueda "{{ searchTerm }}".
+    </p>
+    
+    <!-- Empty State -->
+    <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">work</mat-icon>
+        <h3>No se encontraron cargos</h3>
+        <ng-template #noCargosMessage>
+            <p>Comienza creando un nuevo cargo.</p>
+        </ng-template>
+        <button mat-raised-button color="primary" (click)="abrirFormularioNuevoCargo()" class="empty-action-btn">
+            <mat-icon>add</mat-icon>
+            Crear Primer Cargo
+        </button>
+    </div>
+</div>

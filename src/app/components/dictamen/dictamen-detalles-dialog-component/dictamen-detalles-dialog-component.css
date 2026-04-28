@@ -1,0 +1,18 @@
+.vertical-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.vertical-detail-table th {
+  text-align: left;
+  padding-right: 16px;
+  color: #1976d2;
+  font-weight: 500;
+  width: 200px;
+}
+.vertical-detail-table td {
+  padding-bottom: 10px;
+  word-break: break-all;
+}
+.vertical-detail-table tr {
+  border-bottom: 1px solid #e0e0e0;
+}

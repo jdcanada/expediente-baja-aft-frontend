@@ -1,0 +1,139 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()" class="expediente-form">
+
+  <!-- Sección: Datos del Expediente -->
+  <h3>Datos del Expediente</h3>
+  <div class="form-group">
+    <label>Expediente No.</label>
+    <input formControlName="no_expediente" placeholder="Ejemplo: EXP-2025-001" />
+    <small class="helper-text">Número único del expediente, formato EXP-AAAA-NNN</small>
+  </div>
+
+  <div class="form-group">
+    <label>Fecha</label>
+    <input type="date" formControlName="fecha_creacion" />
+    <small class="helper-text">Fecha en que se crea el expediente</small>
+  </div>
+
+  <div class="form-group">
+    <label>Estructura a la que pertenece</label>
+    <select formControlName="estructura_id">
+      <option value="" disabled>Seleccione una estructura</option>
+      <option *ngFor="let e of estructuras" [value]="e.idestructura">{{ e.nombre_estructura }}</option>
+    </select>
+    <small class="helper-text">Ejemplo: Dirección de Finanzas</small>
+  </div>
+
+  <div class="form-group">
+    <label>Código Centro de Costo</label>
+    <input formControlName="centroCostoCodigo" placeholder="Código numérico o alfanumérico"  />
+    <small class="helper-text">Ejemplo: CC-1234</small>
+  </div>
+
+  <div class="form-group">
+    <label>Nombre Centro de Costo</label>
+    <input formControlName="centroCostoNombre" placeholder="Nombre descriptivo"  />
+    <small class="helper-text">Ejemplo: Centro de Costos Regional</small>
+  </div>
+
+  <!-- Sección: Datos del Solicitante -->
+  <h3>Datos del Solicitante</h3>
+  <div class="form-group">
+    <label>Nombre del solicitante</label>
+    <select formControlName="nombreSolicitante">
+      <option value="" disabled>Seleccione un solicitante</option>
+      <option *ngFor="let p of personasDirectivas" [value]="p.idpersona">{{ p.nombre }} {{ p.apellidos }}</option>
+    </select>
+    <small class="helper-text">Persona que solicita el trámite</small>
+  </div>
+
+  <div class="form-group">
+    <label>Cargo del solicitante</label>
+    <input formControlName="cargoSolicitante" placeholder="Cargo o posición"  />
+    <small class="helper-text">Ejemplo: Jefe de Departamento</small>
+  </div>
+
+  <div class="form-group">
+    <label>Teléfono del solicitante</label>
+    <input formControlName="telefono" placeholder="Número telefónico con código"  />
+    <small class="helper-text">Ejemplo: +1 555 123 4567</small>
+  </div>
+
+  <!-- Sección: Aprobación -->
+  <h3>Aprobación</h3>
+  <div class="form-group">
+    <label>Nombre del Jefe que aprueba</label>
+    <select formControlName="nombreJefeAprueba">
+      <option value="" disabled>Seleccione un jefe que aprueba</option>
+      <option *ngFor="let p of personasDirectivas" [value]="p.idpersona">{{ p.nombre }} {{ p.apellidos }}</option>
+    </select>
+    <small class="helper-text">Persona responsable de aprobar</small>
+  </div>
+
+  <div class="form-group">
+    <label>Cargo del jefe que aprueba</label>
+    <input formControlName="cargoJefeAprueba" placeholder="Cargo o posición"  />
+    <small class="helper-text">Ejemplo: Director General</small>
+  </div>
+
+  <!-- Sección: Comisión -->
+  <h3>Comisión</h3>
+  <div class="form-group">
+    <label>Jefe de Comisión</label>
+    <select formControlName="jefeComision">
+      <option value="" disabled>Seleccione un jefe de comisión</option>
+      <option *ngFor="let cm of jefesComisiones" [value]="cm.idcomisionmiembro">{{ cm.persona.nombre }} {{ cm.persona.apellidos }}</option>
+    </select>
+    <small class="helper-text">Responsable de la comisión</small>
+  </div>
+
+  <div class="form-group">
+    <label>Miembro 1</label>
+    <input formControlName="miembro1" placeholder="Nombre completo"  />
+  </div>
+
+  <div class="form-group">
+    <label>Miembro 2</label>
+    <input formControlName="miembro2" placeholder="Nombre completo"  />
+  </div>
+
+  <div class="form-group">
+    <label>Miembro 3</label>
+    <input formControlName="miembro3" placeholder="Nombre completo"  />
+  </div>
+
+  <div class="form-group">
+    <label>Miembro 4</label>
+    <input formControlName="miembro4" placeholder="Nombre completo"  />
+  </div>
+
+  <!-- Sección: Áreas y Direcciones -->
+  <h3>Áreas y Direcciones</h3>
+  <div class="form-group">
+    <label>Dirección que solicita</label>
+    <input formControlName="direccionSolicita" placeholder="Nombre de la dirección"  />
+  </div>
+
+  <div class="form-group">
+    <label>Área que entrega</label>
+    <input formControlName="areaEntrega" placeholder="Nombre del área"  />
+  </div>
+
+  <div class="form-group">
+    <label>Área que recibe</label>
+    <input formControlName="areaRecibe" placeholder="Nombre del área" />
+  </div>
+
+  <!-- Sección: Datos del Acta -->
+  <h3>Datos del Acta</h3>
+  <div class="form-group">
+    <label>Fecha Acta</label>
+    <input type="date" formControlName="fechaActa" />
+  </div>
+
+  <div class="form-group">
+    <label>Hora Acta</label>
+    <input type="time" formControlName="horaActa" />
+  </div>
+
+  <button type="submit" [disabled]="form.invalid" class="btn-submit">Guardar datos</button>
+</form>

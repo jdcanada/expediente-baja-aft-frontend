@@ -1,0 +1,97 @@
+<div class="area-management-container">
+    <!-- Header -->
+    <div class="titulo-gestion">
+        <mat-icon class="titulo-icono">gavel</mat-icon>
+        <span>Gestionar Dictámenes</span>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar-card">
+        <div class="toolbar-content">
+            <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevoDictamen()"
+                matTooltip="Crear nuevo dictamen">
+                <mat-icon>add</mat-icon>
+                Nuevo Dictamen
+            </button>
+            <div class="search-container">
+                <mat-form-field appearance="outline" class="search-field">
+                    <mat-label>Buscar dictamen...</mat-label>
+                    <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)"
+                        placeholder="Buscar por cualquier campo...">
+                    <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Cargando dictámenes...</p>
+    </div>
+
+    <div class="table-card">
+        <div *ngIf="!loading" class="table-container">
+            <table mat-table [dataSource]="dataSource" class="modern-table">
+                <!-- Número Dictamen -->
+                <ng-container matColumnDef="no_dictamen">
+                    <th mat-header-cell *matHeaderCellDef>N° Dictamen</th>
+                    <td mat-cell *matCellDef="let d">{{ d.no_dictamen }}</td>
+                </ng-container>
+                <!-- Expediente -->
+                <ng-container matColumnDef="expediente">
+                    <th mat-header-cell *matHeaderCellDef>Expediente</th>
+                    <td mat-cell *matCellDef="let d">{{ d.expediente?.no_expediente }}</td>
+                </ng-container>
+                <!-- Medio Básico (inventario) -->
+                <ng-container matColumnDef="no_inventario">
+                    <th mat-header-cell *matHeaderCellDef>No. Inventario</th>
+                    <td mat-cell *matCellDef="let d">{{ d.mediobasico?.no_inventario }}</td>
+                </ng-container>
+                <!-- Fecha -->
+                <ng-container matColumnDef="fecha_dictamen">
+                    <th mat-header-cell *matHeaderCellDef>Fecha</th>
+                    <td mat-cell *matCellDef="let d">{{ d.fecha_dictamen | date: 'shortDate' }}</td>
+                </ng-container>
+                <!-- Acciones -->
+                <ng-container matColumnDef="acciones">
+                    <th mat-header-cell *matHeaderCellDef class="table-header-actions">Acciones</th>
+                    <td mat-cell *matCellDef="let d">
+
+                        <div class="actions-container">
+                             <a (click)="verDetallesDictamen(d)" aria-label="Ver Detalles" class="icon-link text-primary"
+                                title="Ver Detalles" matTooltip="Ver Detalles">
+                               <i class="bi bi-eye-fill"></i>
+
+                            </a>
+                            <a (click)="editarDictamen(d)" aria-label="Editar dictamen" class="icon-link text-primary"
+                                title="Editar" matTooltip="Editar dictamen">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a (click)="eliminarDictamen(d)" aria-label="Eliminar dictamen"
+                                class="icon-link text-danger" title="Eliminar">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+            </table>
+
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="5" showFirstLastButtons
+            class="custom-paginator"></mat-paginator>
+        <p *ngIf="searchShow">
+            No hay dictámenes que coincidan con tu búsqueda "{{ searchTerm }}".
+        </p>
+        <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+            <mat-icon class="empty-icon">gavel</mat-icon>
+            <h3>No se encontraron dictámenes</h3>
+            <ng-template #noDictamenesMessage>
+                <p>Comienza creando un nuevo dictamen.</p>
+            </ng-template>
+        </div>
+    </div>
+</div>

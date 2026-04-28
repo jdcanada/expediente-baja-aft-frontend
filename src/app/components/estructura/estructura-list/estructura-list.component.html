@@ -1,0 +1,138 @@
+<div class="area-management-container">
+  <!-- Header -->
+  <div class="titulo-gestion">
+    <mat-icon class="titulo-icono">account_tree</mat-icon>
+    <span>Gestionar Estructuras</span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar-card">
+    <div class="toolbar-content">
+      <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevaEstructura()" matTooltip="Crear nueva estructura">
+        <mat-icon>add</mat-icon>
+        Nueva Estructura
+      </button>
+
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar estructura...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)" placeholder="Buscar por cualquier campo...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando estructuras...</p>
+  </div>
+
+  <!-- Table Card -->
+  <div  class="table-card">
+    <div  *ngIf="!loading" class="table-container">
+      <table mat-table [dataSource]="dataSource" class="modern-table">
+
+        <!-- Nombre Estructura -->
+        <ng-container matColumnDef="nombre_estructura">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_estructura') }}
+          </th>
+          <td mat-cell *matCellDef="let estructura" class="table-cell">
+            <div *ngIf="!isEditing(estructura, 'nombre_estructura')" class="cell-content editable-cell"
+              (click)="startEdit(estructura, 'nombre_estructura')" matTooltip="Click para editar">
+              <span>{{ estructura.nombre_estructura }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(estructura, 'nombre_estructura')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" />
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Código Centro Costo -->
+        <ng-container matColumnDef="codigo_centro_costo">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('codigo_centro_costo') }}
+          </th>
+          <td mat-cell *matCellDef="let estructura" class="table-cell">
+            <div *ngIf="!isEditing(estructura, 'codigo_centro_costo')" class="cell-content editable-cell"
+              (click)="startEdit(estructura, 'codigo_centro_costo')" matTooltip="Click para editar">
+              <span>{{ estructura.codigo_centro_costo }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(estructura, 'codigo_centro_costo')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" />
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nombre Entidad -->
+        <ng-container matColumnDef="nombre_entidad">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_entidad') }}
+          </th>
+          <td mat-cell *matCellDef="let estructura" class="table-cell">
+            {{ estructura.entidad.nombre_entidad || 'N/A' }}
+          </td>
+        </ng-container>
+
+        <!-- Acciones -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="table-header actions-cell">
+            {{ getColumnDisplayName('acciones') }}
+          </th>
+          <td mat-cell *matCellDef="let estructura" class="table-cell actions-cell">
+            <div class="actions-container">
+              <a (click)="editarEstructura(estructura)" aria-label="Editar estructura" class="icon-link text-primary" title="Editar" matTooltip="Editar estructura completa">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <a (click)="eliminarEstructura(estructura)" aria-label="Eliminar estructura" class="icon-link text-danger" title="Eliminar" matTooltip="Eliminar estructura">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5,10,20,50]" [pageSize]="pageSize" showFirstLastButtons class="custom-paginator">
+    </mat-paginator>
+  </div>
+  <p *ngIf="searchShow">
+    No hay estructuras que coincidan con tu búsqueda "{{ searchTerm }}".
+  </p>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">apartment</mat-icon>
+    <h3>No se encontraron estructuras</h3>
+    <ng-template #noEstructurasMessage>
+      <p>Comienza creando una nueva estructura.</p>
+    </ng-template>
+    <button mat-raised-button color="primary" (click)="abrirFormularioNuevaEstructura()" class="empty-action-btn">
+      <mat-icon>add</mat-icon>
+      Crear Primera Estructura
+    </button>
+  </div>
+</div>

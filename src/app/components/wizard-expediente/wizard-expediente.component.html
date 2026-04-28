@@ -1,0 +1,83 @@
+<div >
+
+
+
+
+
+  <!-- Header con pasos -->
+  <div class="wizard-header">
+    <div *ngFor="let step of steps; let i = index" class="wizard-step" [class.active]="i === currentStep"
+      [class.completed]="i < currentStep" (click)="goToStep(i)">
+      <div class="step-circle">{{ i + 1 }}</div>
+      <div class="step-label">{{ step.label }}</div>
+    </div>
+  </div>
+
+
+
+  <!-- Contenido dinámico según paso -->
+  <div class="wizard-content">
+    <ng-container [ngSwitch]="currentStep">
+      <!-- Paso 1 -->
+      <app-upload-excel *ngSwitchCase="0" (excelLoaded)="onExcelLoaded($event)"></app-upload-excel>
+
+      <!-- Paso 2 -->
+      <app-expediente-form *ngSwitchCase="1" (formCompleted)="onExpedienteFormCompleted($event)"></app-expediente-form>
+
+      <!-- Paso 3 -->
+      <app-aft-table-edit *ngSwitchCase="2" [registros]="excelData" (tableEdited)="onAftTableEdited($event)">
+      </app-aft-table-edit>
+      <button *ngIf="currentStep === 2" (click)="guardarAfts()">Guardar Medios Básicos</button>
+
+      <!-- Paso 4: Dictámenes -->
+      <div *ngSwitchCase="3">
+        <div *ngIf="loadingDictamenesPDF || loadingDictamenesDOCX" class="loading-container">
+          <div class="spinner-border text-primary" role="status" style="width: 40px; height: 40px;">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p *ngIf="loadingDictamenesPDF">Generando dictámenes en PDF, por favor espere...</p>
+          <p *ngIf="loadingDictamenesDOCX">Generando dictámenes en DOCX, por favor espere...</p>
+        </div>
+        <div *ngIf="!loadingDictamenesPDF && !loadingDictamenesDOCX" class="download-buttons mb-3">
+          <button type="button" class="btn btn-outline-danger" (click)="descargarDictamenesPDF()">
+            <i class="bi bi-file-earmark-pdf-fill"></i>
+            Dictámenes
+          </button>
+          <button type="button" class="btn btn-outline-primary" (click)="descargarDictamenesDocx()">
+            <i class="bi bi-file-earmark-word-fill"></i>
+            Dictámenes
+          </button>
+        </div>
+      </div>
+
+      <!-- Paso 5: Movimientos -->
+      <div *ngSwitchCase="4">
+        <div *ngIf="loadingMovimientosPDF || loadingMovimientosDOCX" class="loading-container">
+          <div class="spinner-border text-primary" role="status" style="width: 40px; height: 40px;">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p *ngIf="loadingMovimientosPDF">Generando movimientos en PDF, por favor espere...</p>
+          <p *ngIf="loadingMovimientosDOCX">Generando movimientos en DOCX, por favor espere...</p>
+        </div>
+        <div *ngIf="!loadingMovimientosPDF && !loadingMovimientosDOCX" class="download-buttons mb-3">
+          <button type="button" class="btn btn-outline-danger" (click)="descargarMovimientosPDF()">
+            <i class="bi bi-file-earmark-pdf-fill"></i> Movimientos </button>
+          <button type="button" class="btn btn-outline-primary" (click)="descargarMovimientosDocx()">
+            <i class="bi bi-file-earmark-word-fill"></i> Movimientos </button>
+        </div>
+      </div>
+
+
+      <!-- Paso 6 -->
+
+      <app-document-preview *ngSwitchCase="5" [expediente]="expedienteData"
+        [registros]="excelData"></app-document-preview>
+    </ng-container>
+  </div>
+  <!-- Navegación -->
+  <div class="wizard-footer">
+    <button mat-button (click)="prevStep()" [disabled]="currentStep === 0">Atrás</button>
+    <button mat-button (click)="nextStep()" [disabled]="!canContinue()">Siguiente</button>
+  </div>
+
+</div>

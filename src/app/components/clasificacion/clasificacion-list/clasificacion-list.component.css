@@ -1,0 +1,39 @@
+/* .titulo-gestion {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #1976d2 0%, #42a5f5 100%);
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  padding: 18px 32px;
+  border-radius: 18px;
+  box-shadow: 0 4px 16px rgba(25, 118, 210, 0.15);
+  margin-bottom: 30px;
+  gap: 18px;
+  letter-spacing: 1px;
+}
+
+.titulo-icono {
+  font-size: 2.8rem;
+  color: #fff !important;
+}
+
+.full-width-table {
+  width: 100%;
+}
+
+.clasificacion-toolbar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.acciones-btns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+td.mat-cell {
+  white-space: nowrap;
+} */

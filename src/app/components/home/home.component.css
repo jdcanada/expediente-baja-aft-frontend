@@ -1,0 +1,112 @@
+.home-container {
+  max-width: 100%;
+  /* margin-left: 17em; */
+  padding-left: 20em;
+  background: #ebeaea;
+  border-radius: 10px;
+  box-shadow: 2px 2px 18px #0002;
+  text-align: left;
+}
+h1, h2 {
+  text-align: center;
+}
+ul {
+  margin-bottom: 1.5em;
+}
+
+.magnifier-container {
+  position: relative;
+  display: inline-block;
+}
+
+.magnifier-img {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  display: block;
+}
+
+#magnifier-glass {
+  display: none;
+  position: absolute;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: none;
+  width: 180px;
+  height: 180px;
+  box-shadow: 0 2px 8px #0002;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 10;
+}
+
+
+label{
+  font-size: 20px;;
+}
+
+.excel-thumb {
+  cursor: zoom-in;
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px #0001;
+  display: block;
+  margin-bottom: 2em auto;
+}
+
+.zoom-modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.zoomed-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px #0008;
+  cursor: zoom-out;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.blinking-colors {
+  animation: colorBlink 3s infinite;
+  font-weight: bold;
+  transition: color 0.1s ease; /* para suavizar el cambio al pausar */
+}
+
+.blinking-colors:hover {
+  animation-play-state: paused;
+  font-size: 18px;
+}
+  
+@keyframes colorBlink {
+  0%   { color: red; }
+  16%  { color: orange; }
+  33%  { color: yellow; }
+  50%  { color: green; }
+  66%  { color: blue; }
+  83%  { color: indigo; }
+  100% { color: violet; }
+}
+
+
+
+
+
+
+

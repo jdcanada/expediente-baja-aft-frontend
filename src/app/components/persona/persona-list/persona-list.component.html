@@ -1,0 +1,205 @@
+<div class="area-management-container">
+  <!-- Header -->
+  <div class="titulo-gestion">
+    <mat-icon class="titulo-icono">person</mat-icon>
+    <span>Gestionar Personas</span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar-card">
+    <div class="toolbar-content">
+      <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevaPersona()" matTooltip="Crear nueva persona">
+        <mat-icon>add</mat-icon>
+        Nueva Persona
+      </button>
+
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar persona...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)" placeholder="Buscar por cualquier campo...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando personas...</p>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <div  *ngIf="!loading" class="table-container">
+      <table mat-table [dataSource]="dataSource" class="modern-table">
+
+        <!-- Solapín -->
+        <ng-container matColumnDef="solapin">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('solapin') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div *ngIf="!isEditing(persona, 'solapin')" class="cell-content editable-cell"
+              (click)="startEdit(persona, 'solapin')" matTooltip="Click para editar">
+              <span>{{ persona.solapin }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(persona, 'solapin')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" #editInput>
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Nombre -->
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div *ngIf="!isEditing(persona, 'nombre')" class="cell-content editable-cell"
+              (click)="startEdit(persona, 'nombre')" matTooltip="Click para editar">
+              <span>{{ persona.nombre }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(persona, 'nombre')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Apellidos -->
+        <ng-container matColumnDef="apellidos">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('apellidos') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div *ngIf="!isEditing(persona, 'apellidos')" class="cell-content editable-cell"
+              (click)="startEdit(persona, 'apellidos')" matTooltip="Click para editar">
+              <span>{{ persona.apellidos }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(persona, 'apellidos')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Correo -->
+        <ng-container matColumnDef="correo">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('correo') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div *ngIf="!isEditing(persona, 'correo')" class="cell-content editable-cell"
+              (click)="startEdit(persona, 'correo')" matTooltip="Click para editar">
+              <span>{{ persona.correo }}</span>
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(persona, 'correo')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Cargo -->
+        <ng-container matColumnDef="nombre_cargo">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_cargo') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div class="cell-content editable-cell" matTooltip="Click para editar">
+              <span>{{ persona.nombre_cargo }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Estructura -->
+        <ng-container matColumnDef="nombre_estructura">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('nombre_estructura') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div  class="cell-content editable-cell"   matTooltip="Click para editar">
+              <span>{{ persona.nombre_estructura }}</span>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('acciones') }}
+          </th>
+          <td mat-cell *matCellDef="let persona" class="table-cell">
+            <div class="actions-container">
+              <a (click)="editarPersona(persona)" aria-label="Editar persona" class="icon-link text-primary"
+                title="Editar" matTooltip="Editar persona completa">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <a (click)="eliminarPersona(persona)" aria-label="Eliminar persona" class="icon-link text-danger" title="Eliminar"
+                matTooltip="Eliminar persona">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageSize" showFirstLastButtons
+      class="custom-paginator">
+    </mat-paginator>
+  </div>
+  <p *ngIf="searchShow">
+    No hay personas que coincidan con tu búsqueda "{{ searchTerm }}".
+  </p>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+    <mat-icon class="empty-icon">people</mat-icon>
+    <h3>No se encontraron personas</h3>
+    <ng-template #noPersonasMessage>
+      <p>Comienza creando una nueva persona.</p>
+    </ng-template>
+    <button mat-raised-button color="primary" (click)="abrirFormularioNuevaPersona()" class="empty-action-btn">
+      <mat-icon>add</mat-icon>
+      Crear Primera Persona
+    </button>
+  </div>
+</div>

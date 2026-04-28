@@ -1,0 +1,16 @@
+.back-home-link {
+  margin-bottom: 1em;
+  text-align: left;
+}
+
+.back-home-link a.btn-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.back-home-link a.btn-link:hover {
+  text-decoration: underline;
+}

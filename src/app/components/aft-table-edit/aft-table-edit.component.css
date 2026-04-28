@@ -1,0 +1,11 @@
+.tabla-preview {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.tabla-preview th, .tabla-preview td {
+  border: 1px solid #888;
+  padding: 4px 8px;
+  text-align: left;
+  white-space: nowrap; /* Evita saltos de línea en celdas */
+}

@@ -1,0 +1,99 @@
+<div class="area-management-container">
+  <!-- Header -->
+  <div class="titulo-gestion">
+    <mat-icon class="titulo-icono">list</mat-icon>
+    <span>Gestionar Características</span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar-card">
+    <div class="toolbar-content">
+      <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevaCaracteristica()" matTooltip="Crear nueva característica">
+        <mat-icon>add</mat-icon>
+        Nueva Característica
+      </button>
+
+      <div class="search-container">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Buscar característica...</mat-label>
+          <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)" placeholder="Buscar por cualquier campo...">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando características...</p>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+    <div *ngIf="!loading" class="table-container">
+      <table mat-table [dataSource]="dataSource" class="modern-table">
+
+        <!-- Descripción Column -->
+        <ng-container matColumnDef="descripcion_c">
+          <th mat-header-cell *matHeaderCellDef class="table-header">
+            {{ getColumnDisplayName('descripcion_c') }}
+          </th>
+          <td mat-cell *matCellDef="let caracteristica" class="table-cell">
+            <div *ngIf="!isEditing(caracteristica, 'descripcion_c')" class="cell-content editable-cell" (click)="startEdit(caracteristica, 'descripcion_c')" matTooltip="Click para editar">
+              {{ caracteristica.descripcion_c }}
+              <mat-icon class="edit-icon">edit</mat-icon>
+            </div>
+            <div *ngIf="isEditing(caracteristica, 'descripcion_c')" class="edit-container">
+              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" />
+              <div class="edit-actions">
+                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Actions Column -->
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="table-header-actions actions-cell">
+            {{ getColumnDisplayName('acciones') }}
+          </th>
+          <td mat-cell *matCellDef="let caracteristica" class="table-cell actions-cell">
+            <div class="actions-container">
+              <a (click)="editarCaracteristica(caracteristica)" aria-label="Editar característica" class="icon-link text-primary" title="Editar característica completa" matTooltip="Editar característica completa">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+              <a (click)="eliminarCaracteristica(caracteristica)" aria-label="Eliminar característica" class="icon-link text-danger" title="Eliminar característica" matTooltip="Eliminar característica">
+                <i class="bi bi-trash-fill"></i>
+              </a>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      </table>
+    </div>
+
+    <mat-paginator  [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageSize" showFirstLastButtons class="custom-paginator">
+    </mat-paginator>
+     <p *ngIf="searchShow">
+        No hay características que coincidan con tu búsqueda "{{ searchTerm }}".
+      </p>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">list</mat-icon>
+      <h3>No se encontraron características</h3>
+     
+      <ng-template #noCaracteristicasMessage>
+        <p>Comienza creando una nueva característica.</p>
+      </ng-template>
+    </div>
+  </div>
+</div>
