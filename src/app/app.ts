@@ -4,7 +4,7 @@ import { filter } from 'rxjs';
 import { NavigationComponent } from './components/navigation/navigation/navigation.component';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './services/auth/auth.service';
-import { DictamenTecnico } from './models/dictamentecnico';
+import { DictamenTecnico } from './models/dictamen';
 import { ExpedienteFormulario } from './models/expedienteformulario';
 
 @Component({
@@ -32,38 +32,39 @@ export class AppComponent implements OnInit {
 
   listaDictamenes: DictamenTecnico[] = [];
 
-  showNav = true;
+  showNav = false;
   esLogin = false;
 
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private authService: AuthService
   ) {
-    // Controla mostrar menú de navegación solo en rutas distintas a login
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {
-      this.showNav = event.urlAfterRedirects !== '/login';
-      this.esLogin = event.urlAfterRedirects === '/login';
+      this.actualizarEstadoPorRuta(event.urlAfterRedirects);
     });
   }
 
   ngOnInit(): void {
-    // Llamada única para consultar estado auth al iniciar la aplicación
-    this.authService.checkAuthStatus().subscribe({
-      next: user => {
-        // Opcional: aquí puedes reaccionar si quieres
-        if (user) {
-          console.log('AppComponent: Usuario autenticado', user);
-        } else {
-          console.log('AppComponent: Usuario no autenticado');
-        }
-      },
-      error: err => {
-        console.error('AppComponent: Error al verificar autenticación', err);
-      }
+    // Verificar autenticación al inicio
+    this.authService.checkAuthStatus().subscribe(user => {
+      this.actualizarEstadoPorRuta(this.router.url);
     });
   }
+
+
+    private actualizarEstadoPorRuta(url: string): void {
+    // Verificar si la URL contiene 'login' (puede tener query params como ?returnUrl=)
+    const esPaginaLogin = url.includes('/login');
+    const estaAutenticado = this.authService.isLoggedIn();
+    
+    this.esLogin = esPaginaLogin;
+    // Solo mostrar nav si NO es login Y está autenticado
+    this.showNav = !esPaginaLogin && estaAutenticado;
+  }
+
+
 
   // Método que se llama al cargar el Excel (ya implementado)
   onFormularioCompletado(event: Event) {
@@ -71,7 +72,7 @@ export class AppComponent implements OnInit {
     this.listaDictamenes = formulario.dictamenes || [];
 
     this.datosExpediente = {
-      expedienteNo: formulario.no_expediente,
+      expedienteNo: formulario.numero_expediente,
       fecha_creacion: formulario.fecha_creacion,
       cargoJefeAprueba: formulario.cargoJefeAprueba,
       nombreJefeAprueba: formulario.nombreJefeAprueba,

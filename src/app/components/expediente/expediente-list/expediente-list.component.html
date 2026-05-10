@@ -1,132 +1,168 @@
-<div class="area-management-container">
-  <!-- Header -->
-  <div class="titulo-gestion">
-    <mat-icon class="titulo-icono">folder</mat-icon>
-    <span>Gestionar Expedientes</span>
-  </div>
-
-  <!-- Toolbar -->
-  <div class="toolbar-card">
-    <div class="toolbar-content">
-      <button mat-raised-button color="primary" class="nuevo-btn" (click)="abrirFormularioNuevoExpediente()" matTooltip="Crear nuevo expediente">
-        <mat-icon>add</mat-icon>
-        Nuevo Expediente
+<div class="expedientes-container" [class.estilo-apiladas]="estiloActual === 'apiladas'"
+                                 [class.estilo-libro]="estiloActual === 'libro'"
+                                 [class.estilo-libro-real]="estiloActual === 'libro-real'"
+                                 [class.estilo-bloc]="estiloActual === 'bloc'">
+  
+  <div class="page-header">
+    <div>
+      <h1>Expedientes</h1>
+      <p>Gestión de expedientes de baja de activos fijos tangibles</p>
+    </div>
+    <div class="header-actions">
+      <!-- ✅ Botón simplificado - usar propiedad en lugar de expresión compleja -->
+      <button class="btn-style-selector" [matMenuTriggerFor]="styleMenu">
+        <mat-icon>palette</mat-icon>
+        {{ getNombreEstiloActual() }}
+        <mat-icon class="dropdown-icon">expand_more</mat-icon>
       </button>
-
-      <div class="search-container">
-        <mat-form-field appearance="outline" class="search-field">
-          <mat-label>Buscar expediente...</mat-label>
-          <input matInput [(ngModel)]="searchTerm" (keyup)="applyFilter($event)" placeholder="Buscar por cualquier campo...">
-          <mat-icon matSuffix>search</mat-icon>
-        </mat-form-field>
-      </div>
+      <mat-menu #styleMenu="matMenu" class="style-menu">
+        @for (estilo of estilosDisponibles; track estilo.id) {
+          <button mat-menu-item (click)="cambiarEstilo(estilo.id)">
+            <span class="style-icon">{{ getInicialEstilo(estilo.nombre) }}</span>
+            {{ estilo.nombre }}
+            @if (estiloActual === estilo.id) {
+              <mat-icon class="check-icon">check</mat-icon>
+            }
+          </button>
+        }
+      </mat-menu>
+      
+      @if (authService.hasPermission('expedientes.crear')) {
+        <button class="btn-primary" (click)="abrirFormularioNuevo()">
+          <mat-icon>add</mat-icon>
+          Nuevo Expediente
+        </button>
+      }
     </div>
   </div>
 
-  <!-- Loading -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="loading-spinner"></div>
-    <p>Cargando expedientes...</p>
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input type="text" [(ngModel)]="searchTerm" (keyup)="applyFilter()" placeholder="Buscar por número de expediente..."
+      class="search-input">
+    @if (searchTerm) {
+      <button class="clear-search" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
   </div>
 
-  <!-- Table Card -->
-  <div class="table-card">
-    <div *ngIf="!loading" class="table-container">
-      <table mat-table [dataSource]="dataSource" class="modern-table">
-
-        <!-- No. Expediente -->
-        <ng-container matColumnDef="no_expediente">
-          <th mat-header-cell *matHeaderCellDef class="table-header">
-            {{ getColumnDisplayName('no_expediente') }}
-          </th>
-          <td mat-cell *matCellDef="let expediente" class="table-cell">
-            <div *ngIf="!isEditing(expediente, 'no_expediente')" class="cell-content editable-cell" (click)="startEdit(expediente, 'no_expediente')" matTooltip="Click para editar">
-              {{ expediente.no_expediente }}
-              <mat-icon class="edit-icon">edit</mat-icon>
-            </div>
-            <div *ngIf="isEditing(expediente, 'no_expediente')" class="edit-container">
-              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input" #editInput>
-              <div class="edit-actions">
-                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
-                  <mat-icon>check</mat-icon>
-                </button>
-                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
-                  <mat-icon>close</mat-icon>
-                </button>
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando expedientes...</p>
+    </div>
+  } @else if (filteredExpedientes.length === 0) {
+    <div class="empty-state">
+      <mat-icon>folder</mat-icon>
+      <p>No hay expedientes registrados</p>
+      @if (authService.hasPermission('expedientes.crear')) {
+        <button class="btn-primary" (click)="abrirFormularioNuevo()">Crear primer expediente</button>
+      }
+    </div>
+  } @else {
+    <div class="expedientes-grid">
+      @for (expediente of filteredExpedientes; track expediente.id_expediente) {
+        <div class="expediente-card">
+          <!-- Header con estado y menú de descargas -->
+          <div class="card-header">
+            <div class="header-left">
+              <mat-icon>folder</mat-icon>
+              <div class="card-title">
+                <h3>{{ expediente.numero_expediente }}</h3>
+                <p>Expediente de baja de AFT</p>
               </div>
             </div>
-          </td>
-        </ng-container>
-
-        <!-- Fecha de Creación -->
-        <ng-container matColumnDef="fecha_creacion">
-          <th mat-header-cell *matHeaderCellDef class="table-header">
-            {{ getColumnDisplayName('fecha_creacion') }}
-          </th>
-          <td mat-cell *matCellDef="let expediente" class="table-cell">
-            {{ expediente.fecha_creacion | date:'mediumDate' }}
-          </td>
-        </ng-container>
-
-        <!-- Estado -->
-        <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef class="table-header">
-            {{ getColumnDisplayName('estado') }}
-          </th>
-          <td mat-cell *matCellDef="let expediente" class="table-cell">
-            <div *ngIf="!isEditing(expediente, 'estado')" class="cell-content editable-cell" (click)="startEdit(expediente, 'estado')" matTooltip="Click para editar">
-              {{ expediente.estado }}
-              <mat-icon class="edit-icon">edit</mat-icon>
+            <div class="header-right">
+              @if (expediente.total_dictamenes > 0 || expediente.total_movimientos > 0 || expediente.estado_validacion === 'COMPLETO') {
+                <button class="btn-download-dropdown" [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
+                  <mat-icon>picture_as_pdf</mat-icon>
+                  Descargar
+                  <mat-icon class="dropdown-icon">expand_more</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu" class="download-menu">
+                  @if (expediente.total_dictamenes > 0) {
+                    <button mat-menu-item (click)="descargarDictamenes(expediente)">
+                      <mat-icon>gavel</mat-icon>
+                      Dictámenes Técnicos
+                    </button>
+                  }
+                  @if (expediente.total_movimientos > 0) {
+                    <button mat-menu-item (click)="descargarMovimientos(expediente)">
+                      <mat-icon>swap_horiz</mat-icon>
+                      Movimientos AFT
+                    </button>
+                  }
+                  @if (expediente.estado_validacion === 'COMPLETO') {
+                    <button mat-menu-item (click)="descargarInformeResumen(expediente)">
+                      <mat-icon>description</mat-icon>
+                      Informe Resumen
+                    </button>
+                  }
+                </mat-menu>
+              }
+              <span class="estado-badge" [class]="getEstadoClass(expediente.estado!)">
+                {{ expediente.estado || 'Iniciado' }}
+              </span>
             </div>
-            <div *ngIf="isEditing(expediente, 'estado')" class="edit-container">
-              <input [(ngModel)]="tempValue" (keydown)="onKeyDown($event)" class="edit-input">
-              <div class="edit-actions">
-                <button mat-icon-button (click)="saveEdit()" class="save-btn" matTooltip="Guardar">
-                  <mat-icon>check</mat-icon>
-                </button>
-                <button mat-icon-button (click)="cancelEdit()" class="cancel-btn" matTooltip="Cancelar">
-                  <mat-icon>close</mat-icon>
-                </button>
+          </div>
+
+          <div class="card-body">
+            <div class="expediente-info">
+              <div class="info-row">
+                <span class="info-label">Fecha de creación:</span>
+                <span class="info-value">{{ expediente.fecha_creacion | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Estructura:</span>
+                <span class="info-value">{{ expediente.estructura?.nombre_estructura || '—' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Comisión:</span>
+                <span class="info-value">{{ expediente.comision?.nombre_comision || '—' }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Medios registrados:</span>
+                <span class="info-value">{{ expediente.total_medios || 0 }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Dictámenes:</span>
+                <span class="info-value">{{ expediente.total_dictamenes || 0 }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Movimientos:</span>
+                <span class="info-value">{{ expediente.total_movimientos || 0 }}</span>
               </div>
             </div>
-          </td>
-        </ng-container>
+          </div>
 
-        <!-- Acciones -->
-        <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef class="table-header-actions actions-cell">
-            {{ getColumnDisplayName('acciones') }}
-          </th>
-          <td mat-cell *matCellDef="let expediente" class="table-cell actions-cell">
-            <div class="actions-container">
-              <a (click)="editarExpediente(expediente)" aria-label="Editar expediente" class="icon-link text-primary" title="Editar expediente completo" matTooltip="Editar expediente completo">
-                <i class="bi bi-pencil-fill"></i>
-              </a>
-              <a (click)="eliminarExpediente(expediente)" aria-label="Eliminar expediente" class="icon-link text-danger" title="Eliminar expediente" matTooltip="Eliminar expediente">
-                <i class="bi bi-trash-fill"></i>
-              </a>
-            </div>
-          </td>
-        </ng-container>
+          <!-- Botones de acción -->
+          <div class="card-actions">
+            <button class="btn-view" (click)="verDetalles(expediente)" title="Ver detalles">
+              <mat-icon>visibility</mat-icon> Ver
+            </button>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
-      </table>
+            @if (authService.hasPermission('expedientes.editar') && expediente.estado !== 'APROBADO') {
+              <button class="btn-edit" (click)="editarExpediente(expediente)" title="Editar expediente">
+                <mat-icon>edit</mat-icon> Editar
+              </button>
+            }
+
+            @if (authService.hasPermission('expedientes.aprobar') && expediente.estado !== 'APROBADO' && expedienteService.puedeAprobar(expediente)) {
+              <button class="btn-aprobar" (click)="aprobarExpediente(expediente)" title="Aprobar expediente">
+                <mat-icon>check_circle</mat-icon> Aprobar
+              </button>
+            }
+
+            @if (authService.hasPermission('expedientes.eliminar') && expediente.estado !== 'APROBADO') {
+              <button class="btn-delete" (click)="eliminarExpediente(expediente)" title="Eliminar expediente">
+                <mat-icon>delete</mat-icon> Eliminar
+              </button>
+            }
+          </div>
+        </div>
+      }
     </div>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20, 50]" [pageSize]="pageSize" showFirstLastButtons class="custom-paginator">
-    </mat-paginator>
-    <p *ngIf="searchShow">
-      No hay expedientes que coincidan con tu búsqueda "{{ searchTerm }}".
-    </p>
-
-    <!-- Empty State -->
-    <div *ngIf="!loading && dataSource.data.length === 0" class="empty-state">
-      <mat-icon class="empty-icon">folder</mat-icon>
-      <h3>No se encontraron expedientes</h3>
-      <ng-template #noExpedientesMessage>
-        <p>Comienza creando un nuevo expediente.</p>
-      </ng-template>
-    </div>
-  </div>
+  }
 </div>

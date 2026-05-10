@@ -1,6 +1,102 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <mat-icon class="header-icon">supervisor_account</mat-icon>
+    <h2>{{ esNuevo ? 'Nuevo Directivo' : 'Editar Directivo' }}</h2>
+    <button mat-icon-button class="close-btn" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-<div class="">
-    
-    <p>directivo-form works!</p>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dialog-form">
+    <div class="form-content">
+      <!-- Sección: Datos del Directivo -->
+      <div class="form-section">
+        <div class="section-header">
+          <mat-icon>person</mat-icon>
+          <h3>Datos del Directivo</h3>
+        </div>
 
+        <div class="form-grid">
+          <!-- Persona (solo visible en creación) -->
+          @if (esNuevo) {
+            <div class="form-field">
+              <label>
+                <mat-icon>badge</mat-icon>
+                Persona
+              </label>
+              <select formControlName="persona_id" class="form-select">
+                <option value="" disabled>Seleccione una persona</option>
+                @for (persona of personas; track persona.id_persona) {
+                  <option [value]="persona.id_persona">
+                    {{ persona.nombre }} {{ persona.apellidos }} - {{ persona.correo }}
+                  </option>
+                }
+              </select>
+              @if (form.get('persona_id')?.invalid && form.get('persona_id')?.touched) {
+                <small class="error-text">La persona es requerida</small>
+              }
+            </div>
+          }
+
+          <!-- Teléfono Corporativo -->
+          <div class="form-field">
+            <label>
+              <mat-icon>phone</mat-icon>
+              Teléfono Corporativo
+            </label>
+            <input type="text" formControlName="telefono_corporativo" placeholder="Ejemplo: 5288-3931" class="form-input">
+            <small class="helper-text">Número telefónico del directivo</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección: Datos de la Persona (solo lectura en edición) -->
+      @if (!esNuevo && data?.persona) {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>assignment_ind</mat-icon>
+            <h3>Información de la Persona</h3>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Nombre completo:</span>
+              <span class="info-value">{{ data?.persona?.nombre || '' }} {{ data?.persona?.apellidos || '' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Correo electrónico:</span>
+              <span class="info-value">{{ data?.persona?.correo || 'No registrado' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Solapín:</span>
+              <span class="info-value">{{ data?.persona?.solapin || 'No registrado' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Cargo:</span>
+              <span class="info-value">{{ data?.cargo?.nombre_cargo || 'No asignado' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Estructura:</span>
+              <span class="info-value">{{ data?.estructura?.nombre_estructura || 'No asignada' }}</span>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="dialog-actions">
+      <button type="button" class="btn-cancel" (click)="cerrar()">
+        <mat-icon>cancel</mat-icon>
+        Cancelar
+      </button>
+      <button type="submit" class="btn-save" [disabled]="loading || form.invalid">
+        @if (loading) {
+          <div class="spinner-small"></div>
+        }
+        <mat-icon>{{ esNuevo ? 'add' : 'save' }}</mat-icon>
+        {{ esNuevo ? 'Crear Directivo' : 'Guardar Cambios' }}
+      </button>
+    </div>
+  </form>
 </div>

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PdfGenerator } from './pdf-generator';
+import { PdfGeneratorService } from './pdf-generator.service';
 
 describe('PdfGenerator', () => {
-  let service: PdfGenerator;
+  let service: PdfGeneratorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PdfGenerator);
+    service = TestBed.inject(PdfGeneratorService);
   });
 
   it('should be created', () => {

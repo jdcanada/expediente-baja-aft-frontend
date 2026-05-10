@@ -113,7 +113,7 @@ export class GrupoComisionList implements OnInit, AfterViewInit {
   startEdit(grupo: GrupoComisionDetalle, field: keyof GrupoComisionDetalle): void {
     if (field !== 'nombre_grupo' && field !== 'descripcion') return;
     this.editingCell = {
-      id: grupo.idgrupo,
+      id: grupo.id_grupo,
       field: field,
       value: grupo[field]?.toString() || ''
     };
@@ -122,7 +122,7 @@ export class GrupoComisionList implements OnInit, AfterViewInit {
 
   saveEdit(): void {
     if (!this.editingCell) return;
-    const updated = this.grupos.find(g => g.idgrupo === this.editingCell!.id);
+    const updated = this.grupos.find(g => g.id_grupo === this.editingCell!.id);
     if (!updated) return;
     const updateData = {
       ...updated,
@@ -131,7 +131,7 @@ export class GrupoComisionList implements OnInit, AfterViewInit {
 
     this.grupoComisionService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.grupos.findIndex(g => g.idgrupo === this.editingCell!.id);
+        const index = this.grupos.findIndex(g => g.id_grupo === this.editingCell!.id);
         if (index !== -1) {
           this.grupos[index] = { ...this.grupos[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.grupos];
@@ -160,7 +160,7 @@ export class GrupoComisionList implements OnInit, AfterViewInit {
   }
 
   isEditing(grupo: GrupoComisionDetalle, field: keyof GrupoComisionDetalle): boolean {
-    return this.editingCell?.id === grupo.idgrupo && this.editingCell?.field === field;
+    return this.editingCell?.id === grupo.id_grupo && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -176,7 +176,7 @@ export class GrupoComisionList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar el grupo "${grupo.nombre_grupo}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.grupoComisionService.delete(grupo.idgrupo).subscribe({
+        this.grupoComisionService.delete(grupo.id_grupo).subscribe({
           next: () => {
             this.cargarGrupos();
             this.notificacionService.mostrarMensaje(

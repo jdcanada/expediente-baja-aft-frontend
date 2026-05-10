@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NotificacionService } from '../../../services/notificacion/notificacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { MediobasicoForm } from '../mediobasico-form/mediobasico-form.component';
+import { MediobasicoFormComponent } from '../mediobasico-form/mediobasico-form.component';
 import { MediobasicoService } from '../../../services/mediobasico/mediobasico.service';
 
 @Component({
@@ -100,7 +100,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
   startEdit(mb: MediobasicoListItem, field: keyof MediobasicoListItem): void {
     if (field !== 'no_inventario' && field !== 'aft') return;
     this.editingCell = {
-      id: mb.idmediobasico,
+      id: mb.id_medio,
       field: field,
       value: mb[field]?.toString() || ''
     };
@@ -109,7 +109,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
 
   saveEdit(): void {
     if (!this.editingCell) return;
-    const updated = this.mediobasicos.find(mb => mb.idmediobasico === this.editingCell!.id);
+    const updated = this.mediobasicos.find(mb => mb.id_medio === this.editingCell!.id);
     if (!updated) return;
     const updateData = {
       ...updated,
@@ -118,7 +118,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
 
     this.medioBasicoService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.mediobasicos.findIndex(mb => mb.idmediobasico === this.editingCell!.id);
+        const index = this.mediobasicos.findIndex(mb => mb.id_medio === this.editingCell!.id);
         if (index !== -1) {
           this.mediobasicos[index] = { ...this.mediobasicos[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.mediobasicos];
@@ -147,7 +147,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
   }
 
   isEditing(mb: MediobasicoListItem, field: keyof MediobasicoListItem): boolean {
-    return this.editingCell?.id === mb.idmediobasico && this.editingCell?.field === field;
+    return this.editingCell?.id === mb.id_medio && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -163,7 +163,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar el medio básico "${mb.no_inventario} - ${mb.aft}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.medioBasicoService.delete(mb.idmediobasico).subscribe({
+        this.medioBasicoService.delete(mb.id_medio).subscribe({
           next: () => {
             this.cargarMediosBasicos();
             this.notificacionService.mostrarMensaje(
@@ -197,7 +197,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
   }
 
   abrirFormularioNuevoMedioBasico(): void {
-    const dialogRef = this.dialog.open(MediobasicoForm, {
+    const dialogRef = this.dialog.open(MediobasicoFormComponent, {
       width: '600px',
       data: null,
       panelClass: 'custom-dialog-container'
@@ -211,7 +211,7 @@ export class MedioBasicoList implements OnInit, AfterViewInit {
   }
 
   editarMedioBasico(mb: MediobasicoListItem): void {
-    const dialogRef = this.dialog.open(MediobasicoForm, {
+    const dialogRef = this.dialog.open(MediobasicoFormComponent, {
       width: '600px',
       data: mb,
       panelClass: 'custom-dialog-container'

@@ -1,83 +1,163 @@
-<div >
-
-
-
-
-
+<div class="wizard-container">
   <!-- Header con pasos -->
   <div class="wizard-header">
-    <div *ngFor="let step of steps; let i = index" class="wizard-step" [class.active]="i === currentStep"
-      [class.completed]="i < currentStep" (click)="goToStep(i)">
-      <div class="step-circle">{{ i + 1 }}</div>
-      <div class="step-label">{{ step.label }}</div>
-    </div>
+    @for (step of steps; track step.label; let i = $index) {
+      <div 
+        class="wizard-step" 
+        [class.active]="i === currentStep"
+        [class.completed]="i < currentStep" 
+        (click)="goToStep(i)"
+      >
+        <div class="step-circle">
+          @if (i < currentStep) {
+            <mat-icon>check</mat-icon>
+          } @else {
+            <span>{{ i + 1 }}</span>
+          }
+        </div>
+        <div class="step-label">{{ step.label }}</div>
+      </div>
+    }
   </div>
 
-
-
-  <!-- Contenido dinámico según paso -->
+  <!-- Contenido dinámico -->
   <div class="wizard-content">
-    <ng-container [ngSwitch]="currentStep">
-      <!-- Paso 1 -->
-      <app-upload-excel *ngSwitchCase="0" (excelLoaded)="onExcelLoaded($event)"></app-upload-excel>
-
-      <!-- Paso 2 -->
-      <app-expediente-form *ngSwitchCase="1" (formCompleted)="onExpedienteFormCompleted($event)"></app-expediente-form>
-
-      <!-- Paso 3 -->
-      <app-aft-table-edit *ngSwitchCase="2" [registros]="excelData" (tableEdited)="onAftTableEdited($event)">
-      </app-aft-table-edit>
-      <button *ngIf="currentStep === 2" (click)="guardarAfts()">Guardar Medios Básicos</button>
-
-      <!-- Paso 4: Dictámenes -->
-      <div *ngSwitchCase="3">
-        <div *ngIf="loadingDictamenesPDF || loadingDictamenesDOCX" class="loading-container">
-          <div class="spinner-border text-primary" role="status" style="width: 40px; height: 40px;">
-            <span class="visually-hidden">Cargando...</span>
-          </div>
-          <p *ngIf="loadingDictamenesPDF">Generando dictámenes en PDF, por favor espere...</p>
-          <p *ngIf="loadingDictamenesDOCX">Generando dictámenes en DOCX, por favor espere...</p>
+    <!-- Paso 1: Cargar Excel -->
+    @if (currentStep === 0) {
+      <div class="step-card">
+        <div class="step-header">
+          <mat-icon class="step-icon">cloud_upload</mat-icon>
+          <h2>Cargar Archivo Excel</h2>
         </div>
-        <div *ngIf="!loadingDictamenesPDF && !loadingDictamenesDOCX" class="download-buttons mb-3">
-          <button type="button" class="btn btn-outline-danger" (click)="descargarDictamenesPDF()">
-            <i class="bi bi-file-earmark-pdf-fill"></i>
-            Dictámenes
-          </button>
-          <button type="button" class="btn btn-outline-primary" (click)="descargarDictamenesDocx()">
-            <i class="bi bi-file-earmark-word-fill"></i>
-            Dictámenes
-          </button>
-        </div>
+        <p class="step-description">
+          Seleccione un archivo Excel con el formato requerido para comenzar el proceso de bajas de AFT.
+        </p>
+        <app-upload-excel (excelLoaded)="onExcelLoaded($event)"></app-upload-excel>
       </div>
+    }
 
-      <!-- Paso 5: Movimientos -->
-      <div *ngSwitchCase="4">
-        <div *ngIf="loadingMovimientosPDF || loadingMovimientosDOCX" class="loading-container">
-          <div class="spinner-border text-primary" role="status" style="width: 40px; height: 40px;">
-            <span class="visually-hidden">Cargando...</span>
+    <!-- Paso 2: Datos y Guardar -->
+    @if (currentStep === 1) {
+      <div class="step-card">
+        <div class="step-header">
+          <mat-icon class="step-icon">assignment</mat-icon>
+          <h2>Datos del Expediente</h2>
+        </div>
+        <p class="step-description">
+          Complete la información general del expediente de baja.
+        </p>
+        
+        @if (!expedienteCreadoId) {
+          <app-expediente-form (formCompleted)="onExpedienteFormSubmitted($event)"></app-expediente-form>
+        }
+        
+        @if (isLoading) {
+          <div class="loading-state">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Guardando expediente, áreas, medios y dictámenes...</p>
           </div>
-          <p *ngIf="loadingMovimientosPDF">Generando movimientos en PDF, por favor espere...</p>
-          <p *ngIf="loadingMovimientosDOCX">Generando movimientos en DOCX, por favor espere...</p>
-        </div>
-        <div *ngIf="!loadingMovimientosPDF && !loadingMovimientosDOCX" class="download-buttons mb-3">
-          <button type="button" class="btn btn-outline-danger" (click)="descargarMovimientosPDF()">
-            <i class="bi bi-file-earmark-pdf-fill"></i> Movimientos </button>
-          <button type="button" class="btn btn-outline-primary" (click)="descargarMovimientosDocx()">
-            <i class="bi bi-file-earmark-word-fill"></i> Movimientos </button>
-        </div>
+        }
+        
+        @if (expedienteCreadoId && !isLoading) {
+          <div class="success-state">
+            <mat-icon>check_circle</mat-icon>
+            <h3>¡Expediente guardado correctamente!</h3>
+            <p>Puede continuar con la descarga de documentos.</p>
+            <button mat-raised-button color="primary" (click)="nextStep()">
+              Continuar
+              <mat-icon>arrow_forward</mat-icon>
+            </button>
+          </div>
+        }
       </div>
+    }
 
+    <!-- Paso 3: Dictámenes -->
+    @if (currentStep === 2) {
+      <div class="step-card">
+        <div class="step-header">
+          <mat-icon class="step-icon">gavel</mat-icon>
+          <h2>Generar Dictámenes Técnicos</h2>
+        </div>
+        <p class="step-description">
+          Descargue los dictámenes técnicos en formato PDF.
+        </p>
+        
+        @if (loadingDictamenes) {
+          <div class="loading-state">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Generando dictámenes, por favor espere...</p>
+          </div>
+        } @else {
+          <div class="download-buttons">
+            <button mat-raised-button class="btn-pdf" (click)="descargarDictamenes()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Descargar Dictámenes PDF
+            </button>
+          </div>
+        }
+      </div>
+    }
 
-      <!-- Paso 6 -->
+    <!-- Paso 4: Movimientos -->
+    @if (currentStep === 3) {
+      <div class="step-card">
+        <div class="step-header">
+          <mat-icon class="step-icon">swap_horiz</mat-icon>
+          <h2>Generar Movimientos AFT</h2>
+        </div>
+        <p class="step-description">
+          Descargue el reporte de movimientos de activos fijos tangibles.
+        </p>
+        
+        @if (loadingMovimientos) {
+          <div class="loading-state">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p>Generando movimientos, por favor espere...</p>
+          </div>
+        } @else {
+          <div class="download-buttons">
+            <button mat-raised-button class="btn-pdf" (click)="descargarMovimientos()">
+              <mat-icon>picture_as_pdf</mat-icon>
+              Descargar Movimientos PDF
+            </button>
+          </div>
+        }
+      </div>
+    }
 
-      <app-document-preview *ngSwitchCase="5" [expediente]="expedienteData"
-        [registros]="excelData"></app-document-preview>
-    </ng-container>
+    <!-- Paso 5: Informe Resumen -->
+    @if (currentStep === 4) {
+      <div class="step-card">
+        <div class="step-header">
+          <mat-icon class="step-icon">description</mat-icon>
+          <h2>Informe Resumen</h2>
+        </div>
+        <p class="step-description">
+          Genere el informe resumen del expediente.
+        </p>
+        
+        <app-document-preview 
+          [expedienteId]="expedienteCreadoId"
+          [expedienteData]="expedienteData"
+          [registros]="excelData">
+        </app-document-preview>
+      </div>
+    }
   </div>
-  <!-- Navegación -->
+
+  <!-- Footer con navegación -->
   <div class="wizard-footer">
-    <button mat-button (click)="prevStep()" [disabled]="currentStep === 0">Atrás</button>
-    <button mat-button (click)="nextStep()" [disabled]="!canContinue()">Siguiente</button>
+    <button mat-stroked-button (click)="prevStep()" [disabled]="currentStep === 0" class="nav-btn prev-btn">
+      <mat-icon>arrow_back</mat-icon>
+      Anterior
+    </button>
+    
+    @if (currentStep < steps.length - 1 && currentStep !== 1) {
+      <button mat-raised-button color="primary" (click)="nextStep()" [disabled]="!canContinue()" class="nav-btn next-btn">
+        Siguiente
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    }
   </div>
-
 </div>

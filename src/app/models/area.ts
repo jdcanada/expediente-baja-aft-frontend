@@ -4,14 +4,14 @@ import {  ExpedienteDetalle_2 } from './expediente';
 import { MediobasicoDetalle } from './medioBasico';
 
 export interface Area {
-  idarea?: number;
+  id_area?: number;
   codigo_area: string;
   nombre_area: string;
   estructura_id?: number;
 }
 
 export interface AreaDetalle {
-  idarea: number;
+  id_area: number;
   codigo_area: string;
   nombre_area: string;
   estructura: EstructuraDetalle;
@@ -21,7 +21,7 @@ export interface AreaDetalle {
 }
 
 export interface AreaDetalleSimple {
-  idarea: number;
+  id_area: number;
   codigo_area: string;
   nombre_area: string;
   estructura: Estructura;
@@ -30,7 +30,7 @@ export interface AreaDetalleSimple {
 }
 
 export interface AreaPlano {
-  idarea: number;
+  id_area: number;
   codigo_area: string;
   nombre_area: string;
   estructura_id: number;
@@ -43,7 +43,7 @@ export interface AreaPlano {
 
 //codigo de bolt
 export interface AreaDetalleSimple_bolt {
-  idarea: number;
+  id_area: number;
   codigo_area: string;
   nombre_area: string;
   nombre_estructura: string;
@@ -60,7 +60,7 @@ export interface AreaCreateRequest {
 }
 
 export interface AreaUpdateRequest extends Partial<AreaCreateRequest> {
-  idarea: number;
+  id_area: number;
 }
 
 

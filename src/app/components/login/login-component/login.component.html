@@ -1,34 +1,49 @@
 <div class="login-container">
-  <h2>Iniciar Sesión</h2>
-  <button mat-raised-button color="primary" (click)="login()">Entrar con CAS</button>
+  <div class="login-card">
+    <div class="login-header">
+      <mat-icon class="logo-icon">folder</mat-icon>
+      <h1>Sistema de Gestión de Bajas AFT</h1>
+    </div>
+    
+    <div class="login-body">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <!-- Campos de usuario y contraseña -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Usuario</mat-label>
+          <input matInput formControlName="username" placeholder="Ingresa tu usuario">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="loginForm.get('username')?.hasError('required')">
+            El usuario es requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+          <mat-icon matPrefix>lock</mat-icon>
+          <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">
+            La contraseña es requerida
+          </mat-error>
+        </mat-form-field>
+
+        <div class="error-message" *ngIf="errorMessage">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button mat-raised-button color="primary" class="login-btn" type="submit" [disabled]="loginForm.invalid || isLoading">
+          <mat-icon>login</mat-icon>
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+          <span *ngIf="isLoading">Iniciando sesión...</span>
+        </button>
+      </form>
+    </div>
+    
+    <div class="login-footer">
+      <span>© {{ currentYear }} Universidad de las Ciencias Informáticas</span>
+    </div>
+  </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-<!-- 
-<div class="login-container">
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-    <h2>Iniciar Sesión</h2>
-
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Usuario</mat-label>
-      <input matInput formControlName="username" placeholder="Ingresa tu usuario" />
-      <mat-error *ngIf="loginForm.get('username')?.hasError('required')">El usuario es requerido</mat-error>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Contraseña</mat-label>
-      <input matInput type="password" formControlName="password" placeholder="Ingresa tu contraseña" />
-      <mat-error *ngIf="loginForm.get('password')?.hasError('required')">La contraseña es requerida</mat-error>
-    </mat-form-field>
-
-    <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid">Entrar</button>
-  </form>
-</div> -->

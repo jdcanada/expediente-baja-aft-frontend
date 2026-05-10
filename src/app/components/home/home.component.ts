@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   standalone: true,
@@ -10,18 +10,10 @@ import { RouterModule } from '@angular/router';
   styleUrls: ['./home.component.css'],
   imports: [
     CommonModule,
-    RouterModule 
-  
-    
+    RouterModule,
+    MatIconModule
   ],
-
 })
-export class HomeComponent implements AfterViewInit {
+export class HomeComponent {
   showZoom = false;
-
-
-
-  ngAfterViewInit() {
-    
-  }
 }

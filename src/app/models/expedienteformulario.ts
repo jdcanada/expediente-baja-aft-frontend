@@ -1,9 +1,9 @@
 import { AFTRegistro } from "./aftregistro";
-import { DictamenTecnico } from "./dictamentecnico";
+import { DictamenTecnico } from "./dictamen";
 
 
 export interface ExpedienteFormulario2 {
-no_expediente: string;
+numero_expediente: string;
 fecha_creacion: string;
 estado: boolean;
 estructura_id: number;
@@ -12,7 +12,7 @@ estructura_id: number;
 // Modelo unificado para todo el expediente, dictámenes, informe y movimiento
 export interface ExpedienteFormulario {
   // --- Datos generales ---
-  no_expediente: string;
+  numero_expediente: string;
   fecha_creacion: string;
   estructura: string;
   estructura_id?: number;
@@ -46,21 +46,22 @@ export interface ExpedienteFormulario {
   aprobadoPorCargo?: string;
 
   //Comision
-  jefecomsion_id?: number;
+  jefeComision_id?: number;
   jefeComision: string;
   miembro1?: string;
   miembro2?: string;
   miembro3?: string;
+  miembro4?: string;
 
   // Jefe que aprueba
   nombreJefeAprueba: string;
   cargoJefeAprueba: string;
 
   // --- Datos del medio/AFT (del Excel) ---
-  area: string;                // Área del AFT
-  codigoArea: string;          // Código del área
-  descripcionAFT: string;      // Descripción/nombre del AFT
-  inventarioNo: string;        // Número de inventario
+  area?: string;                // Área del AFT
+  codigoArea?: string;          // Código del área
+  descripcionAFT?: string;      // Descripción/nombre del AFT
+  inventarioNo?: string;        // Número de inventario
   cnmb?: string;
   alquiler?: string;
   alquilerMonto?: string;

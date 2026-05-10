@@ -2,22 +2,24 @@ import { Cargo } from "./cargo";
 import { Estructura } from "./estructura";
 
 export interface Persona {
-  idpersona: number;
-  solapin: string;
+  id_persona: number;
+  solapin: string| null;
   nombre: string;
   apellidos: string;
   correo?: string | null;
   cargo_id?: number | null;
   estructura_id?: number | null;
+  telefono: string;
+  activo: boolean
 }
 
 export interface PersonaPlano {
-  idpersona: number;
+  id_persona: number;
   nombre: string;
   apellidos: string;
   correo: string;
   cargo_id: number;
-  estructura_id: number;
+  estructura_id: number | null;
 
   // Datos del cargo
   cargo_nombre: string;
@@ -34,7 +36,7 @@ export interface PersonaPlano {
 
 
 export interface PersonaById {
-  idpersona: number;
+  id_persona: number;
   solapin: string | null;
   nombre: string;
   apellidos: string;
@@ -42,7 +44,7 @@ export interface PersonaById {
   cargo_id: number;
   nombre_cargo: string;
   es_directivo: number; // o boolean si prefieres mapearlo
-  estructura_id: number;
+  estructura_id: number | null;
   nombre_estructura: string;
   codigo_centro_costo: string;
 }
@@ -50,7 +52,7 @@ export interface PersonaById {
 
 
 export interface PersonaListItem {
-  idpersona: number;
+  id_persona: number;
   solapin: string | null;
   nombre: string;
   apellidos: string;
@@ -58,36 +60,36 @@ export interface PersonaListItem {
   cargo_id: number;
   nombre_cargo: string;
   es_directivo: number; // o boolean, si prefieres mapearlo
-  estructura_id: number;
+  estructura_id: number | null;
   nombre_estructura: string;
   codigo_centro_costo: string;
 }
 
 export interface PersonaListItem2 extends PersonaListItem {
-iddirectivo: number;
+id_directivo: number;
 persona_id: number;
-telefono_corporativo: string;
+telefono: string;
 }
 
 export interface PersonaDetalle {
-  idpersona: number;
-  solapin: string;
+  id_persona: number;
+  solapin: string | null;
   nombre: string;
   apellidos: string;
   correo: string | null;
   cargo?: Cargo | null;
   estructura?: Estructura | null;
   usuario?: {
-    idusuario: number;
+    id_usuario: number;
     nombre_usuario: string;
     id_rol: number;
   } | null;
   directivo?: {
-    iddirectivo: number;
+    id_directivo: number;
     telefono_corporativo: string | null;
   } | null;
   comisiones?: Array<{
-    idcomisionmiembro: number;
+    id_miembro: number;
     idcomision: number;
     nombre_comision: string;
     descripcion: string | null;
@@ -97,8 +99,8 @@ export interface PersonaDetalle {
 
 
 export interface PersonaResumen {
-  idpersona: number;
-  solapin: string;
+  id_persona: number;
+  solapin: string | null;
   nombre: string;
   apellidos: string;
   correo: string | null;

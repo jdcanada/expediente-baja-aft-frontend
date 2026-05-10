@@ -1,0 +1,299 @@
+<div class="detalle-container">
+  <div class="detalle-header">
+    <mat-icon>folder</mat-icon>
+    <h2>Expediente: {{ expediente.numero_expediente }}</h2>
+    <button mat-icon-button class="close-btn" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <!-- NOTIFICACIÓN DE VALIDACIÓN -->
+  @if (validacion) {
+  <div class="alerta-validacion" [class.completo]="validacion.estado === 'COMPLETO'"
+    [class.incompleto]="validacion.estado === 'INCOMPLETO'">
+    <div class="alerta-icono">
+      @if (validacion.estado === 'COMPLETO') {
+      <mat-icon>check_circle</mat-icon>
+      } @else {
+      <mat-icon>warning</mat-icon>
+      }
+    </div>
+    <div class="alerta-contenido">
+      <div class="alerta-titulo">{{ validacion.mensaje }}</div>
+      <div class="alerta-descripcion">{{ validacion.mensaje_detallado }}</div>
+
+      @if (validacion.estado === 'INCOMPLETO') {
+      <div class="alerta-progreso">
+        <div class="progreso-item">
+          <span class="progreso-label">Medios básicos:</span>
+          <div class="progreso-barra">
+            <div class="progreso-fill" [style.width.%]="(validacion.total_medios > 0 ? 100 : 0)"></div>
+          </div>
+          <span class="progreso-valor">{{ validacion.total_medios || 0 }}</span>
+        </div>
+        <div class="progreso-item">
+          <span class="progreso-label">Dictámenes:</span>
+          <div class="progreso-barra">
+            <div class="progreso-fill"
+              [style.width.%]="(validacion.total_dictamenes / (validacion.total_medios || 1)) * 100"></div>
+          </div>
+          <span class="progreso-valor">{{ validacion.total_dictamenes || 0 }} / {{ validacion.total_medios || 0
+            }}</span>
+        </div>
+        <div class="progreso-item">
+          <span class="progreso-label">Movimientos:</span>
+          <div class="progreso-barra">
+            <div class="progreso-fill" [style.width.%]="(validacion.total_movimientos > 0 ? 100 : 0)"></div>
+          </div>
+          <span class="progreso-valor">{{ validacion.total_movimientos || 0 }}</span>
+        </div>
+      </div>
+      }
+    </div>
+
+    @if (validacion.estado === 'INCOMPLETO') {
+    <div class="alerta-accion">
+      <button class="btn-ir-completar" (click)="irACompletar()">
+        Completar expediente
+        <mat-icon>arrow_forward</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+  }
+
+  <div class="detalle-content">
+    <!-- Pestañas -->
+    <div class="tabs">
+      <button class="tab-btn" [class.active]="activeTab === 'info'" (click)="setActiveTab('info')">
+        <mat-icon>info</mat-icon>
+        Información General
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'medios'" (click)="setActiveTab('medios')">
+        <mat-icon>inventory</mat-icon>
+        Medios Básicos ({{ expediente.mediobasicos.length || 0 }})
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'dictamenes'" (click)="setActiveTab('dictamenes')">
+        <mat-icon>gavel</mat-icon>
+        Dictámenes ({{ expediente.dictamenes.length || 0 }})
+      </button>
+      <button class="tab-btn" [class.active]="activeTab === 'movimientos'" (click)="setActiveTab('movimientos')">
+        <mat-icon>swap_horiz</mat-icon>
+        Movimientos ({{ expediente.movimientos.length || 0 }})
+      </button>
+    </div>
+
+    <!-- Tab: Información General -->
+    @if (activeTab === 'info') {
+    <div class="tab-content">
+      <div class="info-section">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">N° Expediente:</span>
+            <span class="info-value">{{ expediente.numero_expediente }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Fecha de creación:</span>
+            <span class="info-value">{{ expediente.fecha_creacion | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estado:</span>
+            <span class="info-value">{{ expediente.estado || 'Iniciado' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estado validación:</span>
+            <span class="info-value">
+              @if (validacion?.estado === 'COMPLETO') {
+              <span class="badge-ok">✓ Completo</span>
+              } @else {
+              <span class="badge-warning">⚠ Incompleto</span>
+              }
+            </span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Estructura:</span>
+            <span class="info-value">{{ expediente.estructura?.nombre_estructura || '—' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Comisión:</span>
+            <span class="info-value">{{ expediente.comision?.nombre_comision || '—' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Total medios:</span>
+            <span class="info-value">{{ expediente.mediobasicos.length || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+
+    <!-- Tab: Medios Básicos -->
+    @if (activeTab === 'medios') {
+    <div class="tab-content">
+      @if (expediente.mediobasicos.length === 0) {
+      <div class="empty-tab">
+        <mat-icon>inventory</mat-icon>
+        <p>No hay medios básicos registrados en este expediente</p>
+      </div>
+      } @else {
+      <div class="medios-grid">
+        @for (medio of expediente.mediobasicos; track medio.id_medio) {
+        <div class="medio-card">
+          <div class="medio-header">
+            <mat-icon>inventory</mat-icon>
+            <span class="medio-inventario">{{ medio.no_inventario }}</span>
+          </div>
+          <div class="medio-body">
+            <div class="medio-field">
+              <span class="field-label">AFT:</span>
+              <span class="field-value">{{ medio.aft }}</span>
+            </div>
+            <div class="medio-field">
+              <span class="field-label">Clasificación:</span>
+              <span class="field-value">{{ medio.clasificacion?.descripcion || '—' }}</span>
+            </div>
+            <div class="medio-field">
+              <span class="field-label">Característica:</span>
+              <span class="field-value">{{ medio.caracteristica?.descripcion_c || '—' }}</span>
+            </div>
+            <div class="medio-field">
+              <span class="field-label">Área:</span>
+              <span class="field-value">{{ medio.area?.nombre_area || '—' }}</span>
+            </div>
+            <!-- <div class="medio-field full-width">
+              <span class="field-label">Argumentación:</span>
+              <span class="field-value">{{ medio.argumentacion_tecnica || '—' }}</span>
+            </div> -->
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Tab: Dictámenes -->
+    @if (activeTab === 'dictamenes') {
+    <div class="tab-content">
+      @if (expediente.dictamenes.length === 0) {
+      <div class="empty-tab">
+        <mat-icon>gavel</mat-icon>
+        <p>No hay dictámenes asociados a este expediente</p>
+      </div>
+      } @else {
+      <div class="dictamenes-grid">
+        @for (dictamen of expediente.dictamenes; track dictamen.id_dictamen) {
+        <div class="dictamen-card">
+          <div class="dictamen-header">
+            <mat-icon>gavel</mat-icon>
+            <span class="dictamen-number">N° {{ dictamen.no_dictamen }}</span>
+          </div>
+          <div class="dictamen-body">
+            <div class="dictamen-field">
+              <span class="field-label">Fecha:</span>
+              <span class="field-value">{{ dictamen.fecha_dictamen | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="dictamen-field">
+              <span class="field-label">Reparable:</span>
+              <span class="field-value">{{ dictamen.concluye_reparable ? 'Sí' : 'No' }}</span>
+            </div>
+            <div class="dictamen-field full-width">
+              <span class="field-label">Argumentación:</span>
+              <span class="field-value">{{ dictamen.argumentacion_tecnica || '—' }}</span>
+            </div>
+            @if (dictamen.mediosbasico) {
+            <div class="dictamen-field">
+              <span class="field-label">AFT:</span>
+              <span class="field-value">{{ dictamen.mediosbasico.aft }}</span>
+            </div>
+            <div class="dictamen-field">
+              <span class="field-label">Inventario:</span>
+              <span class="field-value">{{ dictamen.mediosbasico.no_inventario }}</span>
+            </div>
+            }
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Tab: Movimientos -->
+    @if (activeTab === 'movimientos') {
+    <div class="tab-content">
+      @if (expediente.movimientos.length === 0) {
+      <div class="empty-tab">
+        <mat-icon>swap_horiz</mat-icon>
+        <p>No hay movimientos asociados a este expediente</p>
+      </div>
+      } @else {
+      <div class="movimientos-grid">
+        @for (movimiento of expediente.movimientos; track movimiento.id_movimiento) {
+        <div class="movimiento-card">
+          <div class="movimiento-header">
+            <mat-icon>swap_horiz</mat-icon>
+            <span class="movimiento-tipo">{{ movimiento.tipo_movimiento?.descripcion || 'Movimiento' }}</span>
+          </div>
+          <div class="movimiento-body">
+            <div class="movimiento-field">
+              <span class="field-label">Fecha:</span>
+              <span class="field-value">{{ movimiento.fecha_movimiento | date:'dd/MM/yyyy' }}</span>
+            </div>
+            <div class="movimiento-field">
+              <span class="field-label">Fundamentación:</span>
+              <span class="field-value">{{ movimiento.fundamentacion || '—' }}</span>
+            </div>
+            <div class="movimiento-field">
+              <span class="field-label">Hecho por:</span>
+              <span class="field-value">{{ movimiento.hecho_por?.nombre +" "+ movimiento.hecho_por?.apellidos || '—'
+                }}</span>
+            </div>
+            <div class="movimiento-field">
+              <span class="field-label">Autorizado por:</span>
+              <span class="field-value">{{ movimiento.autorizado_por?.nombre +" "+ movimiento.autorizado_por?.apellidos
+                || '—' }}</span>
+            </div>
+            <div class="movimiento-field">
+              <span class="field-label">Aprobado por:</span>
+              <span class="field-value">{{ movimiento.aprobado_por?.nombre +" "+ movimiento.aprobado_por?.apellidos ||
+                '—' }}</span>
+            </div>
+            <div class="movimiento-field full-width">
+              <span class="field-label">Medios asociados:</span>
+              <div class="medios-tags-container">
+                @for (mb of movimiento.medios_basicos; track mb.id_medio) {
+                <span class="medio-tag">{{ mb.no_inventario }}</span>
+                } @empty {
+                <span class="field-value">—</span>
+                }
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+    }
+  </div>
+
+  <div class="detalle-footer">
+    @if (puedeCompletar) {
+    <button class="btn-completar" (click)="completarExpediente()" [disabled]="isGenerandoMovimientos">
+      @if (isGenerandoMovimientos) {
+      <mat-icon>refresh</mat-icon> Generando movimientos...
+      } @else {
+      <mat-icon>check_circle</mat-icon> Completar Expediente
+      }
+    </button>
+    }
+
+    <button class="btn-cerrar" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+      Cerrar
+    </button>
+  </div>
+</div>

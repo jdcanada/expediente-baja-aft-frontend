@@ -1,239 +1,174 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { DictamenService } from '../../../services/dictamen/dictamen.service';
-import { Dictamen, DictamenDetalle, DictamenListado, EditableCellDictamen } from '../../../models/dictamen';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { NotificacionService } from '../../../services/notificacion/notificacion.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
-import { DictamenForm } from '../dictamen-form/dictamen-form.component';
-import { DictamenDetallesDialogComponent } from '../dictamen-detalles-dialog-component/dictamen-detalles-dialogcomponent';
+
+import { DictamenService } from '../../../services/dictamen/dictamen.service';
+import { NotificacionService } from '../../../services/notificacion/notificacion.service';
+import { DictamenFormComponent } from '../dictamen-form/dictamen-form.component';
+import { DictamenDetallesDialogComponent } from '../dictamen-detalles-dialog-component/dictamen-detalles-dialog.component';
 
 @Component({
   selector: 'app-dictamen-list',
-  templateUrl: './dictamen-list.component.html',
-  styleUrl: './dictamen-list.component.css',
   standalone: true,
   imports: [
     CommonModule,
     RouterModule,
-    MatPaginatorModule,
+    FormsModule,
     MatIconModule,
-    MatTableModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule,
-    FormsModule
-  ]
+    MatTooltipModule
+  ],
+  templateUrl: './dictamen-list.component.html',
+  styleUrls: ['./dictamen-list.component.css']
 })
-export class DictamenList implements OnInit, AfterViewInit {
-  dictamenes: DictamenListado[] = [];
-  displayedColumns: string[] = ['no_dictamen', 'expediente', 'no_inventario', 'fecha_dictamen', 'acciones'];
-
-  dataSource = new MatTableDataSource<DictamenListado>([]);
+export class DictamenListComponent implements OnInit {
+  allData: any[] = [];
+  filteredData: any[] = [];
+  paginatedData: any[] = [];  // ✅ Nueva propiedad para datos paginados
   loading = false;
   searchTerm = '';
-  pageSize = 5;
-
-  editingCell: EditableCellDictamen | null = null;
-  tempValue = '';
-  searchShow = false;
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  currentPage = 0;
+  pageSize = 10;
 
   constructor(
     private dictamenService: DictamenService,
     private dialog: MatDialog,
     private notificacionService: NotificacionService,
-    private cdr: ChangeDetectorRef,
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.cargarDictamenes();
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.paginator.pageSize = this.pageSize;
-    this.cdr.detectChanges();
+  // ✅ Actualizar los datos paginados
+  actualizarPaginatedData(): void {
+    const start = this.currentPage * this.pageSize;
+    this.paginatedData = this.filteredData.slice(start, start + this.pageSize);
   }
 
   cargarDictamenes(): void {
     this.loading = true;
+    this.cdr.markForCheck(); // ✅ Marca para verificar en el próximo ciclo
+
     this.dictamenService.listAll().subscribe({
-      next: (data: DictamenListado[]) => {
-        this.dictamenes = data;
-        this.dataSource.data = data;
-        console.log(data)
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-          this.paginator.pageSize = this.pageSize;
-          this.cdr.detectChanges();
-        }
+      next: (data) => {
+        this.allData = data;
+        this.filteredData = [...data];
+        this.currentPage = 0;
+        this.actualizarPaginatedData();
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.loading = false;
-        this.notificacionService.mostrarMensaje(
-          'Error al cargar los dictámenes',
-          true,
-          'error'
-        );
+        this.cdr.markForCheck();
+        this.notificacionService.mostrarMensaje('Error al cargar dictámenes', true, 'error');
       }
     });
   }
-
-  verDetallesDictamen(dictamen: DictamenListado): void {
-  this.dialog.open(DictamenDetallesDialogComponent, {
-    width: '700px',
-    data: dictamen,
-    panelClass: 'custom-dialog-container'
-  });
-}
 
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchTerm = filterValue;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-    this.searchShow = this.dataSource.filteredData.length === 0;
-  }
+    const searchLower = filterValue.trim().toLowerCase();
 
-  startEdit(dictamen: DictamenListado, field: keyof DictamenListado): void {
-    if (field !== 'argumentacion_tecnica' && field !== 'destino_final') return;
-    this.editingCell = {
-      id: dictamen.iddictamen,
-      field: field,
-      value: dictamen[field]?.toString() || ''
-    };
-    this.tempValue = dictamen[field]?.toString() || '';
-  }
-
-  saveEdit(): void {
-    if (!this.editingCell) return;
-    const updated = this.dictamenes.find(d => d.iddictamen === this.editingCell!.id);
-    if (!updated) return;
-    const updateData = {
-      ...updated,
-      [this.editingCell.field]: this.tempValue
-    };
-
-    this.dictamenService.update(this.editingCell.id, updateData).subscribe({
-      next: () => {
-        const index = this.dictamenes.findIndex(d => d.iddictamen === this.editingCell!.id);
-        if (index !== -1) {
-          this.dictamenes[index] = { ...this.dictamenes[index], [this.editingCell!.field]: this.tempValue };
-          this.dataSource.data = [...this.dictamenes];
-        }
-        this.cancelEdit();
-        this.notificacionService.mostrarMensaje(
-          'Dictamen actualizado correctamente',
-          true,
-          'success'
+    if (!searchLower) {
+      this.filteredData = [...this.allData];
+    } else {
+      this.filteredData = this.allData.filter(item => {
+        return (
+          item.no_dictamen?.toLowerCase().includes(searchLower) ||
+          item.expediente?.numero_expediente?.toLowerCase().includes(searchLower) ||
+          item.mediobasico?.aft?.toLowerCase().includes(searchLower) ||
+          item.mediobasico?.no_inventario?.toLowerCase().includes(searchLower) ||
+          item.mediobasico?.clasificacion?.descripcion?.toLowerCase().includes(searchLower)
         );
+      });
+    }
+    this.currentPage = 0;
+    this.actualizarPaginatedData();  // ✅ Actualizar después del filtro
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.filteredData = [...this.allData];
+    this.currentPage = 0;
+    this.actualizarPaginatedData();  // ✅ Actualizar después de limpiar
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.actualizarPaginatedData();  // ✅ Actualizar después de cambiar página
+    }
+  }
+
+  nextPage(): void {
+    if ((this.currentPage + 1) * this.pageSize < this.filteredData.length) {
+      this.currentPage++;
+      this.actualizarPaginatedData();  // ✅ Actualizar después de cambiar página
+    }
+  }
+
+  abrirFormularioNuevo(): void {
+    const dialogRef = this.dialog.open(DictamenFormComponent, {
+      width: '700px',
+      maxWidth: '90vw',
+      data: null
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.cargarDictamenes();
+    });
+  }
+
+  verDetalles(dictamen: any): void {
+    this.dictamenService.getById(dictamen.id_dictamen).subscribe({
+      next: (detalle) => {
+        this.dialog.open(DictamenDetallesDialogComponent, {
+          width: '800px',
+          maxWidth: '90vw',
+          data: detalle
+        });
       },
       error: () => {
-        this.notificacionService.mostrarMensaje(
-          'Error al actualizar el dictamen',
-          true,
-          'error'
-        );
-        this.cancelEdit();
+        this.notificacionService.mostrarMensaje('Error al cargar detalles', true, 'error');
       }
     });
   }
 
-  cancelEdit(): void {
-    this.editingCell = null;
-    this.tempValue = '';
+  editarDictamen(dictamen: any): void {
+    const dialogRef = this.dialog.open(DictamenFormComponent, {
+      width: '700px',
+      maxWidth: '90vw',
+      data: dictamen
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) this.cargarDictamenes();
+    });
   }
 
-  isEditing(dictamen: DictamenListado, field: keyof DictamenListado): boolean {
-    return this.editingCell?.id === dictamen.iddictamen && this.editingCell?.field === field;
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.saveEdit();
-    } else if (event.key === 'Escape') {
-      this.cancelEdit();
-    }
-  }
-
-  eliminarDictamen(dictamen: Dictamen): void {
-    this.notificacionService.confirmarAccion(
-      `¿Está seguro de eliminar el dictamen número "${dictamen.no_dictamen}"?`
-    ).then(confirmado => {
+  eliminarDictamen(dictamen: any): void {
+    this.notificacionService.confirmarAccion(`¿Eliminar dictamen ${dictamen.no_dictamen}?`).then(confirmado => {
       if (confirmado) {
-        this.dictamenService.delete(dictamen.iddictamen!).subscribe({
+        this.dictamenService.delete(dictamen.id_dictamen).subscribe({
           next: () => {
             this.cargarDictamenes();
-            this.notificacionService.mostrarMensaje(
-              'Dictamen eliminado correctamente',
-              true,
-              'success'
-            );
+            this.notificacionService.mostrarMensaje('Dictamen eliminado', true, 'success');
           },
           error: () => {
-            this.notificacionService.mostrarMensaje(
-              'Error al eliminar el dictamen',
-              true,
-              'error'
-            );
+            this.notificacionService.mostrarMensaje('Error al eliminar', true, 'error');
           }
         });
-      }
-    });
-  }
-
-  getColumnDisplayName(column: string): string {
-    const columnNames: { [key: string]: string } = {
-      'no_dictamen': 'N° Dictamen',
-      'expediente': 'Expediente',
-      'mediobasico': 'Medio Básico',
-      'comision': 'Comisión',
-      'solicita': 'Solicita',
-      'argumentacion_tecnica': 'Argumentación Técnica',
-      'destino_final': 'Destino Final',
-      'conclusion_reparable': '¿Reparable?',
-      'fecha_dictamen': 'Fecha',
-      'acciones': 'Acciones'
-    };
-    return columnNames[column] || column;
-  }
-
-  abrirFormularioNuevoDictamen(): void {
-    const dialogRef = this.dialog.open(DictamenForm, {
-      width: '600px',
-      data: null,
-      panelClass: 'custom-dialog-container'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.cargarDictamenes();
-      }
-    });
-  }
-
-  editarDictamen(dictamen: Dictamen): void {
-    const dialogRef = this.dialog.open(DictamenForm, {
-      width: '600px',
-      data: dictamen,
-      panelClass: 'custom-dialog-container'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.cargarDictamenes();
       }
     });
   }

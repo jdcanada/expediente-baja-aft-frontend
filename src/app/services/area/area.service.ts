@@ -13,8 +13,9 @@ export class AreaService {
   constructor(private http: HttpClient) { }
 
    getAllSimple(): Observable<Area[]> {
-    return this.http.get<Area[]>(this.apiUrl)
+    const result = this.http.get<Area[]>(this.apiUrl)
      .pipe(catchError(this.handleError));
+     return result;
   }
 
   // Obtener todas las áreas con paginado

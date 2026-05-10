@@ -111,10 +111,10 @@ export class EntidadList implements OnInit, AfterViewInit {
 
 
   startEdit(entidad: Entidad, field: keyof Entidad): void {
-    if (field === 'identidad') return; // No editar ID
+    if (field === 'id_entidad') return; // No editar ID
 
     this.editingCell = {
-      id: entidad.identidad,
+      id: entidad.id_entidad,
       field: field,
       value: entidad[field]?.toString() || ''
     };
@@ -124,7 +124,7 @@ export class EntidadList implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updatedEntidad = this.entidades.find(e => e.identidad === this.editingCell!.id);
+    const updatedEntidad = this.entidades.find(e => e.id_entidad === this.editingCell!.id);
     if (!updatedEntidad) return;
 
     const updateData = {
@@ -134,7 +134,7 @@ export class EntidadList implements OnInit, AfterViewInit {
 
     this.entidadService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.entidades.findIndex(e => e.identidad === this.editingCell!.id);
+        const index = this.entidades.findIndex(e => e.id_entidad === this.editingCell!.id);
         if (index !== -1) {
           this.entidades[index] = { ...this.entidades[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.entidades];
@@ -163,7 +163,7 @@ export class EntidadList implements OnInit, AfterViewInit {
   }
 
   isEditing(entidad: Entidad, field: keyof Entidad): boolean {
-    return this.editingCell?.id === entidad.identidad && this.editingCell?.field === field;
+    return this.editingCell?.id === entidad.id_entidad && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -207,7 +207,7 @@ export class EntidadList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar la entidad "${entidad.nombre_entidad}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.entidadService.delete(entidad.identidad).subscribe({
+        this.entidadService.delete(entidad.id_entidad).subscribe({
           next: () => {
             this.cargarEntidades();
             this.notificacionService.mostrarMensaje(

@@ -45,7 +45,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
     'autorizado_por_id',
     'aprobado_por_id',
     'fecha_movimiento',
-    'fundamentacion_operacion',
+    'fundamentacion',
     'acciones'
   ];
   dataSource = new MatTableDataSource<MovimientoAFTCompleto>([]);
@@ -81,7 +81,6 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
       next: (data: MovimientoAFTCompleto[]) => {
         this.movimientos = data;
         this.dataSource.data = data;
-        console.log(data);
         this.loading = false;
         this.cdr.detectChanges();
       },
@@ -118,9 +117,9 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
 
 
   startEdit(mov: MovimientoAFTCompleto, field: keyof MovimientoAFTCompleto): void {
-    if (field !== 'fundamentacion_operacion') return;
+    if (field !== 'fundamentacion') return;
     this.editingCell = {
-      id: mov.idmovimiento,
+      id: mov.id_movimiento,
       field: field,
       value: mov[field]?.toString() || ''
     };
@@ -130,7 +129,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updated = this.movimientos.find(m => m.idmovimiento === this.editingCell!.id);
+    const updated = this.movimientos.find(m => m.id_movimiento === this.editingCell!.id);
     if (!updated) return;
 
     const updateData = {
@@ -140,7 +139,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
 
     this.movimientoService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.movimientos.findIndex(m => m.idmovimiento === this.editingCell!.id);
+        const index = this.movimientos.findIndex(m => m.id_movimiento === this.editingCell!.id);
         if (index !== -1) {
           this.movimientos[index] = { ...this.movimientos[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.movimientos];
@@ -169,7 +168,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
   }
 
   isEditing(mov: MovimientoAFTCompleto, field: keyof MovimientoAFTCompleto): boolean {
-    return this.editingCell?.id === mov.idmovimiento && this.editingCell?.field === field;
+    return this.editingCell?.id === mov.id_movimiento && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -210,10 +209,10 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
 
   eliminarMovimiento(mov: MovimientoAFTCompleto): void {
     this.notificacionService.confirmarAccion(
-      `¿Está seguro de eliminar el movimiento del expediente #${mov.expediente?.no_expediente}?`
+      `¿Está seguro de eliminar el movimiento del expediente #${mov.expediente?.numero_expediente}?`
     ).then(confirmado => {
       if (confirmado) {
-        this.movimientoService.delete(mov.idmovimiento).subscribe({
+        this.movimientoService.delete(mov.id_movimiento).subscribe({
           next: () => {
             this.cargarMovimientos();
             this.notificacionService.mostrarMensaje(
@@ -236,7 +235,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
 
   getColumnDisplayName(column: string): string {
     const columnNames: { [key: string]: string } = {
-      'idmovimiento': 'ID',
+      'id_movimiento': 'ID',
       'expediente_id': 'Expediente',
       'entidad_id': 'Entidad',
       'tipo_movimiento_id': 'Tipo de Movimiento',
@@ -244,7 +243,7 @@ export class MovimientoAFTList implements OnInit, AfterViewInit {
       'autorizado_por_id': 'Autorizado por',
       'aprobado_por_id': 'Aprobado por',
       'fecha_movimiento': 'Fecha',
-      'fundamentacion_operacion': 'Fundamentación de la Operación',
+      'fundamentacion': 'Fundamentación de la Operación',
       'acciones': 'Acciones'
     };
     return columnNames[column] || column;

@@ -111,10 +111,10 @@ export class CargoList implements OnInit, AfterViewInit {
   }
 
   startEdit(cargo: Cargo, field: keyof Cargo): void {
-    if (field === 'idcargo') return; // No editar ID
+    if (field === 'id_cargo') return; // No editar ID
 
     this.editingCell = {
-      id: cargo.idcargo,
+      id: cargo.id_cargo,
       field: field,
       value: cargo[field]
     };
@@ -124,7 +124,7 @@ export class CargoList implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updated = this.cargos.find(c => c.idcargo === this.editingCell!.id);
+    const updated = this.cargos.find(c => c.id_cargo === this.editingCell!.id);
     if (!updated) return;
 
     const updateData = {
@@ -134,7 +134,7 @@ export class CargoList implements OnInit, AfterViewInit {
 
     this.cargoService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.cargos.findIndex(c => c.idcargo === this.editingCell!.id);
+        const index = this.cargos.findIndex(c => c.id_cargo === this.editingCell!.id);
         if (index !== -1) {
           this.cargos[index] = { ...this.cargos[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.cargos];
@@ -163,7 +163,7 @@ export class CargoList implements OnInit, AfterViewInit {
   }
 
   isEditing(cargo: Cargo, field: keyof Cargo): boolean {
-    return this.editingCell?.id === cargo.idcargo && this.editingCell?.field === field;
+    return this.editingCell?.id === cargo.id_cargo && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -207,7 +207,7 @@ export class CargoList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar el cargo "${cargo.nombre_cargo}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.cargoService.delete(cargo.idcargo).subscribe({
+        this.cargoService.delete(cargo.id_cargo).subscribe({
           next: () => {
             this.cargarCargos();
             this.notificacionService.mostrarMensaje(

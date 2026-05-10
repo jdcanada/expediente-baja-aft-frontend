@@ -4,14 +4,19 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Expediente, ExpedienteDetalle_3, ExpedienteDetalle_4, ExpedientePlano } from '../../models/expediente';
 import { ExpedienteFormulario, ExpedienteFormulario2 } from '../../models/expedienteformulario';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExpedienteService {
+
   private apiUrl = `${environment.apiUrl}/expedientes`;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) { }
 
   // Obtener todas las Expedientees
   getAll(): Observable<ExpedientePlano[]> {
@@ -34,8 +39,8 @@ export class ExpedienteService {
   }
 
   // Crear nueva Expediente
-  create(data: Expediente): Observable<{ idexpediente: number }> {
-    return this.http.post<{ idexpediente: number }>(this.apiUrl, data)
+  create(data: Expediente): Observable<{ id_expediente: number }> {
+    return this.http.post<{ id_expediente: number }>(this.apiUrl, data)
       .pipe(catchError(this.handleError));
   }
 
@@ -70,4 +75,63 @@ export class ExpedienteService {
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
   }
+
+
+  // Obtener datos completos para regenerar documentos
+  getDatosParaDocumento(id: number): Observable<ExpedienteFormulario> {
+    return this.http.get<ExpedienteFormulario>(`${this.apiUrl}/${id}/datos-documento`);
+  }
+
+  // Obtener solo los medios (afts) de un expediente (alternativa)
+  getMediosByExpediente(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${id}/medios`);
+  }
+
+  // Obtener estado de validación de un expediente
+  getValidacion(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/validacion`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getInformeResumen(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/informe-resumen`)
+      .pipe(catchError(this.handleError));
+  }
+
+
+  // Cambiar estado de expediente (aprobar)
+  cambiarEstado(id: number, nuevoEstado: string): Observable<any> {
+    const usuario = this.authService.getCurrentUser();
+    return this.http.patch(`${this.apiUrl}/${id}/estado`, {
+      nuevoEstado,
+      usuarioId: usuario?.id_usuario
+    }).pipe(catchError(this.handleError));
+  }
+
+  // Verificar si el usuario puede aprobar el expediente
+  puedeAprobar(expediente: any): boolean {
+    const usuario = this.authService.getCurrentUser();
+    if (!usuario) return false;
+
+    // Admin siempre puede aprobar
+    if (usuario.id_rol === 1) return true;
+
+    // El jefe que aprueba puede aprobar su expediente
+    return expediente.aprobado_por_id === usuario.id_usuario;
+  }
+
+
+  // Generar movimientos automáticamente desde medios existentes
+  generarMovimientosAutomaticos(id: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/${id}/generar-movimientos`, {})
+      .pipe(catchError(this.handleError));
+  }
+
+  // Verificar si un expediente puede completarse (tiene medios y dictámenes)
+  puedeCompletarse(expediente: any): boolean {
+    // Solo si tiene medios y NO tiene movimientos aún
+    return (expediente.total_medios || 0) > 0 && (expediente.total_movimientos || 0) === 0;
+  }
+
+
 }

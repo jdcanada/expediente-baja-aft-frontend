@@ -21,7 +21,7 @@
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Estructura</mat-label>
         <mat-select formControlName="estructura_id" required>
-          <mat-option *ngFor="let estructura of estructuras" [value]="estructura.idestructura">
+          <mat-option *ngFor="let estructura of estructuras" [value]="estructura.id_estructura">
             {{ estructura.nombre_estructura }}
           </mat-option>
         </mat-select>

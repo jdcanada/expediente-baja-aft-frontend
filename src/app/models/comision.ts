@@ -1,10 +1,11 @@
-import { ComisionMiembroDetalle } from './comisionMiembro';
+import { ComisionMiembro, ComisionMiembroDetalle, ComisionMiembroPlano } from './comisionMiembro';
 import { ExpedienteDetalle } from './expediente';
 
 export interface Comision {
   idcomision: number;
   nombre_comision: string;
   descripcion: string | null;
+  miembros?: ComisionMiembroPlano[];
   
 }
 

@@ -5,10 +5,29 @@ import { ComisionMiembro, ComisionMiembro_Persona, ComisionMiembroDetalle } from
 import { PersonaDetalle } from "./persona";
 
 export interface GrupoComision {
-    idgrupo: number;
-    comision_id: number;
-    nombre_grupo: string;
-    descripcion: string | null;
+  id_grupo: number;
+  comision_id: number;
+  nombre_grupo: string;
+  descripcion: string;
+  comision_nombre?: string;
+  miembros?: any[];
+}
+
+
+export interface MiembroGrupo {
+  nombre: string;
+  apellidos: string;
+  id_miembro: number;
+  comision_id: number;
+  grupo_id: number;
+  persona_id: number;
+  es_responsable: boolean;
+  persona?: {
+    id_persona: number;
+    nombre: string;
+    apellidos: string;
+    correo: string;
+  };
 }
 
 export interface GrupoComision_Simple extends GrupoComision {
@@ -17,7 +36,7 @@ export interface GrupoComision_Simple extends GrupoComision {
 }
 
 export interface GrupoComisionListItem {
-    idgrupo: number;
+    id_grupo: number;
     nombre_grupo: string;
 }
 
@@ -27,14 +46,14 @@ export interface GrupoComisionDetalle extends GrupoComision {
 }
 
 export interface GrupoComisionMiembroDetalle {
-    idcomisionmiembro: number;
+    id_comisionmiembro: number;
     es_responsable: boolean;
     persona: PersonaDetalle;
 
 }
 
 export interface GrupoComision2 {
-  idgrupo: number;
+  id_grupo: number;
   nombre_grupo: string;
   descripcion: string | null;
   comision: Comision;

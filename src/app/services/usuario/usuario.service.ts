@@ -9,15 +9,15 @@ import { environment } from '../../../environments/environment';
 })
 export class UsuarioService {
 
-  private baseUrl: string = `${environment.apiUrl}/usuarios`; // Ajusta si tu endpoint es /usuario
+  private baseUrl: string = `${environment.apiUrl}/usuarios`; 
 
   constructor(private http: HttpClient) { }
 
   // Método para enviar el "ping" de sesión activa
-  pingSession(user:string): Observable<any> {
+  // pingSession(user:string): Observable<any> {
    
-    return this.http.post(`${this.baseUrl}/session/ping`, {'usuario': user});
-  }
+  //   return this.http.post(`${this.baseUrl}/session/ping`, {'usuario': user});
+  // }
 
   // Listar todos los usuarios
   getUsers(): Observable<Usuario[]> {
@@ -28,8 +28,7 @@ export class UsuarioService {
 
    // Buscar todos los usuarios 
   listAll(): Observable<Usuario[]> {
-    return this.http.get<Usuario[]>(`${this.baseUrl}/list`)
-      .pipe(catchError(this.handleError));
+    return this.http.get<Usuario[]>(`${this.baseUrl}/list`);
   }
 
   // Buscar usuario por username

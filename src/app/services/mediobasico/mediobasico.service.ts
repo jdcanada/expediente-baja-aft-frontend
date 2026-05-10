@@ -9,6 +9,7 @@ import { MedioBasicoListadoEnriquecido } from '../../models/movimientoaft';
   providedIn: 'root'
 })
 export class MediobasicoService {
+
   private apiUrl = `${environment.apiUrl}/mediosbasicos`;
 
   constructor(private http: HttpClient) { }
@@ -23,6 +24,12 @@ export class MediobasicoService {
     return this.http.get<MediobasicoListItem[]>(`${this.apiUrl}/list`);
   }
 
+  // En mediobasico.service.ts
+  getByExpediente(expedienteId: number): Observable<MediobasicoListItem[]> {
+    return this.http.get<MediobasicoListItem[]>(`${this.apiUrl}/expediente/${expedienteId}`)
+      .pipe(catchError(this.handleError));
+  }
+
   // Obtener Expediente por ID
   getById(id: number): Observable<Mediobasico> {
     return this.http.get<Mediobasico>(`${this.apiUrl}/${id}`)
@@ -34,14 +41,14 @@ export class MediobasicoService {
   }
 
   // Crear nuevo medio basico
-  create(data: Mediobasico): Observable<{ idmediobasico: number }> {
-    return this.http.post<{ idmediobasico: number }>(this.apiUrl, data)
+  create(data: Mediobasico): Observable<{ id_medio: number }> {
+    return this.http.post<{ id_medio: number }>(`${this.apiUrl}/new`, data)
       .pipe(catchError(this.handleError));
   }
 
   // Crear varios medios básicos (masivo) y devolver los resultados (IDs, status, etc.)
   createMasivo(data: MedioBasicoDictamenMasivo[]): Observable<{ resultados: any[] }> {
-    
+
     return this.http.post<{ resultados: any[] }>(`${this.apiUrl}/bulk`, data)
       .pipe(catchError(this.handleError));
   }
@@ -70,6 +77,12 @@ export class MediobasicoService {
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
+  }
+
+  // En mediobasico.service.ts
+  createMasivoConMovimientos(data: any[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}/bulk-with-movements`, data)
+      .pipe(catchError(this.handleError));
   }
 }
 

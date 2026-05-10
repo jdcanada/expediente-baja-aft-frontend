@@ -1,0 +1,671 @@
+/* ============================================
+   EXPEDIENTE LIST - ESTILOS BASE
+   ============================================ */
+
+.expedientes-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+/* ============================================
+   HEADER CON SELECTOR DE ESTILOS
+   ============================================ */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.page-header p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-style-selector {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-style-selector:hover {
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+.btn-style-selector mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--accent-primary);
+}
+
+/* Menu de estilos */
+.style-menu .mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.style-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border-radius: 8px;
+  font-weight: bold;
+  color: var(--accent-primary);
+}
+
+.check-icon {
+  margin-left: auto;
+  color: var(--success);
+}
+
+/* ============================================
+   BÚSQUEDA Y ESTADOS BASE
+   ============================================ */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-primary-glow);
+}
+
+.search-bar mat-icon {
+  color: var(--text-muted);
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.search-bar .search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: 14px;
+  outline: none;
+  padding: 8px 0;
+}
+
+.search-bar .clear-search {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 50%;
+}
+
+.search-bar .clear-search:hover {
+  background: var(--bg-hover);
+}
+
+.loading-container, .empty-state {
+  text-align: center;
+  padding: 60px 40px;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-light);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   TARJETAS BASE
+   ============================================ */
+.expedientes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 24px;
+  transition: all 0.3s ease;
+}
+
+.expediente-card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  overflow: visible;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-light);
+  transition: all 0.3s ease;
+}
+
+.expediente-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   HEADER DE TARJETA
+   ============================================ */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-primary-dark) 100%);
+  gap: 16px;
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+}
+
+.header-left mat-icon {
+  color: white;
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.card-title h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 4px 0;
+  word-break: break-word;
+}
+
+.card-title p {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   BOTÓN DESCARGAR
+   ============================================ */
+.btn-download-dropdown {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-download-dropdown:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* ============================================
+   MENÚ DESPLEGABLE
+   ============================================ */
+.download-menu .mat-menu-content {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 8px 0;
+  min-width: 200px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+}
+
+.download-menu .mat-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.download-menu .mat-menu-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-sidebar-hover);
+}
+
+.download-menu .mat-menu-item mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   BADGE DE ESTADO
+   ============================================ */
+.estado-badge {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  white-space: nowrap;
+}
+
+.estado-badge.estado-iniciado { background: var(--warning); }
+.estado-badge.estado-aprobado { background: var(--success); }
+.estado-badge.estado-completo { background: var(--accent-primary); }
+.estado-badge.estado-rechazado { background: var(--danger); }
+
+/* ============================================
+   CUERPO DE TARJETA
+   ============================================ */
+.card-body {
+  padding: 16px 20px;
+}
+
+.expediente-info .info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.expediente-info .info-row:last-child {
+  border-bottom: none;
+}
+
+.expediente-info .info-row .info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.expediente-info .info-row .info-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ============================================
+   BOTONES DE ACCIÓN
+   ============================================ */
+.card-actions {
+  display: flex;
+  padding: 12px 20px 16px;
+  gap: 10px;
+  border-top: 1px solid var(--border-light);
+  background: var(--bg-surface);
+}
+
+.card-actions button {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.card-actions .btn-view {
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  border: 1px solid var(--border-light);
+}
+.card-actions .btn-view:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.card-actions .btn-edit {
+  background: var(--bg-surface);
+  color: var(--warning);
+  border: 1px solid var(--border-light);
+}
+.card-actions .btn-edit:hover {
+  background: var(--warning);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.card-actions .btn-delete {
+  background: var(--bg-surface);
+  color: var(--danger);
+  border: 1px solid var(--border-light);
+}
+.card-actions .btn-delete:hover {
+  background: var(--danger);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.btn-aprobar {
+  background: var(--bg-surface);
+  color: #8b5cf6;
+  border: 1px solid var(--border-light);
+}
+.btn-aprobar:hover {
+  background: #8b5cf6;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   ESTILO 1: TARJETAS APILADAS
+   ============================================ */
+.estilo-apiladas .expedientes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.estilo-apiladas .expediente-card {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.estilo-apiladas .expediente-card::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: -4px;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-card);
+  border-radius: 16px;
+  z-index: -1;
+  opacity: 0.5;
+  box-shadow: -4px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.estilo-apiladas .expediente-card::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: -8px;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-card);
+  border-radius: 16px;
+  z-index: -2;
+  opacity: 0.3;
+  box-shadow: -4px 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.estilo-apiladas .card-header {
+  border-left: 6px solid var(--accent-primary);
+}
+
+/* ============================================
+   ESTILO 2: VISTA LIBRO (DOS COLUMNAS)
+   ============================================ */
+.estilo-libro .expedientes-container {
+  background: var(--bg-surface);
+}
+
+.estilo-libro .expedientes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.estilo-libro .expedientes-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--border-light), var(--accent-primary), var(--border-light));
+  border-radius: 2px;
+}
+
+.estilo-libro .expediente-card:nth-child(odd) {
+  margin-right: 15px;
+  border-right: 1px solid var(--border-light);
+  box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.estilo-libro .expediente-card:nth-child(even) {
+  margin-left: 15px;
+  border-left: 1px solid var(--border-light);
+  box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================
+   ESTILO 3: LIBRO REAL
+   ============================================ */
+.estilo-libro-real .expedientes-container {
+  background: linear-gradient(135deg, var(--bg-page) 0%, var(--bg-surface) 100%);
+  position: relative;
+}
+
+.estilo-libro-real .expedientes-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 100vh;
+  background: linear-gradient(180deg, transparent 0%, var(--border-light) 20%, var(--border-light) 80%, transparent 100%);
+  z-index: 0;
+  opacity: 0.3;
+}
+
+.estilo-libro-real .expedientes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 850px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.estilo-libro-real .expediente-card {
+  position: relative;
+  margin: 0 20px;
+}
+
+.estilo-libro-real .expediente-card {
+  transform-origin: left center;
+}
+
+.estilo-libro-real .expediente-card:nth-child(1) { transform: rotate(0deg); }
+.estilo-libro-real .expediente-card:nth-child(2) { transform: rotate(0.5deg); }
+.estilo-libro-real .expediente-card:nth-child(3) { transform: rotate(1deg); }
+.estilo-libro-real .expediente-card:nth-child(4) { transform: rotate(1.5deg); }
+.estilo-libro-real .expediente-card:nth-child(5) { transform: rotate(2deg); }
+
+.estilo-libro-real .expediente-card:hover {
+  transform: rotate(0deg) translateY(-8px) scale(1.01);
+  z-index: 10;
+}
+
+.estilo-libro-real .expediente-card:hover ~ .expediente-card {
+  transform: rotate(0deg);
+}
+
+.estilo-libro-real .expediente-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, transparent 50%, var(--bg-surface) 50%);
+  border-radius: 0 0 16px 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   ESTILO 4: BLOC DE NOTAS
+   ============================================ */
+.estilo-bloc .expedientes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.estilo-bloc .expediente-card {
+  position: relative;
+  border-left: 6px solid var(--accent-primary);
+}
+
+.estilo-bloc .expediente-card::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 20px;
+  width: 8px;
+  height: 8px;
+  background: var(--bg-page);
+  border-radius: 50%;
+  box-shadow: 
+    0 28px 0 var(--bg-page),
+    0 56px 0 var(--bg-page),
+    0 84px 0 var(--bg-page),
+    0 112px 0 var(--bg-page),
+    0 140px 0 var(--bg-page);
+}
+
+.estilo-bloc .expediente-card:hover {
+  transform: translateX(8px);
+  box-shadow: -4px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .expedientes-container {
+    padding: 16px;
+  }
+
+  .expedientes-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header-right {
+    justify-content: space-between;
+  }
+
+  .card-actions {
+    flex-wrap: wrap;
+  }
+
+  .card-actions button {
+    flex: 1;
+    min-width: calc(33% - 6px);
+  }
+
+  /* Ajustes responsive para estilos especiales */
+  .estilo-libro .expedientes-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .estilo-libro .expedientes-grid::before {
+    display: none;
+  }
+  
+  .estilo-libro .expediente-card:nth-child(odd),
+  .estilo-libro .expediente-card:nth-child(even) {
+    margin: 0;
+    border: 1px solid var(--border-light);
+  }
+  
+  .estilo-libro-real .expediente-card {
+    transform: rotate(0deg) !important;
+  }
+  
+  .estilo-apiladas .expediente-card::before,
+  .estilo-apiladas .expediente-card::after {
+    display: none;
+  }
+  
+  .estilo-bloc .expediente-card::before {
+    display: none;
+  }
+}

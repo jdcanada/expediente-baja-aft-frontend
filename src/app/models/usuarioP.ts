@@ -27,7 +27,7 @@ export interface UsuarioP {
     nombre_area?: string;
   
     // Datos de estructura
-    idestructura?: number | string;
+    id_estructura?: number | string;
     nombre_estructura?: string;
     codigo_centro_costo?: string;
   
@@ -44,10 +44,10 @@ export interface UsuarioP {
   
   
   export interface UsuarioConPersona {
-    idusuario: number;
+    id_usuario: number;
     nombre_usuario: string;
     persona: {
-      idpersona: number;
+      id_persona: number;
       nombre: string;
       apellidos: string;
       correo: string | null;
@@ -56,27 +56,27 @@ export interface UsuarioP {
   
   
   interface UsuarioDetalle {
-    idusuario: number;
+    id_usuario: number;
     nombre_usuario: string;
     id_rol: number;
     nombre_rol: string;
     persona: {
-      idpersona: number;
+      id_persona: number;
       nombre: string;
       apellidos: string;
       correo?: string | null;
       cargo: {
-        idcargo: number;
+        id_cargo: number;
         nombre_cargo: string;
         es_directivo: boolean;
       };
       area: {
-        idarea: number;
+        id_area: number;
         nombre_area: string;
         codigo_area: string;
       };
       estructura: {
-        idestructura: number;
+        id_estructura: number;
         nombre_estructura: string;
         codigo_centro_costo: string;
       };

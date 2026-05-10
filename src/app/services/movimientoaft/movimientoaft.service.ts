@@ -34,8 +34,8 @@ export class MovimientoaftService {
   }
 
   // Crear nueva Expediente
-  create(data: MovimientoAFT): Observable<{ idmovimiento: number }> {
-    return this.http.post<{ idmovimiento: number }>(this.apiUrl, data)
+  create(data: MovimientoAFT): Observable<{ id_movimiento: number }> {
+    return this.http.post<{ id_movimiento: number }>(this.apiUrl, data)
       .pipe(catchError(this.handleError));
   }
 

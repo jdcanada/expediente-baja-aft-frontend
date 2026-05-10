@@ -1,94 +1,111 @@
-<nav class="modern-sidebar" [class.collapsed]="isCollapsed">
-  <!-- Header con toggle button -->
+<!-- Overlay para móvil -->
+@if (!isCollapsed && isMobile) {
+  <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+}
+
+<div class="modern-sidebar" [class.collapsed]="isCollapsed" [class.mobile]="isMobile">
+  <!-- Header - Logo -->
   <div class="sidebar-header">
-    <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()"
-      [matTooltip]="isCollapsed ? 'Expandir menú' : 'Contraer menú'" matTooltipPosition="right">
-      <mat-icon>{{ isCollapsed ? 'menu' : 'menu_open' }}</mat-icon>
-    </button>
-
-    <div class="app-title" *ngIf="!isCollapsed">
-      <h2>Sistema</h2>
+    <div class="logo-area">
+      <mat-icon class="logo-icon">folder</mat-icon>
+      @if (!isCollapsed) {
+        <span class="logo-text">AFT System</span>
+      }
     </div>
-  </div>
-
-  <!-- User Panel -->
-  <div class="user-panel" *ngIf="!isCollapsed">
-    <div class="user-avatar">
-      <img [src]="showImage()" alt="Avatar usuario" />
-    </div>
-    <div class="user-info">
-      <span class="welcome-text">Bienvenido,</span>
-      <strong class="user-name">{{ getUserDisplayName() }}</strong>
-    </div>
-    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Cerrar sesión" matTooltipPosition="left">
-      <mat-icon>logout</mat-icon>
+    <button mat-icon-button class="toggle-btn" (click)="toggleSidebar()" [matTooltip]="isCollapsed ? 'Expandir' : 'Contraer'">
+      <mat-icon>{{ isCollapsed ? 'chevron_right' : 'chevron_left' }}</mat-icon>
     </button>
   </div>
 
-  <!-- Collapsed user panel -->
-  <div class="user-panel-collapsed" *ngIf="isCollapsed">
-    <button mat-icon-button class="user-avatar-btn" matTooltip="{{ getUserDisplayName() }}" matTooltipPosition="right">
-      <img [src]="showImage()" alt="Avatar usuario" />
-    </button>
-    <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Cerrar sesión" matTooltipPosition="right">
-      <mat-icon>logout</mat-icon>
-    </button>
-  </div>
+  <!-- User Profile Section -->
+  @if (user) {
+    <div class="user-section">
+      @if (!isCollapsed) {
+        <!-- Perfil expandido -->
+        <div class="user-info-expanded">
+          <div class="user-avatar">
+            <img [src]="userAvatar" alt="Avatar" class="avatar-img" (error)="handleImageError($event)">
+          </div>
+          <div class="user-details">
+            <span class="user-name">{{ getUserDisplayName() }}</span>
+            <span class="user-role">{{ getUserRole() }}</span>
+          </div>
+        </div>
+        <div class="user-actions">
+          <app-theme-switcher></app-theme-switcher>
+          <button mat-icon-button class="logout-btn" (click)="logout()" matTooltip="Cerrar sesión">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      } @else {
+        <!-- Perfil colapsado -->
+        <div class="user-info-collapsed">
+          <div class="user-avatar-small">
+            <img [src]="userAvatar" alt="Avatar" class="avatar-img-small" (error)="handleImageError($event)">
+          </div>
+          <app-theme-switcher></app-theme-switcher>
+          <button mat-icon-button class="logout-btn-collapsed" (click)="logout()" matTooltip="Cerrar sesión">
+            <mat-icon>logout</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
+  }
 
   <!-- Navigation Menu -->
   <div class="nav-container">
     <!-- Home link -->
-    <div class="nav-section">
-      <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-item home-link" matRipple [matTooltip]="isCollapsed ? 'Inicio' : ''" matTooltipPosition="right">
-        <mat-icon>home</mat-icon>
-        <span class="nav-text" *ngIf="!isCollapsed">Inicio</span>
-      </a>
-    </div>
+    <a routerLink="/home" routerLinkActive="active" class="nav-item home-item" (click)="closeSidebar()">
+      <mat-icon>home</mat-icon>
+      @if (!isCollapsed) {
+        <span class="nav-text">Inicio</span>
+      }
+    </a>
 
-    <!-- Home link -->
-    <div class="nav-section">
-      <a routerLink="/cargar" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        class="nav-item home-link" matRipple [matTooltip]="isCollapsed ? 'Generar Expediente' : ''"
-        matTooltipPosition="right">
-        <mat-icon>folder</mat-icon>
-        <span class="nav-text" *ngIf="!isCollapsed">Generar Expediente</span>
-      </a>
-    </div>
+    <!-- Navigation groups -->
+    <div class="nav-groups">
+      @for (group of navigationGroups; track group.title; let i = $index) {
+        @if (hasAnyVisibleItem(group)) {
+          <div class="nav-group">
+            <!-- Group header (expanded mode) -->
+            @if (!isCollapsed) {
+              <div class="group-header" (click)="openedGroupIndex = openedGroupIndex === i ? null : i">
+                <mat-icon class="group-icon">{{ group.icon }}</mat-icon>
+                <span class="group-title">{{ group.title }}</span>
+                <mat-icon class="group-arrow">{{ openedGroupIndex === i ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </div>
+            }
+            
+            <!-- Group items (expanded mode) -->
+            @if (openedGroupIndex === i && !isCollapsed) {
+              <div class="group-items">
+                @for (item of group.items; track item.route) {
+                  @if (hasPermission(item.permission)) {
+                    <a [routerLink]="item.route" 
+                       routerLinkActive="active"
+                       class="nav-item sub-item"
+                       (click)="closeSidebar()"
+                       [matTooltip]="item.tooltip || item.label"
+                       matTooltipPosition="right">
+                      <mat-icon>{{ item.icon }}</mat-icon>
+                      <span class="nav-text">{{ item.label }}</span>
+                    </a>
+                  }
+                }
+              </div>
+            }
 
-    <!-- Navigation Groups -->
-    <mat-accordion multi class="nav-accordion" *ngIf="!isCollapsed">
-      <mat-expansion-panel *ngFor="let group of navigationGroups; let i = index" class="nav-group"
-        [expanded]="openedGroupIndex === i">
-        <mat-expansion-panel-header class="group-header">
-          <mat-panel-title class="group-title">
-            <mat-icon>{{ group.icon }}</mat-icon>
-            <span>{{ group.title }}</span>
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="group-content">
-          <a *ngFor="let item of group.items" [routerLink]="item.route" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }" class="nav-item" matRipple [matTooltip]="item.tooltip || ''"
-            matTooltipPosition="right">
-            <mat-icon>{{ item.icon }}</mat-icon>
-            <span class="nav-text">{{ item.label }}</span>
-          </a>
-        </div>
-      </mat-expansion-panel>
-    </mat-accordion>
-
-
-
-    <!-- Collapsed navigation -->
-    <div class="nav-collapsed" *ngIf="isCollapsed">
-      <div *ngFor="let group of navigationGroups" class="nav-group-collapsed">
-        <button mat-icon-button class="group-icon-btn" [matTooltip]="group.title" matTooltipPosition="right">
-          <mat-icon>{{ group.icon }}</mat-icon>
-        </button>
-      </div>
+            <!-- Group collapsed mode -->
+            @if (isCollapsed) {
+              <div class="group-collapsed">
+                <button mat-icon-button class="group-collapsed-btn" [matTooltip]="group.title" matTooltipPosition="right">
+                  <mat-icon>{{ group.icon }}</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+      }
     </div>
   </div>
-</nav>
-
-<!-- Overlay para móviles -->
-<div class="sidebar-overlay" *ngIf="!isCollapsed" (click)="toggleSidebar()"></div>
+</div>

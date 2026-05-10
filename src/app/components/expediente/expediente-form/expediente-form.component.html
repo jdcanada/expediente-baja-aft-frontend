@@ -1,139 +1,275 @@
-<form [formGroup]="form" (ngSubmit)="submitForm()" class="expediente-form">
-
-  <!-- Sección: Datos del Expediente -->
-  <h3>Datos del Expediente</h3>
-  <div class="form-group">
-    <label>Expediente No.</label>
-    <input formControlName="no_expediente" placeholder="Ejemplo: EXP-2025-001" />
-    <small class="helper-text">Número único del expediente, formato EXP-AAAA-NNN</small>
+<div class="form-container">
+  <!-- Navegación por pestañas -->
+  <div class="tabs-navigation">
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'expediente'" (click)="setActiveTab('expediente')">
+      <mat-icon>folder</mat-icon>
+      <span>Expediente</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'solicitante'" (click)="setActiveTab('solicitante')">
+      <mat-icon>person</mat-icon>
+      <span>Solicitante</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'aprobacion'" (click)="setActiveTab('aprobacion')">
+      <mat-icon>verified</mat-icon>
+      <span>Aprobación</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'comision'" (click)="setActiveTab('comision')">
+      <mat-icon>groups</mat-icon>
+      <span>Comisión</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'areas'" (click)="setActiveTab('areas')">
+      <mat-icon>location_city</mat-icon>
+      <span>Áreas</span>
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'aft'" (click)="setActiveTab('aft')">
+      <mat-icon>inventory</mat-icon>
+      <span>AFT</span>
+    </button>
   </div>
 
-  <div class="form-group">
-    <label>Fecha</label>
-    <input type="date" formControlName="fecha_creacion" />
-    <small class="helper-text">Fecha en que se crea el expediente</small>
-  </div>
+  <form [formGroup]="form" (ngSubmit)="submitForm()" class="expediente-form">
+    <div class="tab-content">
+      <!-- PESTAÑA 1: DATOS DEL EXPEDIENTE -->
+      @if (activeTab === 'expediente') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>folder</mat-icon>
+            <h3>Datos del Expediente</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label><mat-icon>numbers</mat-icon>Expediente No.</label>
+              <input formControlName="numero_expediente" placeholder="Ejemplo: EXP-2025-001">
+              @if (form.get('numero_expediente')?.invalid && form.get('numero_expediente')?.touched) {
+                <small class="error-text">Requerido</small>
+              }
+            </div>
+            <div class="form-field">
+              <label><mat-icon>calendar_today</mat-icon>Fecha</label>
+              <input type="date" formControlName="fecha_creacion">
+              @if (form.get('fecha_creacion')?.invalid && form.get('fecha_creacion')?.touched) {
+                <small class="error-text">Requerido</small>
+              }
+            </div>
+            <div class="form-field">
+              <label><mat-icon>account_tree</mat-icon>Estructura</label>
+              <select formControlName="estructura_id">
+                <option value="" disabled>Seleccione una estructura</option>
+                @for (e of estructuras; track e.id_estructura) {
+                  <option [ngValue]="e.id_estructura">{{ e.nombre_estructura }}</option>
+                }
+              </select>
+              @if (form.get('estructura_id')?.invalid && form.get('estructura_id')?.touched) {
+                <small class="error-text">Requerido</small>
+              }
+            </div>
+            <div class="form-field">
+              <label><mat-icon>qr_code</mat-icon>Código Centro Costo</label>
+              <input formControlName="centroCostoCodigo" placeholder="Código">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>business</mat-icon>Nombre Centro Costo</label>
+              <input formControlName="centroCostoNombre" placeholder="Nombre">
+            </div>
+          </div>
+        </div>
+      }
 
-  <div class="form-group">
-    <label>Estructura a la que pertenece</label>
-    <select formControlName="estructura_id">
-      <option value="" disabled>Seleccione una estructura</option>
-      <option *ngFor="let e of estructuras" [value]="e.idestructura">{{ e.nombre_estructura }}</option>
-    </select>
-    <small class="helper-text">Ejemplo: Dirección de Finanzas</small>
-  </div>
+      <!-- PESTAÑA 2: SOLICITANTE -->
+      @if (activeTab === 'solicitante') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>person</mat-icon>
+            <h3>Datos del Solicitante</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label><mat-icon>badge</mat-icon>Nombre del solicitante</label>
+              <select formControlName="nombreSolicitante">
+                <option value="" disabled>Seleccione un solicitante</option>
+                @for (p of personasDirectivas; track p.id_persona) {
+                  <option [ngValue]="p.id_persona">{{ p.nombre }} {{ p.apellidos }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label><mat-icon>work</mat-icon>Cargo</label>
+              <input formControlName="cargoSolicitante" placeholder="Cargo">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>phone</mat-icon>Teléfono</label>
+              <input formControlName="telefono" placeholder="Teléfono">
+            </div>
+          </div>
+        </div>
+      }
 
-  <div class="form-group">
-    <label>Código Centro de Costo</label>
-    <input formControlName="centroCostoCodigo" placeholder="Código numérico o alfanumérico"  />
-    <small class="helper-text">Ejemplo: CC-1234</small>
-  </div>
+      <!-- PESTAÑA 3: APROBACIÓN -->
+      @if (activeTab === 'aprobacion') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>verified</mat-icon>
+            <h3>Aprobación</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label><mat-icon>how_to_reg</mat-icon>Jefe que aprueba</label>
+              <select formControlName="nombreJefeAprueba">
+                <option value="" disabled>Seleccione un jefe</option>
+                @for (p of personasDirectivas; track p.id_persona) {
+                  <option [ngValue]="p.id_persona">{{ p.nombre }} {{ p.apellidos }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label><mat-icon>work</mat-icon>Cargo</label>
+              <input formControlName="cargoJefeAprueba" placeholder="Cargo">
+            </div>
+          </div>
+        </div>
+      }
 
-  <div class="form-group">
-    <label>Nombre Centro de Costo</label>
-    <input formControlName="centroCostoNombre" placeholder="Nombre descriptivo"  />
-    <small class="helper-text">Ejemplo: Centro de Costos Regional</small>
-  </div>
+      <!-- PESTAÑA 4: COMISIÓN -->
+      @if (activeTab === 'comision') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>groups</mat-icon>
+            <h3>Comisión</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label><mat-icon>supervisor_account</mat-icon>Jefe de Comisión</label>
+              <select formControlName="jefeComision">
+                <option value="" disabled>Seleccione un jefe</option>
+                @for (cm of jefesComisiones; track cm.id_miembro) {
+                  <option [ngValue]="cm.id_miembro">{{ cm.persona.nombre }} {{ cm.persona.apellidos }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-field">
+              <label><mat-icon>person_add</mat-icon>Miembro 1</label>
+              <input formControlName="miembro1" placeholder="Nombre completo">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>person_add</mat-icon>Miembro 2</label>
+              <input formControlName="miembro2" placeholder="Nombre completo">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>person_add</mat-icon>Miembro 3</label>
+              <input formControlName="miembro3" placeholder="Nombre completo">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>person_add</mat-icon>Miembro 4</label>
+              <input formControlName="miembro4" placeholder="Nombre completo">
+            </div>
+          </div>
+        </div>
+      }
 
-  <!-- Sección: Datos del Solicitante -->
-  <h3>Datos del Solicitante</h3>
-  <div class="form-group">
-    <label>Nombre del solicitante</label>
-    <select formControlName="nombreSolicitante">
-      <option value="" disabled>Seleccione un solicitante</option>
-      <option *ngFor="let p of personasDirectivas" [value]="p.idpersona">{{ p.nombre }} {{ p.apellidos }}</option>
-    </select>
-    <small class="helper-text">Persona que solicita el trámite</small>
-  </div>
+      <!-- PESTAÑA 5: ÁREAS Y DIRECCIONES -->
+      @if (activeTab === 'areas') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>location_city</mat-icon>
+            <h3>Áreas y Direcciones</h3>
+          </div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label><mat-icon>business</mat-icon>Dirección que solicita</label>
+              <input formControlName="direccionSolicita" placeholder="Dirección">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>swap_horiz</mat-icon>Área que entrega</label>
+              <input formControlName="areaEntrega" placeholder="Área">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>assignment_turned_in</mat-icon>Área que recibe</label>
+              <input formControlName="areaRecibe" placeholder="Área">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>calendar_today</mat-icon>Fecha Acta</label>
+              <input type="date" formControlName="fechaActa">
+            </div>
+            <div class="form-field">
+              <label><mat-icon>schedule</mat-icon>Hora Acta</label>
+              <input type="time" formControlName="horaActa">
+            </div>
+          </div>
+        </div>
+      }
 
-  <div class="form-group">
-    <label>Cargo del solicitante</label>
-    <input formControlName="cargoSolicitante" placeholder="Cargo o posición"  />
-    <small class="helper-text">Ejemplo: Jefe de Departamento</small>
-  </div>
+      <!-- PESTAÑA 6: AFT -->
+      @if (activeTab === 'aft') {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>inventory</mat-icon>
+            <h3>Gestión de AFT</h3>
+          </div>
+          <p class="step-description">
+            Registre los medios básicos (AFT) y sus dictámenes técnicos asociados a este expediente.
+          </p>
 
-  <div class="form-group">
-    <label>Teléfono del solicitante</label>
-    <input formControlName="telefono" placeholder="Número telefónico con código"  />
-    <small class="helper-text">Ejemplo: +1 555 123 4567</small>
-  </div>
+          @if (expedienteId || isEditMode) {
+            <app-mediobasico-form 
+              [expedienteId]=" (expedienteId || 0)"
+              (abrirDrawer)="abrirDrawerDictamen($event)">
+            </app-mediobasico-form>
+          } @else {
+            <div class="info-message">
+              <mat-icon>info</mat-icon>
+              <p>Primero debe guardar el expediente para poder agregar AFT.</p>
+              <button type="button" class="btn-primary" (click)="submitForm()">
+                Guardar Expediente primero
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
 
-  <!-- Sección: Aprobación -->
-  <h3>Aprobación</h3>
-  <div class="form-group">
-    <label>Nombre del Jefe que aprueba</label>
-    <select formControlName="nombreJefeAprueba">
-      <option value="" disabled>Seleccione un jefe que aprueba</option>
-      <option *ngFor="let p of personasDirectivas" [value]="p.idpersona">{{ p.nombre }} {{ p.apellidos }}</option>
-    </select>
-    <small class="helper-text">Persona responsable de aprobar</small>
-  </div>
+    <!-- BOTONES DE ACCIÓN -->
+    <div class="form-actions">
+      @if (activeTab !== 'expediente') {
+        <button type="button" class="btn-prev" (click)="prevTab()">
+          <mat-icon>arrow_back</mat-icon> Anterior
+        </button>
+      }
+      
+      @if (!isLastTab()) {
+        <button type="button" class="btn-next" (click)="nextTab()">
+          Siguiente <mat-icon>arrow_forward</mat-icon>
+        </button>
+      }
+      
+      @if (dialogRef) {
+        <button type="button" class="btn-cancel" (click)="cerrar()">
+          <mat-icon>cancel</mat-icon> Cancelar
+        </button>
+      }
+      
+      <button type="button" class="btn-reset" (click)="resetForm()">
+        <mat-icon>refresh</mat-icon> Limpiar
+      </button>
+      
+      @if (isLastTab()) {
+        <button type="submit" class="btn-submit" [disabled]="loading || form.invalid">
+          @if (loading) { <div class="spinner-small"></div> }
+          <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+          {{ isEditMode ? 'Guardar Expediente' : 'Crear Expediente' }}
+        </button>
+      }
+    </div>
+  </form>
+</div>
 
-  <div class="form-group">
-    <label>Cargo del jefe que aprueba</label>
-    <input formControlName="cargoJefeAprueba" placeholder="Cargo o posición"  />
-    <small class="helper-text">Ejemplo: Director General</small>
-  </div>
-
-  <!-- Sección: Comisión -->
-  <h3>Comisión</h3>
-  <div class="form-group">
-    <label>Jefe de Comisión</label>
-    <select formControlName="jefeComision">
-      <option value="" disabled>Seleccione un jefe de comisión</option>
-      <option *ngFor="let cm of jefesComisiones" [value]="cm.idcomisionmiembro">{{ cm.persona.nombre }} {{ cm.persona.apellidos }}</option>
-    </select>
-    <small class="helper-text">Responsable de la comisión</small>
-  </div>
-
-  <div class="form-group">
-    <label>Miembro 1</label>
-    <input formControlName="miembro1" placeholder="Nombre completo"  />
-  </div>
-
-  <div class="form-group">
-    <label>Miembro 2</label>
-    <input formControlName="miembro2" placeholder="Nombre completo"  />
-  </div>
-
-  <div class="form-group">
-    <label>Miembro 3</label>
-    <input formControlName="miembro3" placeholder="Nombre completo"  />
-  </div>
-
-  <div class="form-group">
-    <label>Miembro 4</label>
-    <input formControlName="miembro4" placeholder="Nombre completo"  />
-  </div>
-
-  <!-- Sección: Áreas y Direcciones -->
-  <h3>Áreas y Direcciones</h3>
-  <div class="form-group">
-    <label>Dirección que solicita</label>
-    <input formControlName="direccionSolicita" placeholder="Nombre de la dirección"  />
-  </div>
-
-  <div class="form-group">
-    <label>Área que entrega</label>
-    <input formControlName="areaEntrega" placeholder="Nombre del área"  />
-  </div>
-
-  <div class="form-group">
-    <label>Área que recibe</label>
-    <input formControlName="areaRecibe" placeholder="Nombre del área" />
-  </div>
-
-  <!-- Sección: Datos del Acta -->
-  <h3>Datos del Acta</h3>
-  <div class="form-group">
-    <label>Fecha Acta</label>
-    <input type="date" formControlName="fechaActa" />
-  </div>
-
-  <div class="form-group">
-    <label>Hora Acta</label>
-    <input type="time" formControlName="horaActa" />
-  </div>
-
-  <button type="submit" [disabled]="form.invalid" class="btn-submit">Guardar datos</button>
-</form>
+<!-- DRAWER GLOBAL - FUERA DEL FORMULARIO PRINCIPAL -->
+@if (mostrarDrawerGlobal && medioSeleccionadoGlobal) {
+  <app-dictamen-drawer
+    [medioId]="medioSeleccionadoGlobal.id_medio"
+  [expedienteId]="(expedienteId || 0)"
+  [medio]="medioSeleccionadoGlobal"
+  (close)="cerrarDrawerGlobal()"
+  (mediosActualizados)="onMediosActualizados()"
+  (dictamenCreado)="onDictamenCreadoGlobal($event)">
+  </app-dictamen-drawer>
+}

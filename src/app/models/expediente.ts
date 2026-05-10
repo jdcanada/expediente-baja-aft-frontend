@@ -6,17 +6,24 @@ import { MovimientoResumen } from './movimientoaft';
 import { InformeResumenDetalle, InformeResumenDetalle3 } from './informeResumen';
 
 export interface Expediente {
-  idexpediente?: number;
-  no_expediente: string;
+  id_expediente?: number;
+  numero_expediente: string;
   fecha_creacion: string; // ISO date string
   estado?: string | null;
   estructura_id: number;
+  area_id?: number;
+   directivo_solicita_id?: number;
+      autorizado_por_id?: number| string;
+      aprobado_por_id?:  number| string;
+      jefe_comision_id?:  number| string;
+      causas_generales?: string;
+      creado_por_id?:  number| string;
   // Puedes agregar más campos relacionados si lo deseas
 }
 
 export interface ExpedientePlano {
-  idexpediente: number;
-  no_expediente: string;
+  id_expediente: number;
+  numero_expediente: string;
   fecha_creacion: string;
   estado?: string | null;
   estructura_id: number;
@@ -48,12 +55,14 @@ export interface ExpedienteDetalle_3 extends Expediente {
   mediobasicos: MedioBasicoResumen[];
   dictamenes: DictamenResumen2[];
   movimientos: MovimientoResumen[];
+  total_movimientos?: number;
+  total_medios?: number;
 }
 
 
 export interface ExpedienteDetalle_2 {
-  idexpediente: number;
-  no_expediente: string;
+  id_expediente: number;
+  numero_expediente: string;
   fecha_creacion: string | null;
   estado: string | null;
   estructura_id?: number;
@@ -64,16 +73,23 @@ export interface ExpedienteDetalle_2 {
 
 
 export interface ExpedienteDetalle_4 {
-  idexpediente: number;
-  no_expediente: string;
+  id_expediente: number;
+  numero_expediente: string;
   fecha_creacion: string | null;
-  estado: string | null;
+  estado?: string;
   comision: Comision | null;
   estructura: Estructura;
   informes_resumen?: InformeResumenDetalle3[];
   mediobasicos: MedioBasicoResumen[],
   dictamenes?: DictamenResumen2[];
   movimientos?: MovimientoResumen[];
+
+    // ✅ AGREGAR ESTOS CAMPOS
+  total_medios?: number;
+  total_dictamenes?: number;
+  total_movimientos?: number;
+  estado_validacion?: string;
+
 }
 
 export interface EditableCellExpediente {

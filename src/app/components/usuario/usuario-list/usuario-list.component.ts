@@ -118,7 +118,7 @@ export class UsuarioList implements OnInit, AfterViewInit {
   startEdit(usuario: Usuario, field: keyof Usuario): void {
     if (field !== 'nombre_usuario') return; // Inline edit solo para campo simple
     this.editingCell = {
-      id: usuario.idusuario!,
+      id: usuario.id_usuario!,
       field,
       value: usuario[field]?.toString() || ''
     };
@@ -127,7 +127,7 @@ export class UsuarioList implements OnInit, AfterViewInit {
 
   saveEdit(): void {
     if (!this.editingCell) return;
-    const updatedUsuario = this.usuarios.find(u => u.idusuario === this.editingCell!.id);
+    const updatedUsuario = this.usuarios.find(u => u.id_usuario === this.editingCell!.id);
     if (!updatedUsuario) return;
     const updateData = {
       ...updatedUsuario,
@@ -135,7 +135,7 @@ export class UsuarioList implements OnInit, AfterViewInit {
     };
     this.usuarioService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const idx = this.usuarios.findIndex(u => u.idusuario === this.editingCell!.id);
+        const idx = this.usuarios.findIndex(u => u.id_usuario === this.editingCell!.id);
         if (idx !== -1) {
           this.usuarios[idx] = { ...this.usuarios[idx], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.usuarios];
@@ -156,7 +156,7 @@ export class UsuarioList implements OnInit, AfterViewInit {
   }
 
   isEditing(usuario: Usuario, field: keyof Usuario): boolean {
-    return this.editingCell?.id === usuario.idusuario && this.editingCell?.field === field;
+    return this.editingCell?.id === usuario.id_usuario && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -199,7 +199,7 @@ export class UsuarioList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar el usuario "${usuario.nombre_usuario}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.usuarioService.deleteUser(usuario.idusuario!).subscribe({
+        this.usuarioService.deleteUser(usuario.id_usuario!).subscribe({
           next: () => {
             this.cargarUsuarios();
             this.notificacionService.mostrarMensaje(

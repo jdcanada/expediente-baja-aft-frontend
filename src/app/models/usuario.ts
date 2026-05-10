@@ -8,7 +8,7 @@ export interface User {
 
 
 export interface Usuario {
-  idusuario?: number;
+  id_usuario?: number;
   nombre_usuario?: string;
   password_hash?: string;
   foto?: string; 
@@ -27,7 +27,7 @@ export interface Usuario {
 
 
   // Datos de estructura
-  idestructura?: number | string;
+  id_estructura?: number | string;
   nombre_estructura?: string;
   codigo_centro_costo?: string;
 
@@ -44,24 +44,24 @@ export interface UsuarioConDirectivo extends Usuario{
 
 
 export interface UsuarioConPersona {
-  idusuario: number;
+  id_usuario: number;
   nombre_usuario: string;
   id_rol: number;
   nombre_rol: string;
   persona: {
-    idpersona: number;
+    id_persona: number;
     solapin: string;
     nombre: string;
     apellidos: string;
     correo: string | null;
     cargo: {
-      idcargo: number;
+      id_cargo: number;
       nombre_cargo: string;
       es_directivo: boolean;
     }
 
     estructura: {
-      idestructura: number;
+      id_estructura: number;
       nombre_estructura: string;
       codigo_centro_costo: number;
     }
@@ -70,27 +70,27 @@ export interface UsuarioConPersona {
 
 
 interface UsuarioDetalle {
-  idusuario: number;
+  id_usuario: number;
   nombre_usuario: string;
   id_rol: number;
   nombre_rol: string;
   persona: {
-    idpersona: number;
+    id_persona: number;
     nombre: string;
     apellidos: string;
     correo?: string | null;
     cargo: {
-      idcargo: number;
+      id_cargo: number;
       nombre_cargo: string;
       es_directivo: boolean;
     };
     area: {
-      idarea: number;
+      id_area: number;
       nombre_area: string;
       codigo_area: string;
     };
     estructura: {
-      idestructura: number;
+      id_estructura: number;
       nombre_estructura: string;
       codigo_centro_costo: string;
     };
@@ -101,5 +101,40 @@ export interface EditableCellUsuario {
   id: number;
   field: 'nombre_usuario'; // puedes expandir si permites edición inline de más campos simples
   value: string;
+}
+
+
+export interface UserData {
+  
+  id_usuario: number;
+  nombre_usuario: string;
+  email: string;
+  nombre_rol: string;
+  id_rol?: string | number;
+   id_persona: number;
+  theme_preference?: 'dark' | 'light';
+  persona?: {
+    id_persona: number;
+    nombre: string;
+    apellidos: string;
+    nombre_completo?: string;
+    correo?: string;
+    foto?: string;
+    cargo?: {
+      id_cargo: number;
+      nombre_cargo: string;
+      es_directivo: boolean;
+    };
+    estrutura?: {
+      id_estructura: number;
+      nombre_estructura: string;
+      codigo_centro_costo: string;
+    };
+  };
+}
+
+export interface LoginResponse {
+  token: string;
+  user: UserData;
 }
 

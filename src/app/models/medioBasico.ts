@@ -8,28 +8,29 @@ import { MovimientoAFTDetalle } from './movimientoaft';
 
 
 export interface Mediobasico {
-  idmediobasico?: number;
+  id_medio?: number;
   no_inventario: string;
+  expediente_id: number;
   aft: string;
   area_id: number | null;
   caracteristica_id: number | null;
   clasificacion_id: number | null;
-  dictamen_id: number | null;
-  movimiento_id: number;
-  informeresumen_id: number;
+  movimiento_id?: number | null;
+  created_by?: number;
+
 }
 
 export interface MediobasicoDetalle_Estructura {
-   idmediobasico: number;
+   id_medio: number;
   no_inventario: string | null;
   aft: string | null;
-  clasificacion: { idclasificacion: number; descripcion: string } | null;
-  caracteristica: { idcaracteristica: number; descripcion_c: string } | null;
+  clasificacion: { id_clasificacion: number; descripcion: string } | null;
+  caracteristica: { id_caracteristica: number; descripcion_c: string } | null;
   area: Area | null;
 }
 
 export interface MediobasicoDetalle {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
 
@@ -42,20 +43,20 @@ export interface MediobasicoDetalle {
 }
 
 export interface MedioBasicoResumen {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
 
   area: Area | null;
-  clasificacion: { idclasificacion: number; descripcion: string } | null;
+  clasificacion: { id_clasificacion: number; descripcion: string } | null;
   dictamen_id: number | null; // <-- Añadido para forzar traer el número de dictamen
-  caracteristica: { idcaracteristica: number; descripcion_c: string } | null;
+  caracteristica: { id_caracteristica: number; descripcion_c: string } | null;
   no_dictamen?: string | null; // Si quieres mostrar el número de dictamen
 }
 
 
 export interface MediobasicoDetalleCompleto {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
   area?: AreaDetalle | null;
@@ -74,7 +75,7 @@ export interface MediobasicoDetalleCompleto {
 
 
 export interface MedioBasicoEnriquecido {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
   area: AreaDetalle | null;
@@ -82,14 +83,14 @@ export interface MedioBasicoEnriquecido {
   clasificacion: Clasificacion | null;
   dictamen: DictamenDetalle | null;
   movimiento: MovimientoAFTDetalle | null;
-  informeresumen: InformeResumenCompleto | null;
+  informeresumen?: InformeResumenCompleto | null;
   expediente: {
-    idexpediente: number;
-    no_expediente: string;
+    id_expediente: number;
+    numero_expediente: string;
     fecha_creacion: string | null;
     estado: string | null;
     estructura: {
-      idestructura: number;
+      id_estructura: number;
       nombre_estructura: string;
       codigo_centro_costo: string | null;
     } | null;
@@ -101,7 +102,7 @@ export interface MedioBasicoConDictamen extends MedioBasicoResumen {
 }
 
 export interface MedioBasicoPlano {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
   area_id: number | null;
@@ -118,7 +119,7 @@ export interface MedioBasicoPlano {
 
 
 export interface MediobasicoListItem {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
   expediente: ExpedienteDetalle_2 | null;
@@ -127,7 +128,7 @@ export interface MediobasicoListItem {
   clasificacion: Clasificacion | null;
   dictamen: DictamenDetalle | null;
   movimiento: MovimientoAFTDetalle | null;
-  informeresumen: InformeResumenDetalle | null;
+  informeresumen?: InformeResumenDetalle | null;
 }
 
 export interface MedioBasicoDictamenMasivo {
@@ -138,7 +139,7 @@ export interface MedioBasicoDictamenMasivo {
   caracteristica_id: number;
   clasificacion_id: number;
   movimiento_id: number;
-  informeresumen_id: number;
+  informeresumen_id?: number;
 
   // Dictamen
   no_dictamen: string | number;
@@ -146,7 +147,7 @@ export interface MedioBasicoDictamenMasivo {
   directivo_solicita_id: number;
   argumentacion_tecnica: string;
   destino_final: string;
-  conclusion_reparable: boolean;
+  concluye_reparable: boolean;
   fecha_dictamen: string; // 'YYYY-MM-DD'
   estructura_solicita_id: number;
   comision_id: number;

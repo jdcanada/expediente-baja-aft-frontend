@@ -1,11 +1,33 @@
 
 
+
+<div class="app-container" [class.login-page]="esLogin">
+  <app-navigation *ngIf="showNav"></app-navigation>
+  
+  <div class="main-content" 
+       [class.sidebar-visible]="showNav && !esLogin"
+       [class.sidebar-collapsed]="false" >
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
 <app-navigation *ngIf="showNav"></app-navigation>
 
-<!-- Si es login, que el router-outlet NO esté dentro de container -->
+
 <router-outlet *ngIf="esLogin"></router-outlet>
 
-<!-- Para el resto de las rutas, SÍ pones el container -->
+
 <div class="container" *ngIf="!esLogin">
     <router-outlet></router-outlet>
-</div>
+</div> -->

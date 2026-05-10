@@ -1,10 +1,3 @@
-// models/directivo.ts
-
-export interface Directivo {
-  iddirectivo: number;
-  persona_id: number;
-  telefono_corporativo: string | null;
-}
 
 
 // models/directivo.ts
@@ -17,8 +10,15 @@ import { InformeResumenResumen } from './informeResumen';
 import { MovimientoAFTResumen } from './movimientoaft';
 //import { Area } from './area';
 
+
+export interface Directivo {
+  id_directivo: number;
+  persona_id: number;
+  telefono_corporativo: string | null;
+}
+
 export interface DirectivoDetalle {
-  iddirectivo: number;
+  id_directivo: number;
   telefono_corporativo: string | null;
   persona: Persona;
   estructura: Estructura;
@@ -33,7 +33,7 @@ export interface DirectivoAccionesResponse {
 }
 
 export interface DirectivoPlano {
-  iddirectivo: number;
+  id_directivo: number;
   persona_id: number;
   telefono_corporativo: string | null;
 
@@ -53,5 +53,14 @@ export interface EditableCellDirectivo {
   id: number;
   field: keyof DirectivoDetalle;
   value: string;
+}
+
+
+export interface DirectivoDetalle {
+  id_directivo: number;
+  telefono_corporativo: string | null;
+  persona: Persona;
+  estructura: Estructura;
+  cargo: Cargo;
 }
 

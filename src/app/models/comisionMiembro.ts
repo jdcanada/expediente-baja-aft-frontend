@@ -7,22 +7,22 @@ import { MediobasicoDetalle } from './medioBasico';
 
 
 export interface ComisionMiembro {
-  idcomisionmiembro: number;
+  id_miembro: number;
   comision_id: number;
   persona_id: number;
   es_responsable: boolean;
 }
 
 export interface ComisionMiembro_Persona {
-  idcomisionmiembro: number;
+  id_miembro: number;
   es_responsable: boolean;
   persona: {
-    idpersona: number;
+    id_persona: number;
     nombre: string;
     apellidos: string;
     correo: string;
     cargo: {
-      idcargo: number;
+      id_cargo: number;
       nombre_cargo: string;
       es_directivo: boolean
     }
@@ -30,10 +30,10 @@ export interface ComisionMiembro_Persona {
 }
 
 export interface JefeComision {
-  idcomisionmiembro: number;
+  id_miembro: number;
   es_responsable: boolean;
   grupo: {
-    idgrupo: number;
+    id_grupo: number;
     nombre_grupo: string;
     descripcion: string | null;
   };
@@ -42,12 +42,12 @@ export interface JefeComision {
     nombre_comision: string;
   };
   persona: {
-    idpersona: number;
+    id_persona: number;
     nombre: string;
     apellidos: string;
     correo: string;
     cargo: {
-      idcargo: number;
+      id_cargo: number;
       nombre_cargo: string;
       es_directivo: boolean;
     };
@@ -56,7 +56,7 @@ export interface JefeComision {
 
 
 export interface ComisionMiembroDetalle {
-  idcomisionmiembro: number;
+  id_miembro: number;
   comision_id: number;
   persona_id: number;
   es_responsable: boolean;
@@ -80,7 +80,7 @@ export interface ComisionMiembroDetalle {
 }
 
 export interface ComisionMiembroDetallePersona {
-  idcomisionmiembro: number;
+  id_miembro: number;
   comision_id: number;
   persona_id: number;
   es_responsable: boolean;
@@ -91,7 +91,7 @@ export interface ComisionMiembroDetallePersona {
 }
 
 export interface ComisionMiembroPlano {
-  idcomisionmiembro: number;
+  id_miembro: number;
   comision_id: number;
   persona_id: number;
   es_responsable: number; // o boolean, según tu preferencia

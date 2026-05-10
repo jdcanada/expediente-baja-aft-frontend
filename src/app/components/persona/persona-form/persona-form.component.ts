@@ -25,7 +25,7 @@ export class PersonaFormComponent implements OnInit {
   form!: FormGroup;
   estruturas: Estructura_Areas_Personas[] = [];
   cargos: Cargo[] = [];
-  idpersona: number | null = null;
+  id_persona: number | null = null;
   edit: boolean = false;
 
   constructor(
@@ -40,7 +40,7 @@ export class PersonaFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      idpersona: [null],
+      id_persona: [null],
       solapin: ['', [Validators.required, Validators.maxLength(10)]],
       nombre: ['', Validators.required],
       apellidos: ['', Validators.required],
@@ -52,7 +52,7 @@ export class PersonaFormComponent implements OnInit {
     this.loadCargos();
     this.loadEstruturas();
 
-    // Obtener idpersona del parámetro de ruta
+    // Obtener id_persona del parámetro de ruta
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
@@ -86,9 +86,8 @@ export class PersonaFormComponent implements OnInit {
     this.personaService.getById(id).subscribe({
       next: (persona: PersonaById) => {
         // Popular el formulario con los datos recibidos
-        console.log(persona)
         this.form.patchValue({
-          idpersona:persona.idpersona,
+          id_persona:persona.id_persona,
           solapin: persona.solapin,
           nombre: persona.nombre,
           apellidos: persona.apellidos,
@@ -107,11 +106,10 @@ export class PersonaFormComponent implements OnInit {
   if (this.form.valid) {
     const personaData = this.form.value;
     
-    if (personaData.idpersona) {
+    if (personaData.id_persona) {
       //Modificar persona existente
-      this.personaService.update(personaData.idpersona, personaData).subscribe({
+      this.personaService.update(personaData.id_persona, personaData).subscribe({
         next: (response) => {
-          console.log('Persona actualizada correctamente:', response);
           // Aquí puedes agregar lógica para notificar éxito, navegar, etc.
           this.router.navigate(['/personas/all']);
          
@@ -125,7 +123,6 @@ export class PersonaFormComponent implements OnInit {
       //Crear nueva persona
       this.personaService.create(personaData).subscribe({
         next: (response) => {
-          console.log('Persona creada correctamente:', response);
           // Aquí puedes agregar lógica para notificar éxito, navegar, etc.
         },
         error: (error) => {

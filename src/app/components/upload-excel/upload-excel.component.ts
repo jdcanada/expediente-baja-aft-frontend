@@ -134,7 +134,6 @@ export class UploadExcelComponent {
 
       // Normaliza todos los encabezados
       const cabecera = (jsonData[0] as string[]).map(x => normalizarTexto(x));
-      console.log('Cabecera normalizada:', cabecera);
 
       // Normaliza las columnas esperadas
       const columnasEsperadasNormalizadas = COLUMNAS_ESPERADAS.map(normalizarTexto);

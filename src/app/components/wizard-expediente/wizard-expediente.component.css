@@ -1,16 +1,387 @@
-.back-home-link {
-  margin-bottom: 1em;
-  text-align: left;
+/* ============================================
+   WIZARD EXPEDIENTE - ESTILOS MODERNOS
+   ============================================ */
+
+.wizard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.back-home-link a.btn-link {
-  color: #007bff;
-  text-decoration: none;
-  font-weight: 500;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   HEADER DEL WIZARD (PASOS)
+   ============================================ */
+
+.wizard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 16px;
+  padding: 24px 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f6;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   cursor: pointer;
-  font-size: 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  flex: 1;
+  min-width: 80px;
 }
 
-.back-home-link a.btn-link:hover {
-  text-decoration: underline;
+.wizard-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: -20%;
+  top: 20px;
+  width: 40%;
+  height: 2px;
+  background: #e2e8f0;
+  z-index: 0;
+}
+
+.wizard-step.completed:not(:last-child)::after {
+  background: #10b981;
+}
+
+.step-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 2px solid #e2e8f0;
+  transition: all 0.3s ease;
+  z-index: 1;
+  margin-bottom: 8px;
+}
+
+.wizard-step.active .step-circle {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f2b44 100%);
+  border-color: #1e3a5f;
+  color: white;
+  box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+  transform: scale(1.05);
+}
+
+.wizard-step.completed .step-circle {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.step-circle mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  transition: color 0.3s ease;
+}
+
+.wizard-step.active .step-label {
+  color: #1e3a5f;
+}
+
+.wizard-step.completed .step-label {
+  color: #10b981;
+}
+
+/* ============================================
+   CONTENIDO DEL WIZARD
+   ============================================ */
+
+.wizard-content {
+  margin-bottom: 32px;
+}
+
+.step-card {
+  background: white;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid #eef2f6;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #eef2f6;
+}
+
+.step-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  color: #1e3a5f;
+}
+
+.step-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #1a2c3e;
+}
+
+.step-description {
+  color: #5a6e7c;
+  font-size: 14px;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+/* ============================================
+   BOTONES DE DESCARGA
+   ============================================ */
+
+.download-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.btn-pdf,
+.btn-docx {
+  padding: 12px 28px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.btn-pdf {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: white !important;
+}
+
+.btn-pdf:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.3);
+}
+
+.btn-docx {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: white !important;
+}
+
+.btn-docx:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+}
+
+/* ============================================
+   ESTADO DE CARGA
+   ============================================ */
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: #f8fafc;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.loading-state p {
+  margin-top: 20px;
+  color: #1e3a5f;
+  font-weight: 500;
+}
+
+/* ============================================
+   ACCIONES DEL PASO 3
+   ============================================ */
+
+.step-actions {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #eef2f6;
+  text-align: center;
+}
+
+.save-btn {
+  padding: 12px 28px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: white !important;
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.save-btn mat-icon {
+  margin-right: 8px;
+}
+
+/* ============================================
+   FOOTER DEL WIZARD (NAVEGACIÓN)
+   ============================================ */
+
+.wizard-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border-radius: 16px;
+  padding: 20px 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #eef2f6;
+}
+
+.nav-btn {
+  padding: 10px 24px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.prev-btn mat-icon,
+.next-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.prev-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+  .wizard-container {
+    padding: 16px;
+  }
+
+  .wizard-header {
+    padding: 16px;
+    flex-direction: column;
+  }
+
+  .wizard-step {
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .wizard-step:not(:last-child)::after {
+    display: none;
+  }
+
+  .step-card {
+    padding: 20px;
+  }
+
+  .step-header h2 {
+    font-size: 18px;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+  }
+
+  .btn-pdf,
+  .btn-docx {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .wizard-footer {
+    padding: 16px;
+  }
+
+  .nav-btn {
+    padding: 8px 16px !important;
+  }
+}
+
+/* Agregar al final del archivo existente */
+
+/* Mejoras de contraste para el wizard */
+.wizard-header {
+  background: white;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wizard-footer {
+  background: white;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.step-card {
+  background: white;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Mejorar visibilidad del step-circle */
+.step-circle {
+  background: #e2e8f0;
+  border: 2px solid #94a3b8;
+  color: #1e293b;
+  font-weight: 700;
+}
+
+.wizard-step.active .step-circle {
+  background: linear-gradient(135deg, #1e3a5f 0%, #0f2b44 100%);
+  border-color: #1e3a5f;
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.wizard-step.completed .step-circle {
+  background: #059669;
+  border-color: #059669;
+  box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.3);
 }

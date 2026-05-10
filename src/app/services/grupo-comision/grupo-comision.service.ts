@@ -1,71 +1,75 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, Observable, throwError } from 'rxjs';
-import { GrupoComision, GrupoComision_Simple, GrupoComisionDetalle } from '../../models/grupoComision';
+import { GrupoComision, GrupoComisionDetalle, GrupoComisionListItem } from '../../models/grupoComision';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class GrupoComisionService {
-private apiUrl = `${environment.apiUrl}/grupos`;
+  private apiUrl = `${environment.apiUrl}/gruposcomision`;
 
   constructor(private http: HttpClient) {}
 
-  // Obtener todas las Expedientees
-  getAll(): Observable<GrupoComision_Simple[]> {
-    return this.http.get<GrupoComision_Simple[]>(this.apiUrl)
-      .pipe(catchError(this.handleError));
-  }
-  
-   listAll(): Observable<GrupoComisionDetalle[]> {
-      return this.http.get<GrupoComisionDetalle[]>(`${this.apiUrl}/list`);
-    }
-
-  // Obtener Expediente por ID
-  getById(id: number): Observable<GrupoComision_Simple> {
-    return this.http.get<GrupoComision_Simple>(`${this.apiUrl}/${id}`)
-      .pipe(catchError(this.handleError));
+  // Listar todos los grupos (con detalles de comisión)
+  getAll(): Observable<GrupoComision[]> {
+    return this.http.get<GrupoComision[]>(this.apiUrl);
   }
 
-  getByIdDetalle(id: number): Observable<GrupoComisionDetalle> {
-        return this.http.get<GrupoComisionDetalle>(`${this.apiUrl}/${id}/detalle`);
-      }
-
-  // Crear nueva Expediente
-  create(data: GrupoComision): Observable<GrupoComision> {
-    return this.http.post<GrupoComision>(this.apiUrl, data)
-      .pipe(catchError(this.handleError));
+  // Listar grupos con detalles de comisión y miembros
+  getAllWithDetails(): Observable<GrupoComisionDetalle[]> {
+    return this.http.get<GrupoComisionDetalle[]>(`${this.apiUrl}/detalles`);
   }
 
-  // Actualizar Expediente existente
-  update(id: number, data: GrupoComision): Observable<GrupoComision> {
-    return this.http.put<GrupoComision>(`${this.apiUrl}/${id}`, data)
-      .pipe(catchError(this.handleError));
+  // Listado simple para selects
+  listAll(): Observable<GrupoComisionDetalle[]> {
+    return this.http.get<GrupoComisionDetalle[]>(`${this.apiUrl}/list`);
   }
 
-  // Eliminar Expediente
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`)
-      .pipe(catchError(this.handleError));
+  // Obtener grupo por ID
+  getById(id: number): Observable<GrupoComision> {
+    return this.http.get<GrupoComision>(`${this.apiUrl}/${id}`);
   }
 
-  // Manejo centralizado de errores HTTP
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'Error desconocido';
+  // Obtener grupo con sus miembros
+  getByIdWithMiembros(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/miembros`);
+  }
 
-    if (error.error instanceof ErrorEvent) {
-      // Error del cliente o red
-      errorMessage = `Error: ${error.error.message}`;
-    } else if (error.error?.message) {
-      // Mensaje personalizado del backend
-      errorMessage = error.error.message;
-    } else {
-      // Otros errores HTTP
-      errorMessage = `Código: ${error.status} - Mensaje: ${error.message}`;
-    }
+  // Obtener miembros de un grupo específico
+  getMiembrosByGrupo(grupoId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/${grupoId}/miembros`);
+  }
 
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
+  // Obtener todas las comisiones (para selects)
+  getComisiones(): Observable<{ id_comision: number; nombre_comision: string }[]> {
+    return this.http.get<{ id_comision: number; nombre_comision: string }[]>(`${this.apiUrl}/comisiones`);
+  }
+
+  // Crear grupo
+  create(data: { comision_id: number; nombre_grupo: string; descripcion?: string }): Observable<any> {
+    return this.http.post<any>(this.apiUrl, data);
+  }
+
+  // Actualizar grupo
+  update(id: number, data: Partial<GrupoComision>): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, data);
+  }
+
+  // Agregar miembro a grupo
+  addMiembro(data: { grupo_id: number; persona_id: number; es_responsable: boolean }): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/miembros`, data);
+  }
+
+  // Eliminar miembro del grupo
+  removeMiembro(idMiembro: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/miembros/${idMiembro}`);
+  }
+
+  // Eliminar grupo
+  delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }

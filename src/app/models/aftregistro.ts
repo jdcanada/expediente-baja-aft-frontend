@@ -10,7 +10,7 @@ export interface AFTRegistro {
   clasificacion: string;         // CLASIFICACIÓN
   argumentacion: string;         // ARGUMENTACIÓN TÉCNICA
   partesPiezas?: string;
-  conclusionNoReparable?: boolean;
+  concluye_reparable?: boolean;
   fechaDia?: string;
   fechaMes?: string;
   fechaAno?: string;

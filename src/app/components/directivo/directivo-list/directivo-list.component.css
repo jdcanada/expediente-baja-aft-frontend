@@ -1,0 +1,235 @@
+/* ============================================
+   DICTAMEN MODERN - CON SOPORTE DE TEMAS
+   ============================================ */
+
+.dictamen-modern {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 40px;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+  transition: background 0.3s ease;
+}
+
+/* Hero */
+.hero-icon {
+  background: var(--bg-tertiary);
+  border-color: var(--border-light);
+}
+
+.hero-icon mat-icon {
+  color: var(--accent-secondary);
+}
+
+.hero-text h1 {
+  color: var(--text-primary);
+}
+
+.hero-text p {
+  color: var(--text-muted);
+}
+
+.command-bar {
+  /* mantiene estructura */
+}
+
+.cmd-search {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+}
+
+.cmd-search:focus-within {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.cmd-search mat-icon {
+  color: var(--text-muted);
+}
+
+.cmd-input {
+  color: var(--text-secondary);
+}
+
+.cmd-input::placeholder {
+  color: var(--text-placeholder);
+}
+
+.cmd-kbd {
+  background: var(--bg-tertiary);
+  border-color: var(--border-medium);
+  color: var(--text-muted);
+}
+
+.cmd-icon-btn {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-muted);
+}
+
+.cmd-icon-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
+}
+
+/* Tabla */
+.table-modern {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+}
+
+.table-modern th {
+  color: var(--text-muted);
+  border-bottom-color: var(--border-light);
+}
+
+.table-modern td {
+  color: var(--text-secondary);
+  border-bottom-color: var(--border-light);
+}
+
+.table-modern tbody tr:hover {
+  background: var(--table-row-hover);
+}
+
+.dictamen-id .id-badge {
+  color: var(--accent-secondary);
+}
+
+.expediente-cell .exp-code {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+}
+
+.aft-name {
+  color: var(--text-secondary);
+}
+
+.aft-inventory {
+  color: var(--text-muted);
+}
+
+.pill {
+  background: var(--bg-tertiary);
+  color: var(--text-tertiary);
+}
+
+.date-cell {
+  color: var(--text-tertiary);
+}
+
+.action-icon {
+  color: var(--text-muted);
+}
+
+.action-icon:hover {
+  background: var(--bg-tertiary);
+  color: var(--accent-secondary);
+}
+
+.action-icon.danger:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.empty-dash {
+  color: var(--text-placeholder);
+}
+
+/* Paginación */
+.pagination-modern {
+  border-top-color: var(--border-light);
+}
+
+.page-stats {
+  color: var(--text-muted);
+}
+
+.page-stats span {
+  color: var(--text-secondary);
+}
+
+.page-nav {
+  background: var(--bg-tertiary);
+  border-color: var(--border-medium);
+  color: var(--text-tertiary);
+}
+
+.page-nav:hover:not(:disabled) {
+  background: var(--border-medium);
+  border-color: var(--accent-primary);
+  color: var(--accent-secondary);
+}
+
+.page-current {
+  color: var(--text-secondary);
+}
+
+/* Loading */
+.loading-modern {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+  color: var(--text-muted);
+}
+
+.loading-dots span {
+  background: var(--accent-primary);
+}
+
+.loading-dots span:nth-child(2) {
+  background: var(--accent-secondary);
+}
+
+.loading-dots span:nth-child(3) {
+  background: var(--accent-tertiary);
+}
+
+/* Empty state */
+.empty-modern {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+}
+
+.empty-illustration {
+  background: var(--bg-tertiary);
+}
+
+.empty-illustration mat-icon {
+  color: var(--text-placeholder);
+}
+
+.empty-modern h3 {
+  color: var(--text-secondary);
+}
+
+.empty-modern p {
+  color: var(--text-muted);
+}
+
+/* No results */
+.no-results-modern {
+  background: var(--bg-card);
+  border-color: var(--border-light);
+}
+
+.no-results-modern mat-icon {
+  color: var(--text-placeholder);
+}
+
+.no-results-modern p {
+  color: var(--text-tertiary);
+}
+
+.no-results-modern strong {
+  color: var(--text-secondary);
+}
+
+.clear-link {
+  color: var(--accent-secondary);
+}
+
+.clear-link:hover {
+  background: var(--bg-tertiary);
+}

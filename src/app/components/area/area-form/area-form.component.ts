@@ -75,7 +75,7 @@ export class AreaForm implements OnInit {
     this.loading = true;
     const value = this.form.value as Area;
     const op = this.isEdit
-      ? this.areaService.update(this.data!.idarea!, value)
+      ? this.areaService.update(this.data!.id_area!, value)
       : this.areaService.create(value);
 
     op.subscribe({

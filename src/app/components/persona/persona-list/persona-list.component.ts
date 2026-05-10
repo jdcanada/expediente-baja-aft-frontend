@@ -114,10 +114,10 @@ export class PersonaList implements OnInit, AfterViewInit {
 
 
   startEdit(persona: PersonaListItem, field: keyof PersonaListItem): void {
-    if (field === 'idpersona') return; // No editar ID
+    if (field === 'id_persona') return; // No editar ID
 
     this.editingCell = {
-      id: persona.idpersona,
+      id: persona.id_persona,
       field: field,
       value: persona[field]?.toString() || ''
     };
@@ -127,7 +127,7 @@ export class PersonaList implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updatedPersona = this.personas.find(p => p.idpersona === this.editingCell!.id);
+    const updatedPersona = this.personas.find(p => p.id_persona === this.editingCell!.id);
     if (!updatedPersona) return;
 
     const updateData = {
@@ -137,7 +137,7 @@ export class PersonaList implements OnInit, AfterViewInit {
 
     this.personaService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.personas.findIndex(p => p.idpersona === this.editingCell!.id);
+        const index = this.personas.findIndex(p => p.id_persona === this.editingCell!.id);
         if (index !== -1) {
           this.personas[index] = { ...this.personas[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.personas];
@@ -166,7 +166,7 @@ export class PersonaList implements OnInit, AfterViewInit {
   }
 
   isEditing(persona: PersonaListItem, field: keyof PersonaListItem): boolean {
-    return this.editingCell?.id === persona.idpersona && this.editingCell?.field === field;
+    return this.editingCell?.id === persona.id_persona && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -210,7 +210,7 @@ export class PersonaList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar la persona ${persona.nombre} ${persona.apellidos}?`
     ).then(confirmado => {
       if (confirmado) {
-        this.personaService.delete(persona.idpersona).subscribe({
+        this.personaService.delete(persona.id_persona).subscribe({
           next: () => {
             this.cargarPersonas();
             this.notificacionService.mostrarMensaje(

@@ -1,6 +1,180 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <mat-icon class="header-icon">gavel</mat-icon>
+    <h2>{{ esNuevo ? 'Nuevo Dictamen' : 'Editar Dictamen' }}</h2>
+    <button mat-icon-button class="close-btn" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
 
-<div class="">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dialog-form">
+    <div class="form-content">
+      <!-- Datos del Dictamen -->
+      <div class="form-section">
+        <div class="section-header">
+          <mat-icon>gavel</mat-icon>
+          <h3>Datos del Dictamen</h3>
+        </div>
 
-    <p>dictamen-form works!</p>
+        <div class="form-grid">
+          <!-- N° Dictamen -->
+          <div class="form-field">
+            <label>
+              <mat-icon>numbers</mat-icon>
+              N° Dictamen
+            </label>
+            <input type="text" formControlName="no_dictamen" placeholder="Ejemplo: 601" class="form-input">
+            @if (form.get('no_dictamen')?.invalid && form.get('no_dictamen')?.touched) {
+              <small class="error-text">El número de dictamen es requerido</small>
+            }
+          </div>
 
+          <!-- Fecha Dictamen -->
+          <div class="form-field">
+            <label>
+              <mat-icon>calendar_today</mat-icon>
+              Fecha del Dictamen
+            </label>
+            <input type="date" formControlName="fecha_dictamen" class="form-input">
+            @if (form.get('fecha_dictamen')?.invalid && form.get('fecha_dictamen')?.touched) {
+              <small class="error-text">La fecha es requerida</small>
+            }
+          </div>
+
+          <!-- Medio Básico (AFT) -->
+          <div class="form-field">
+            <label>
+              <mat-icon>inventory</mat-icon>
+              AFT / Medio Básico
+            </label>
+            <select formControlName="medio_id" class="form-select">
+              <option value="" disabled>Seleccione un AFT</option>
+              @for (medio of mediosBasicos; track medio.id_medio) {
+                <option [value]="medio.id_medio">
+                  {{ medio.aft }} - {{ medio.no_inventario }}
+                </option>
+              }
+            </select>
+            @if (form.get('medio_id')?.invalid && form.get('medio_id')?.touched) {
+              <small class="error-text">El AFT es requerido</small>
+            }
+          </div>
+
+          <!-- Grupo de Comisión -->
+          <div class="form-field">
+            <label>
+              <mat-icon>groups</mat-icon>
+              Grupo de Comisión
+            </label>
+            <select formControlName="grupo_id" class="form-select">
+              <option value="" disabled>Seleccione un grupo</option>
+              @for (grupo of gruposComision; track grupo.id_grupo) {
+                <option [value]="grupo.id_grupo">
+                  {{ grupo.nombre_grupo }}
+                </option>
+              }
+            </select>
+            @if (form.get('grupo_id')?.invalid && form.get('grupo_id')?.touched) {
+              <small class="error-text">El grupo de comisión es requerido</small>
+            }
+          </div>
+
+          <!-- Característica -->
+          <div class="form-field">
+            <label>
+              <mat-icon>category</mat-icon>
+              Característica
+            </label>
+            <select formControlName="caracteristica_id" class="form-select">
+              <option value="">Seleccione una característica (opcional)</option>
+              @for (car of caracteristicas; track car.id_caracteristica) {
+                <option [value]="car.id_caracteristica">{{ car.descripcion }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Destino Final -->
+          <div class="form-field">
+            <label>
+              <mat-icon>location_on</mat-icon>
+              Destino Final
+            </label>
+            <select formControlName="destino_final_id" class="form-select">
+              <option value="">Seleccione un destino (opcional)</option>
+              @for (destino of destinosFinales; track destino.id_destino) {
+                <option [value]="destino.id_destino">{{ destino.descripcion }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Argumentación Técnica -->
+          <div class="form-field full-width">
+            <label>
+              <mat-icon>description</mat-icon>
+              Argumentación Técnica
+            </label>
+            <textarea formControlName="argumentacion_tecnica" rows="4" placeholder="Describa la argumentación técnica..." class="form-textarea"></textarea>
+            @if (form.get('argumentacion_tecnica')?.invalid && form.get('argumentacion_tecnica')?.touched) {
+              <small class="error-text">La argumentación técnica es requerida</small>
+            }
+          </div>
+
+          <!-- Concluye Reparable -->
+          <div class="form-field checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="concluye_reparable">
+              <span>Concluye Reparable</span>
+            </label>
+            <small class="helper-text">Marque si el AFT es reparable</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Miembros del Grupo seleccionado -->
+      @if (miembrosPorGrupo.length > 0) {
+        <div class="form-section">
+          <div class="section-header">
+            <mat-icon>people</mat-icon>
+            <h3>Miembros del Grupo</h3>
+          </div>
+          
+          <div class="miembros-grid">
+            @for (miembro of miembrosPorGrupo; track miembro.id_miembro) {
+              <div class="miembro-card" [class.responsable]="miembro.es_responsable">
+                <div class="miembro-avatar">
+                  <mat-icon>{{ miembro.es_responsable ? 'star' : 'person' }}</mat-icon>
+                </div>
+                <div class="miembro-info">
+                  <div class="miembro-nombre">
+                    {{ miembro.persona?.nombre || miembro.nombre }} {{ miembro.persona?.apellidos || miembro.apellidos }}
+                  </div>
+                  
+                </div>
+                @if (miembro.es_responsable) {
+                  <span class="responsable-badge">Responsable</span>
+                }@else{
+                    <span class="responsable-badge">Miembro</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="dialog-actions">
+      <button type="button" class="btn-cancel" (click)="cerrar()">
+        <mat-icon>cancel</mat-icon>
+        Cancelar
+      </button>
+      <button type="submit" class="btn-save" [disabled]="loading || form.invalid">
+        @if (loading) {
+          <div class="spinner-small"></div>
+        }
+        <mat-icon>{{ esNuevo ? 'add' : 'save' }}</mat-icon>
+        {{ esNuevo ? 'Crear Dictamen' : 'Guardar Cambios' }}
+      </button>
+    </div>
+  </form>
 </div>

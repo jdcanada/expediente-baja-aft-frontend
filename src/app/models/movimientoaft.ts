@@ -1,15 +1,19 @@
 // models/movimientoaft.ts
 
 export interface MovimientoAFT {
-  idmovimiento?: number;
+  id_movimiento?: number;
   expediente_id: number | null;
-  entidad_id: number | null;
+  clasificacion_id?: number | null;
+  area_id?: number | null;
+  lista_inventarios?: string[] | null;
+  cantidad?: number | null;
   tipo_movimiento_id: number | null;
-  hecho_por_id: number | null;
-  autorizado_por_id: number | null;
-  aprobado_por_id: number | null;
+  entidad_destino: string | null;
+  hecho_por_id?:  string | number| null;
+  autorizado_por_id?:  string | number| null;
+  aprobado_por_id?:  string | number| null;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
+  fundamentacion: string | null;
 }
 
 
@@ -27,7 +31,7 @@ import { DictamenDetalle } from './dictamen';
 import { InformeResumenCompleto } from './informeResumen';
 
 export interface MovimientoAFTDetalle {
-  idmovimiento: number;
+  id_movimiento: number;
   expediente?: Expediente | null;
   entidad?: Entidad | null;
   tipo_movimiento?: TipoMovimiento | null;
@@ -35,7 +39,7 @@ export interface MovimientoAFTDetalle {
   autorizado_por?: DirectivoDetalle | null;
   aprobado_por?: DirectivoDetalle | null;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
+  fundamentacion: string | null;
 }
 
 
@@ -43,7 +47,7 @@ export interface MovimientoAFTDetalle {
 
 // MovimientoAFT donde el directivo participó
 export interface MovimientoAFTResumen {
-  idmovimiento: number;
+  id_movimiento: number;
   expediente_id: number | null;
   entidad_id: number | null;
   tipo_movimiento_id: number | null;
@@ -51,7 +55,7 @@ export interface MovimientoAFTResumen {
   autorizado_por_id: number | null;
   aprobado_por_id: number | null;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
+  fundamentacion: string | null;
   // Para saber el rol del directivo en este movimiento:
   es_hecho_por: boolean;
   es_autorizado_por: boolean;
@@ -60,15 +64,15 @@ export interface MovimientoAFTResumen {
 
 
 export interface MovimientoAFTEnriquecido {
-  idmovimiento: number;
+  id_movimiento: number;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
+  fundamentacion: string | null;
   tipo_movimiento: { idtipo: number; descripcion: string } | null;
-  entidad: { identidad: number; nombre_entidad: string } | null;
-  expediente: { idexpediente: number; no_expediente: string } | null;
-  hecho_por: { iddirectivo: number; nombre: string; apellidos: string } | null;
-  autorizado_por: { iddirectivo: number; nombre: string; apellidos: string } | null;
-  aprobado_por: { iddirectivo: number; nombre: string; apellidos: string } | null;
+  entidad: { id_entidad: number; nombre_entidad: string } | null;
+  expediente: { id_expediente: number; numero_expediente: string } | null;
+  hecho_por: { id_directivo: number; nombre: string; apellidos: string } | null;
+  autorizado_por: { id_directivo: number; nombre: string; apellidos: string } | null;
+  aprobado_por: { id_directivo: number; nombre: string; apellidos: string } | null;
   es_hecho_por: boolean;
   es_autorizado_por: boolean;
   es_aprobado_por: boolean;
@@ -77,30 +81,38 @@ export interface MovimientoAFTEnriquecido {
 
 
 export interface MovimientoResumen {
-  idmovimiento: number;
-  tipo_movimiento: { idtipo: number; descripcion: string } | null;
+  id_movimiento: number;
+  tipo_movimiento: { id_tipo: number; descripcion: string } | null;
   hecho_por: PersonaResumen | null;
   autorizado_por: PersonaResumen | null;
   aprobado_por: PersonaResumen | null;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
-  medios_basicos: MediobasicoDetalle_Estructura[];
+  fundamentacion: string | null;
+  medios_basicos: {
+    id_medio: number;
+    no_inventario: string;
+    aft: string;
+    clasificacion: { id_clasificacion: number; descripcion: string } | null;
+    caracteristica: { id_caracteristica: number; descripcion: string } | null;
+    area: { id_area: number; nombre_area: string; codigo_area: string } | null;
+    argumentacion_tecnica: string | null;
+  }[];
 }
 
 
 export interface MedioBasicoListadoEnriquecido {
-  idmediobasico: number;
+  id_medio: number;
   no_inventario: string | null;
   aft: string | null;
   expediente: {
-    idexpediente: number;
-    no_expediente: string;
+    id_expediente: number;
+    numero_expediente: string;
   } | null;
   area: {
-    idarea: number;
+    id_area: number;
     nombre_area: string;
     estructura: {
-      idestructura: number;
+      id_estructura: number;
       nombre_estructura: string;
     } | null;
   } | null;
@@ -110,9 +122,9 @@ export interface MedioBasicoListadoEnriquecido {
 }
 
 export interface MovimientoAFTCompleto {
-  idmovimiento: number;
+  id_movimiento: number;
   fecha_movimiento: string | null;
-  fundamentacion_operacion: string | null;
+  fundamentacion: string | null;
   tipo_movimiento: TipoMovimiento | null;
   entidad: Entidad | null;
   expediente: Expediente | null;
@@ -122,6 +134,9 @@ export interface MovimientoAFTCompleto {
   medios_basicos: (MedioBasicoResumen & { dictamen: DictamenDetalle | null })[];
   dictamenes: DictamenDetalle[];
 }
+
+
+
 
 export interface MedioBasicoConDictamen extends MedioBasicoResumen {
   dictamen: DictamenDetalle | null;

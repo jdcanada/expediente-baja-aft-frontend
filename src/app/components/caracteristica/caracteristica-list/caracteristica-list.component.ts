@@ -42,7 +42,7 @@ interface EditableCell {
 })
 export class CaracteristicaListComponent implements OnInit, AfterViewInit {
   caracteristicas: Caracteristica[] = [];
-  displayedColumns: string[] = ['descripcion_c', 'acciones'];
+  displayedColumns: string[] = ['descripcion', 'acciones'];
   dataSource = new MatTableDataSource<Caracteristica>([]);
   loading = false;
   searchTerm = '';
@@ -113,10 +113,10 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
   }
 
   startEdit(caracteristica: Caracteristica, field: keyof Caracteristica): void {
-    if (field === 'idcaracteristica') return; // No editar ID
+    if (field === 'id_caracteristica') return; // No editar ID
 
     this.editingCell = {
-      id: caracteristica.idcaracteristica,
+      id: caracteristica.id_caracteristica,
       field: field,
       value: caracteristica[field]?.toString() || ''
     };
@@ -126,7 +126,7 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updated = this.caracteristicas.find(c => c.idcaracteristica === this.editingCell!.id);
+    const updated = this.caracteristicas.find(c => c.id_caracteristica === this.editingCell!.id);
     if (!updated) return;
 
     const updateData = {
@@ -136,7 +136,7 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
 
     this.caracteristicaService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.caracteristicas.findIndex(c => c.idcaracteristica === this.editingCell!.id);
+        const index = this.caracteristicas.findIndex(c => c.id_caracteristica === this.editingCell!.id);
         if (index !== -1) {
           this.caracteristicas[index] = { ...this.caracteristicas[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.caracteristicas];
@@ -165,7 +165,7 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
   }
 
   isEditing(caracteristica: Caracteristica, field: keyof Caracteristica): boolean {
-    return this.editingCell?.id === caracteristica.idcaracteristica && this.editingCell?.field === field;
+    return this.editingCell?.id === caracteristica.id_caracteristica && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -206,10 +206,10 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
 
   eliminarCaracteristica(caracteristica: Caracteristica): void {
     this.notificacionService.confirmarAccion(
-      `¿Está seguro de eliminar la característica "${caracteristica.descripcion_c}"?`
+      `¿Está seguro de eliminar la característica "${caracteristica.descripcion}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.caracteristicaService.delete(caracteristica.idcaracteristica).subscribe({
+        this.caracteristicaService.delete(caracteristica.id_caracteristica).subscribe({
           next: () => {
             this.cargarCaracteristicas();
             this.notificacionService.mostrarMensaje(
@@ -232,8 +232,8 @@ export class CaracteristicaListComponent implements OnInit, AfterViewInit {
 
   getColumnDisplayName(column: string): string {
     const columnNames: { [key: string]: string } = {
-      'idcaracteristica': 'ID',
-      'descripcion_c': 'Descripción',
+      'id_caracteristica': 'ID',
+      'descripcion': 'Descripción',
       'acciones': 'Acciones'
     };
     return columnNames[column] || column;

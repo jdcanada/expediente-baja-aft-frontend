@@ -1,0 +1,124 @@
+<div class="detalle-dialog">
+  <div class="detalle-header">
+    <mat-icon>gavel</mat-icon>
+    <h2>Detalles del Dictamen</h2>
+    <button mat-icon-button mat-dialog-close class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="detalle-content">
+    <!-- Info General -->
+    <div class="detalle-seccion">
+      <h3>Información General</h3>
+      <div class="detalle-grid">
+        <div class="detalle-item">
+          <span class="detalle-label">N° Dictamen:</span>
+          <span class="detalle-valor">{{ dictamen.no_dictamen || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Fecha:</span>
+          <span class="detalle-valor">{{ dictamen.fecha_dictamen | date:'dd/MM/yyyy' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Expediente:</span>
+          <span class="detalle-valor">{{ dictamen.expediente?.numero_expediente || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Estado Expediente:</span>
+          <span class="detalle-valor">{{ dictamen.expediente?.estado || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Medio Básico -->
+    <div class="detalle-seccion">
+      <h3>Medio Básico (AFT)</h3>
+      <div class="detalle-grid">
+        <div class="detalle-item">
+          <span class="detalle-label">AFT:</span>
+          <span class="detalle-valor">{{ dictamen.mediobasico?.aft || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">N° Inventario:</span>
+          <span class="detalle-valor">{{ dictamen.mediobasico?.no_inventario || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Clasificación:</span>
+          <span class="detalle-valor">{{ dictamen.mediobasico?.clasificacion?.descripcion || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Área:</span>
+          <span class="detalle-valor">{{ dictamen.mediobasico?.area?.nombre_area || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Característica:</span>
+          <span class="detalle-valor">{{ dictamen.mediobasico?.caracteristica?.descripcion_c }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Comisión -->
+   
+<div class="detalle-seccion">
+  <h3>Comisión Dictaminadora</h3>
+  <div class="detalle-grid">
+    <div class="detalle-item">
+      <span class="detalle-label">Comisión:</span>
+      <span class="detalle-valor">{{ dictamen.grupo?.nombre_comision || '—' }}</span>
+    </div>
+    <div class="detalle-item">
+      <span class="detalle-label">Grupo:</span>
+      <span class="detalle-valor">{{ dictamen.grupo?.nombre_grupo || '—' }}</span>
+    </div>
+  </div>
+  
+  @if (dictamen.grupo!.comisionmiembros!.length > 0) {
+    <div class="miembros-dictamen">
+      <h4>Miembros de la Comisión</h4>
+      <div class="miembros-grid">
+        @for (m of dictamen.grupo!.comisionmiembros; track m.id_miembro) {
+          <div class="miembro-card" [class.responsable]="m.es_responsable">
+            <div class="miembro-avatar">
+              <mat-icon>{{ m.es_responsable ? 'star' : 'person' }}</mat-icon>
+            </div>
+            <div class="miembro-info">
+              <div class="miembro-nombre">{{ m.persona.nombre }} {{ m.persona.apellidos }}</div>
+              <div class="miembro-cargo">{{ m.persona.cargo?.nombre_cargo || 'Miembro' }}</div>
+            </div>
+            @if (m.es_responsable) {
+              <span class="responsable-badge">Responsable</span>
+            }@else{
+              <span class="responsable-badge">Miembro</span>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+    <!-- Dictamen -->
+    <div class="detalle-seccion">
+      <h3>Dictamen Técnico</h3>
+      <div class="detalle-grid">
+        <div class="detalle-item-full">
+          <span class="detalle-label">Argumentación Técnica:</span>
+          <span class="detalle-valor">{{ dictamen.argumentacion_tecnica || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Destino Final:</span>
+          <span class="detalle-valor">{{ dictamen.destino_final || '—' }}</span>
+        </div>
+        <div class="detalle-item">
+          <span class="detalle-label">Concluye Reparable:</span>
+          <span class="detalle-valor"><span class="badge" [class.badge-success]="dictamen.concluye_reparable" [class.badge-danger]="!dictamen.concluye_reparable">{{ dictamen.concluye_reparable ? 'Sí' : 'No' }}</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="detalle-footer">
+    <button mat-button mat-dialog-close class="btn-cerrar">Cerrar</button>
+  </div>
+</div>

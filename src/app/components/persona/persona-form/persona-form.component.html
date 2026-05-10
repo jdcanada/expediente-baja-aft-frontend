@@ -2,7 +2,7 @@
     <form [formGroup]="form" (ngSubmit)="submitForm()" class="persona-form">
 
         <h2>Registro de Persona</h2>
-        <input type="hidden" formControlName="idpersona" />
+        <input type="hidden" formControlName="id_persona" />
 
         <div class="form-row">
             <div class="form-group">
@@ -45,7 +45,7 @@
                 <label for="cargo_id">Cargo</label>
                 <select id="cargo_id" formControlName="cargo_id">
                     <option value="">Seleccione un cargo</option>
-                    <option *ngFor="let cargo of cargos" [value]="cargo.idcargo">{{ cargo.nombre_cargo }}</option>
+                    <option *ngFor="let cargo of cargos" [value]="cargo.id_cargo">{{ cargo.nombre_cargo }}</option>
                 </select>
                 <div class="invalid" *ngIf="form.get('cargo_id')?.touched && form.get('cargo_id')?.invalid">
                     Seleccione un cargo.
@@ -56,7 +56,7 @@
                 <label for="estructura_id">Estructura</label>
                 <select id="estructura_id" formControlName="estructura_id">
                     <option value="">Seleccione una estructura</option>
-                    <option *ngFor="let estructura of estruturas" [value]="estructura.idestructura">{{
+                    <option *ngFor="let estructura of estruturas" [value]="estructura.id_estructura">{{
                         estructura.nombre_estructura }}</option>
                 </select>
                 <div class="invalid" *ngIf="form.get('estructura_id')?.touched && form.get('estructura_id')?.invalid">

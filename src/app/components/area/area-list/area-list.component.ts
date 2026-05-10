@@ -120,10 +120,10 @@ export class AreaList implements OnInit, AfterViewInit {
 
   // Inline editing methods
   startEdit(area: AreaDetalleSimple_bolt, field: keyof AreaDetalleSimple_bolt): void {
-    if (field === 'idarea') return; // Don't allow editing ID
+    if (field === 'id_area') return; // Don't allow editing ID
 
     this.editingCell = {
-      id: area.idarea,
+      id: area.id_area,
       field: field,
       value: area[field]?.toString() || ''
     };
@@ -133,7 +133,7 @@ export class AreaList implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updatedArea = this.areas.find(a => a.idarea === this.editingCell!.id);
+    const updatedArea = this.areas.find(a => a.id_area === this.editingCell!.id);
     if (!updatedArea) return;
 
     // Create update object
@@ -145,7 +145,7 @@ export class AreaList implements OnInit, AfterViewInit {
     this.areaService.update(this.editingCell.id, updateData).subscribe({
       next: (result) => {
         // Update local data
-        const index = this.areas.findIndex(a => a.idarea === this.editingCell!.id);
+        const index = this.areas.findIndex(a => a.id_area === this.editingCell!.id);
         if (index !== -1) {
           this.areas[index] = { ...this.areas[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.areas];
@@ -176,7 +176,7 @@ export class AreaList implements OnInit, AfterViewInit {
   }
 
   isEditing(area: AreaDetalleSimple_bolt, field: keyof AreaDetalleSimple_bolt): boolean {
-    return this.editingCell?.id === area.idarea && this.editingCell?.field === field;
+    return this.editingCell?.id === area.id_area && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -220,7 +220,7 @@ export class AreaList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar el área ${area.nombre_area}?`
     ).then(confirmado => {
       if (confirmado) {
-        this.areaService.delete(area.idarea).subscribe({
+        this.areaService.delete(area.id_area).subscribe({
           next: () => {
             this.cargarAreas();
             this.notificacionService.mostrarMensaje(

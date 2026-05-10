@@ -1,0 +1,109 @@
+<div class="drawer-overlay" (click)="cerrarDrawer()">
+  <div class="drawer-container" (click)="$event.stopPropagation()">
+    <div class="drawer-header">
+      <div class="header-title">
+        <mat-icon>gavel</mat-icon>
+        <h2>Crear Dictamen</h2>
+      </div>
+      <button class="close-btn" type="button" (click)="cerrarDrawer()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="drawer-content">
+      <!-- Información del Medio Básico -->
+      <div class="info-box">
+        <div class="info-row">
+          <span class="info-label">N° Inventario:</span>
+          <span class="info-value">{{ medio?.no_inventario }}</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">AFT:</span>
+          <span class="info-value">{{ medio?.aft }}</span>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="dictamen-form">
+        <div class="form-grid">
+          <div class="form-field">
+            <label><mat-icon>numbers</mat-icon>N° Dictamen *</label>
+            <input type="text" [(ngModel)]="formData.no_dictamen" placeholder="Ejemplo: 601">
+          </div>
+
+          <div class="form-field">
+            <label><mat-icon>calendar_today</mat-icon>Fecha Dictamen *</label>
+            <input type="date" [(ngModel)]="formData.fecha_dictamen">
+          </div>
+
+          <div class="form-field">
+            <label><mat-icon>groups</mat-icon>Grupo Comisión *</label>
+            <select [(ngModel)]="formData.grupo_id" (change)="onGrupoChange()">
+              <option [ngValue]="null" disabled>Seleccione un grupo</option>
+              @for (grupo of gruposComision; track grupo.id_grupo) {
+                <option [ngValue]="grupo.id_grupo">{{ grupo.nombre_grupo }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label><mat-icon>location_on</mat-icon>Destino Final *</label>
+            <select [(ngModel)]="formData.destino_final_id">
+              <option [ngValue]="null" disabled>Seleccione un destino</option>
+              @for (destino of destinosFinales; track destino.id_destino) {
+                <option [ngValue]="destino.id_destino">{{ destino.descripcion }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-field full-width">
+            <label><mat-icon>description</mat-icon>Argumentación Técnica *</label>
+            <textarea [(ngModel)]="formData.argumentacion_tecnica" rows="4" placeholder="Describa la argumentación técnica..."></textarea>
+          </div>
+
+          <div class="form-field checkbox-field">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.concluye_reparable">
+              <span>Concluye Reparable</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Miembros del Grupo -->
+        @if (miembrosPorGrupo.length > 0) {
+          <div class="miembros-section">
+            <div class="section-header">
+              <mat-icon>people</mat-icon>
+              <h3>Miembros del Grupo</h3>
+            </div>
+            <div class="miembros-grid">
+              @for (miembro of miembrosPorGrupo; track miembro.id_miembro) {
+                <div class="miembro-card" [class.responsable]="miembro.es_responsable">
+                  <div class="miembro-avatar">
+                    <mat-icon>{{ miembro.es_responsable ? 'star' : 'person' }}</mat-icon>
+                  </div>
+                  <div class="miembro-info">
+                    <div class="miembro-nombre">
+                      {{ miembro.persona?.nombre || miembro.nombre }} {{ miembro.persona?.apellidos || miembro.apellidos }}
+                    </div>
+                    <div class="miembro-cargo">{{ miembro.es_responsable ? "Responsable" : "Miembro" }}</div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="drawer-footer">
+      <button type="button" class="btn-cancel" (click)="cerrarDrawer()">
+        <mat-icon>cancel</mat-icon> Cancelar
+      </button>
+      <button type="button" class="btn-save" [disabled]="loading" (click)="onSubmit()">
+        @if (loading) { <div class="spinner-small"></div> }
+        <mat-icon>save</mat-icon> Crear Dictamen
+      </button>
+    </div>
+  </div>
+</div>

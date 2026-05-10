@@ -1,14 +1,14 @@
 import { ExpedienteDetalle_2 } from "./expediente";
 
 export interface Entidad {
-  identidad: number;
+  id_entidad: number;
   nombre_entidad: string;
   descripcion: string | null;
 }
 
 
 export interface EntidadDetalleCompleto {
-  identidad: number;
+  id_entidad: number;
   nombre_entidad: string;
   descripcion: string | null;
   total_expedientes: number;

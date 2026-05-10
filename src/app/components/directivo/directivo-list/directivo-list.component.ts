@@ -1,6 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { DirectivoService } from '../../../services/directivo/directivo.service';
-import { Directivo, DirectivoDetalle, EditableCellDirectivo } from '../../../models/directivo';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -9,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NotificacionService } from '../../../services/notificacion/notificacion.service';
 import { MatDialog } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,7 @@ import { DirectivoForm } from '../directivo-form/directivo-form.component';
 @Component({
   selector: 'app-directivo-list',
   templateUrl: './directivo-list.component.html',
-  styleUrl: './directivo-list.component.css',
+  styleUrls: ['./directivo-list.component.css'],
   standalone: true,
   imports: [
     CommonModule,
@@ -28,11 +28,12 @@ import { DirectivoForm } from '../directivo-form/directivo-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatTooltipModule,
     FormsModule
   ]
 })
 export class DirectivoList implements OnInit, AfterViewInit {
-  directivos: DirectivoDetalle[] = [];
+  directivos: any[] = [];
   displayedColumns: string[] = [
     'nombre',
     'apellidos',
@@ -42,15 +43,20 @@ export class DirectivoList implements OnInit, AfterViewInit {
     'telefono_corporativo',
     'acciones'
   ];
-  dataSource = new MatTableDataSource<DirectivoDetalle>([]);
+  dataSource = new MatTableDataSource<any>([]);
   loading = false;
   searchTerm = '';
   pageSize = 5;
+  searchShow = false;
 
-  editingCell: EditableCellDirectivo | null = null;
-  tempValue = '';
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) set paginator(paginator: MatPaginator) {
+    // Este setter se ejecuta cuando el paginator está disponible
+    if (paginator && this.dataSource) {
+      this.dataSource.paginator = paginator;
+      paginator.pageSize = this.pageSize;
+      this.cdr.detectChanges();
+    }
+  }
 
   constructor(
     private directivoService: DirectivoService,
@@ -64,23 +70,17 @@ export class DirectivoList implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.paginator.pageSize = this.pageSize;
-    this.cdr.detectChanges();
+    // No hacemos nada aquí porque el paginator se configura en el setter
   }
 
   cargarDirectivos(): void {
     this.loading = true;
     this.directivoService.listAll().subscribe({
-      next: (data: DirectivoDetalle[]) => {
+      next: (data: any[]) => {
         this.directivos = data;
         this.dataSource.data = data;
-        if (this.paginator) {
-          this.dataSource.paginator = this.paginator;
-          this.paginator.pageSize = this.pageSize;
-          this.cdr.detectChanges();
-        }
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
@@ -89,99 +89,29 @@ export class DirectivoList implements OnInit, AfterViewInit {
           true,
           'error'
         );
+        this.cdr.detectChanges();
       }
     });
   }
 
-  searchShow = false;
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.searchTerm = filterValue;
 
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-
-    if (this.dataSource.filteredData.length === 0) {
-      this.searchShow = true;
-      this.searchTerm = filterValue;
-    } else {
-      this.searchShow = false;
-      //this.searchTerm = "No hay grupos que coincidan con tu búsqueda ", filterValue;
-    }
-
+    
+    this.searchShow = this.dataSource.filteredData.length === 0 && filterValue.trim().length > 0;
   }
 
-
-  // Solo permite edición inline de telefono_corporativo
-  startEdit(directivo: Directivo, field: keyof Directivo): void {
-    if (field !== 'telefono_corporativo') return;
-    this.editingCell = {
-      id: directivo.iddirectivo,
-      field: field,
-      value: directivo[field]?.toString() || ''
-    };
-    this.tempValue = directivo[field]?.toString() || '';
-  }
-
-  saveEdit(): void {
-    if (!this.editingCell) return;
-    const updated = this.directivos.find(d => d.iddirectivo === this.editingCell!.id);
-    if (!updated) return;
-    const updateData = {
-      ...updated,
-      [this.editingCell.field]: this.tempValue
-    };
-
-    this.directivoService.update(this.editingCell.id, updateData).subscribe({
-      next: () => {
-        const index = this.directivos.findIndex(d => d.iddirectivo === this.editingCell!.id);
-        if (index !== -1) {
-          this.directivos[index] = { ...this.directivos[index], [this.editingCell!.field]: this.tempValue };
-          this.dataSource.data = [...this.directivos];
-        }
-        this.cancelEdit();
-        this.notificacionService.mostrarMensaje(
-          'Directivo actualizado correctamente',
-          true,
-          'success'
-        );
-      },
-      error: () => {
-        this.notificacionService.mostrarMensaje(
-          'Error al actualizar el directivo',
-          true,
-          'error'
-        );
-        this.cancelEdit();
-      }
-    });
-  }
-
-  cancelEdit(): void {
-    this.editingCell = null;
-    this.tempValue = '';
-  }
-
-  isEditing(directivo: Directivo, field: keyof Directivo): boolean {
-    return this.editingCell?.id === directivo.iddirectivo && this.editingCell?.field === field;
-  }
-
-  onKeyDown(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.saveEdit();
-    } else if (event.key === 'Escape') {
-      this.cancelEdit();
-    }
-  }
-
-  eliminarDirectivo(directivo: DirectivoDetalle): void {
+  eliminarDirectivo(directivo: any): void {
+    const nombre = directivo.nombre || directivo.persona?.nombre || 'este directivo';
+    const apellidos = directivo.apellidos || directivo.persona?.apellidos || '';
+    
     this.notificacionService.confirmarAccion(
-      `¿Está seguro de eliminar el directivo "${directivo.persona.nombre} ${directivo.persona.apellidos}"?`
+      `¿Está seguro de eliminar el directivo "${nombre} ${apellidos}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.directivoService.delete(directivo.iddirectivo).subscribe({
+        this.directivoService.delete(directivo.id_directivo || directivo.iddirectivo).subscribe({
           next: () => {
             this.cargarDirectivos();
             this.notificacionService.mostrarMensaje(
@@ -202,27 +132,27 @@ export class DirectivoList implements OnInit, AfterViewInit {
     });
   }
 
-  editarDirectivo(directivo: Directivo): void {
-  const dialogRef = this.dialog.open(DirectivoForm, {
-    width: '600px',
-    data: directivo,
-    panelClass: 'custom-dialog-container'
-  });
+  editarDirectivo(directivo: any): void {
+    const dialogRef = this.dialog.open(DirectivoForm, {
+      width: '650px',
+      maxWidth: '90vw',
+      data: directivo,
+      panelClass: 'custom-dialog-container'
+    });
 
-  dialogRef.afterClosed().subscribe(result => {
-    if (result) {
-      this.cargarDirectivos();
-    }
-  });
-}
-
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.cargarDirectivos();
+      }
+    });
+  }
 
   getColumnDisplayName(column: string): string {
     const columnNames: { [key: string]: string } = {
       'nombre': 'Nombre',
       'apellidos': 'Apellidos',
       'solapin': 'Solapín',
-      'correo': 'Correo',
+      'correo': 'Correo Electrónico',
       'cargo': 'Cargo',
       'telefono_corporativo': 'Teléfono Corporativo',
       'acciones': 'Acciones'
@@ -232,7 +162,8 @@ export class DirectivoList implements OnInit, AfterViewInit {
 
   abrirFormularioNuevoDirectivo(): void {
     const dialogRef = this.dialog.open(DirectivoForm, {
-      width: '600px',
+      width: '650px',
+      maxWidth: '90vw',
       data: null,
       panelClass: 'custom-dialog-container'
     });

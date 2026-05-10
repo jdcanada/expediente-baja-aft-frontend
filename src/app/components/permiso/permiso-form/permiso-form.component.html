@@ -1,0 +1,67 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <mat-icon class="header-icon">{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+    <h2>{{ isEditMode ? 'Editar Permiso' : 'Nuevo Permiso' }}</h2>
+    <button mat-icon-button class="close-btn" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    @if (errorMessage) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <div class="form-group">
+      <label>Código *</label>
+      <input type="text" [(ngModel)]="formData.codigo" placeholder="Ej: usuarios.ver, expedientes.crear" class="form-input">
+      <small class="helper-text">Identificador único del permiso (formato: modulo.accion)</small>
+    </div>
+
+    <div class="form-group">
+      <label>Nombre *</label>
+      <input type="text" [(ngModel)]="formData.nombre" placeholder="Ej: Ver Usuarios" class="form-input">
+      <small class="helper-text">Nombre legible del permiso</small>
+    </div>
+
+    <div class="form-group">
+      <label>Descripción</label>
+      <textarea [(ngModel)]="formData.descripcion" rows="3" placeholder="Descripción del permiso..." class="form-textarea"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label>Módulo *</label>
+      @if (isLoadingModulos) {
+        <div class="loading-modulos">
+          <div class="spinner-small"></div>
+          <span>Cargando módulos...</span>
+        </div>
+      } @else {
+        <select [(ngModel)]="formData.modulo" class="form-select">
+          <option value="" disabled>Seleccione un módulo</option>
+          @for (modulo of modulosDisponibles; track modulo) {
+            <option [value]="modulo">{{ modulo | titlecase }}</option>
+          }
+        </select>
+      }
+      <small class="helper-text">Módulo al que pertenece este permiso</small>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button type="button" class="btn-cancel" (click)="cerrar()">
+      <mat-icon>cancel</mat-icon>
+      Cancelar
+    </button>
+    <button type="submit" class="btn-save" [disabled]="isSaving" (click)="onSubmit()">
+      @if (isSaving) {
+        <div class="spinner-small"></div>
+      }
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Permiso' }}
+    </button>
+  </div>
+</div>

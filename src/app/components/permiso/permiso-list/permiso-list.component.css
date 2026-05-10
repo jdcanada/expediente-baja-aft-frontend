@@ -1,0 +1,348 @@
+.permisos-container {
+  padding: 24px;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+    transition: all 0.2s ease;
+
+    &:focus-within {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    mat-icon {
+      color: var(--text-muted);
+      font-size: 20px;
+    }
+
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-size: 14px;
+      outline: none;
+      padding: 8px 0;
+    }
+
+    .clear-search {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border-radius: 50%;
+
+      &:hover {
+        background: var(--bg-hover);
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px;
+    color: var(--text-muted);
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border-light);
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 16px;
+    }
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+
+    mat-icon {
+      font-size: 48px;
+      width: 48px;
+      height: 48px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+  }
+
+  .permisos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+  }
+
+  .permiso-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-light);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      
+      mat-icon {
+        color: white;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+
+      .card-title {
+        flex: 1;
+        
+        h3 {
+          font-size: 18px;
+          font-weight: 600;
+          color: white;
+          margin: 0 0 4px 0;
+        }
+        
+        p {
+          font-size: 12px;
+          color: rgba(255, 255, 255, 0.8);
+          margin: 0;
+        }
+      }
+
+      .permiso-count {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.2);
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+    }
+
+    .card-body {
+      padding: 16px;
+    }
+  }
+
+  .permisos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .permiso-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    transition: background 0.2s;
+
+    &:hover {
+      background: var(--bg-hover);
+      color: var(--bg-card) !important;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .permiso-info {
+      flex: 1;
+
+      .permiso-nombre {
+        font-weight: 600;
+        /* color: var(--text-primary); */
+        font-size: 14px;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+
+        .permiso-codigo {
+          font-size: 11px;
+          font-family: monospace;
+          color: #667eea;
+          background: rgba(102, 126, 234, 0.1);
+          padding: 2px 8px;
+          border-radius: 12px;
+        }
+      }
+
+      .permiso-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+    }
+
+    .permiso-actions {
+      display: flex;
+      gap: 8px;
+
+      .btn-icon {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
+        color: var(--text-muted);
+        transition: all 0.2s;
+
+        &:hover {
+          background: var(--bg-hover);
+          color: #667eea;
+        }
+
+        &.delete:hover {
+          color: #e74c3c;
+        }
+
+        mat-icon {
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .permisos-container {
+    padding: 16px;
+
+    .permisos-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .permiso-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+
+      .permiso-actions {
+        align-self: flex-end;
+      }
+    }
+  }
+}
+
+
+/* Agregar estos estilos a permiso-list.component.css */
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-icon-header {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  color: white;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-header:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.btn-icon-header mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}

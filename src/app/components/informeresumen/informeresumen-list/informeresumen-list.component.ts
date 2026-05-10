@@ -72,7 +72,6 @@ export class InformeresumenList implements OnInit, AfterViewInit {
       next: (data: InformeResumenCompleto[]) => {
         this.informes = data;
         this.dataSource.data = data;
-        console.log(data)
         this.loading = false;
         this.cdr.detectChanges();
       },

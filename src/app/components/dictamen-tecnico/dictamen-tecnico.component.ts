@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { DictamenTecnico } from '../../models/dictamentecnico';
+import { DictamenTecnico } from '../../models/dictamen';
 import { CommonModule } from '@angular/common';
 
 
 import pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { PdfGeneratorService } from '../../services/pdf-generator/pdf-generator';
+import { PdfGeneratorService } from '../../services/pdf-generator/pdf-generator.service';
 
 pdfMake.vfs = pdfFonts.vfs;
 

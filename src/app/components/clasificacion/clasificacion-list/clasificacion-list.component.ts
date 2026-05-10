@@ -110,10 +110,10 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
 
   // Inline editing methods
   startEdit(clasificacion: Clasificacion, field: keyof Clasificacion): void {
-    if (field === 'idclasificacion') return; // Don't allow editing ID
+    if (field === 'id_clasificacion') return; // Don't allow editing ID
 
     this.editingCell = {
-      id: clasificacion.idclasificacion,
+      id: clasificacion.id_clasificacion,
       field: field,
       value: clasificacion[field]?.toString() || ''
     };
@@ -123,7 +123,7 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updatedClasificacion = this.clasificaciones.find(c => c.idclasificacion === this.editingCell!.id);
+    const updatedClasificacion = this.clasificaciones.find(c => c.id_clasificacion === this.editingCell!.id);
     if (!updatedClasificacion) return;
     const updateData = {
       ...updatedClasificacion,
@@ -132,7 +132,7 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
 
     this.clasificacionService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.clasificaciones.findIndex(c => c.idclasificacion === this.editingCell!.id);
+        const index = this.clasificaciones.findIndex(c => c.id_clasificacion === this.editingCell!.id);
         if (index !== -1) {
           this.clasificaciones[index] = { ...this.clasificaciones[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.clasificaciones];
@@ -161,7 +161,7 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
   }
 
   isEditing(clasificacion: Clasificacion, field: keyof Clasificacion): boolean {
-    return this.editingCell?.id === clasificacion.idclasificacion && this.editingCell?.field === field;
+    return this.editingCell?.id === clasificacion.id_clasificacion && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -177,7 +177,7 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar la clasificación "${clasificacion.descripcion}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.clasificacionService.delete(clasificacion.idclasificacion).subscribe({
+        this.clasificacionService.delete(clasificacion.id_clasificacion).subscribe({
           next: () => {
             this.cargarClasificaciones();
             this.notificacionService.mostrarMensaje(
@@ -200,7 +200,7 @@ export class ClasificacionListComponent implements OnInit, AfterViewInit {
 
   getColumnDisplayName(column: string): string {
     const columnNames: { [key: string]: string } = {
-      'idclasificacion': 'ID',
+      'id_clasificacion': 'ID',
       'descripcion': 'Descripción',
       'acciones': 'Acciones'
     };

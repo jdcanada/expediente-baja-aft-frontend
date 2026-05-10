@@ -1,5 +1,5 @@
 export interface Clasificacion {
-  idclasificacion: number;
+  id_clasificacion: number;
   descripcion: string;
 }
 
@@ -8,7 +8,7 @@ import { MediobasicoDetalle } from './medioBasico';
 import { Dictamen, DictamenDetalle } from './dictamen';
 
 export interface ClasificacionDetalle {
-  idclasificacion: number;
+  id_clasificacion: number;
   descripcion: string;
   mediobasicos: MediobasicoDetalle[];
   dictamenes: DictamenDetalle[];

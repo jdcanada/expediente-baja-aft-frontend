@@ -1,1 +1,127 @@
-<p>mediobasico-form works!</p>
+<div class="mediobasico-container">
+  <!-- Formulario para crear Medio Básico -->
+  <div class="form-section">
+    <div class="section-header">
+      <mat-icon>inventory</mat-icon>
+      <h3>Nuevo Medio Básico (AFT)</h3>
+    </div>
+
+    <!-- ✅ IMPORTANTE: RESTAURAR EL FORM CON formGroup -->
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mediobasico-form">
+      <div class="form-grid">
+        <div class="form-field">
+          <label><mat-icon>numbers</mat-icon>N° Inventario *</label>
+          <input formControlName="no_inventario" placeholder="Ej: MB0000000">
+          @if (form.get('no_inventario')?.invalid && form.get('no_inventario')?.touched) {
+          <small class="error-text">Requerido</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label><mat-icon>description</mat-icon>AFT / Descripción *</label>
+          <input formControlName="aft" placeholder="Descripción del activo">
+          @if (form.get('aft')?.invalid && form.get('aft')?.touched) {
+          <small class="error-text">Requerido</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label><mat-icon>location_city</mat-icon>Área *</label>
+          <select formControlName="area_id">
+            <option value="" disabled>Seleccione un área</option>
+            @for (area of areas; track area.id_area) {
+            <option [ngValue]="area.id_area">{{ area.nombre_area }}</option>
+            }
+          </select>
+          @if (form.get('area_id')?.invalid && form.get('area_id')?.touched) {
+          <small class="error-text">Requerido</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label><mat-icon>category</mat-icon>Característica *</label>
+          <select formControlName="caracteristica_id">
+            <option value="" disabled>Seleccione una característica</option>
+            @for (car of caracteristicas; track car.id_caracteristica) {
+            <option [ngValue]="car.id_caracteristica">{{ car.descripcion }}</option>
+            }
+          </select>
+          @if (form.get('caracteristica_id')?.invalid && form.get('caracteristica_id')?.touched) {
+          <small class="error-text">Requerido</small>
+          }
+        </div>
+
+        <div class="form-field">
+          <label><mat-icon>list_alt</mat-icon>Clasificación *</label>
+          <select formControlName="clasificacion_id">
+            <option value="" disabled>Seleccione una clasificación</option>
+            @for (clas of clasificaciones; track clas.id_clasificacion) {
+            <option [ngValue]="clas.id_clasificacion">{{ clas.descripcion }}</option>
+            }
+          </select>
+          @if (form.get('clasificacion_id')?.invalid && form.get('clasificacion_id')?.touched) {
+          <small class="error-text">Requerido</small>
+          }
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="resetForm()">
+          <mat-icon>clear</mat-icon> Limpiar
+        </button>
+        <button type="submit" class="btn-save" [disabled]="loading || form.invalid">
+          @if (loading) { <div class="spinner-small"></div> }
+          <mat-icon>add</mat-icon> Crear Medio Básico
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lista de medios básicos existentes -->
+  @if (mediosBasicos.length > 0) {
+  <div class="medios-list-section">
+    <div class="section-header">
+      <mat-icon>list</mat-icon>
+      <h3>Medios Básicos Registrados ({{ mediosBasicos.length }})</h3>
+    </div>
+    <div class="medios-grid">
+      @for (medio of mediosBasicos; track medio.id_medio) {
+      <div class="medio-card">
+        <div class="medio-header">
+          <mat-icon>inventory</mat-icon>
+          <span class="medio-inventario">{{ medio.no_inventario }}</span>
+          @if (medio.dictamen) {
+          <span class="dictamen-badge">Dictamen: {{ medio.dictamen.no_dictamen }}</span>
+          } @else {
+          <span class="sin-dictamen-badge">Sin Dictamen</span>
+          }
+        </div>
+        <div class="medio-body">
+          <div><strong>AFT:</strong> {{ medio.aft || '—' }}</div>
+          <div><strong>Área:</strong> {{ medio.area?.nombre_area || '—' }}</div>
+          <div><strong>Clasificación:</strong> {{ medio.clasificacion?.descripcion || '—' }}</div>
+          <div><strong>Característica:</strong> {{ medio.caracteristica?.descripcion_c || '—' }}</div>
+          @if (medio.dictamen) {
+          <div><strong>N° Dictamen:</strong> {{ medio.dictamen.no_dictamen }}</div>
+          <div><strong>Fecha Dictamen:</strong> {{ medio.dictamen.fecha_dictamen | date:'dd/MM/yyyy' }}</div>
+          <div><strong>Destino Final:</strong> {{ medio.dictamen.destino_final || '—' }}</div>
+          <div><strong>Concluye Reparable:</strong> {{ medio.dictamen.concluye_reparable ? 'Sí' : 'No' }}</div>
+          <div><strong>Argumentación:</strong> {{ medio.dictamen.argumentacion_tecnica | slice:0:50 }}...</div>
+          }
+        </div>
+        <div class="medio-actions">
+          @if (!medio.dictamen) {
+          <button type="button" class="btn-dictamen" (click)="crearDictamen(medio)">
+            <mat-icon>gavel</mat-icon> Crear Dictamen
+          </button>
+          }
+          <button type="button" class="btn-delete" (click)="eliminar(medio)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>

@@ -27,13 +27,13 @@ export class ComisionmiembrosService {
   }
 
 
-  MiembrosPorGrupo(idgrupo: number): Observable<GrupoComision2> {
-    return this.http.get<GrupoComision2>(`${this.apiUrl}/miembros-por-grupo/${idgrupo}`);
+  MiembrosPorGrupo(id_grupo: number): Observable<GrupoComision2> {
+    return this.http.get<GrupoComision2>(`${this.apiUrl}/grupo/${id_grupo}`);
   }
 
 
   getJefescomisiones(): Observable<JefeComision[]> {
-    return this.http.get<JefeComision[]>(`${this.apiUrl}/jefes-comisiones`);
+    return this.http.get<JefeComision[]>(`${this.apiUrl}/jefes/all`);
   }
 
 

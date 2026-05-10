@@ -73,7 +73,6 @@ export class ComisionMiembrosList implements OnInit, AfterViewInit {
       next: (data: ComisionMiembroDetalle[]) => {
         this.miembros = data;
         this.dataSource.data = data;
-        console.log(data)
         setTimeout(() => this.dataSource.paginator = this.paginator);
         this.loading = false;
       },
@@ -108,7 +107,7 @@ export class ComisionMiembrosList implements OnInit, AfterViewInit {
   // Edición inline solo para "es_responsable"
   startEdit(miembro: ComisionMiembroDetalle, field: 'es_responsable'): void {
     this.editingCell = {
-      id: miembro.idcomisionmiembro,
+      id: miembro.id_miembro,
       field,
       value: miembro.es_responsable
     };
@@ -137,7 +136,7 @@ export class ComisionMiembrosList implements OnInit, AfterViewInit {
   }
 
   isEditing(miembro: ComisionMiembroDetalle, field: string): boolean {
-    return this.editingCell?.id === miembro.idcomisionmiembro && this.editingCell?.field === field;
+    return this.editingCell?.id === miembro.id_miembro && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -175,7 +174,7 @@ export class ComisionMiembrosList implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar al miembro ${miembro.persona?.nombre} ${miembro.persona?.apellidos}?`
     ).then(confirmado => {
       if (confirmado) {
-        this.miembroService.delete(miembro.idcomisionmiembro).subscribe({
+        this.miembroService.delete(miembro.id_miembro).subscribe({
           next: () => {
             this.cargarMiembros();
             this.notificacionService.mostrarMensaje(

@@ -1,0 +1,90 @@
+<div class="roles-container">
+  <div class="page-header">
+    <div>
+      <h1>Roles</h1>
+      <p>Gestión de roles y permisos del sistema</p>
+    </div>
+    @if (authService.hasPermission('roles.asignar')) {
+      <button class="btn-primary" (click)="abrirFormularioNuevo()">
+        <mat-icon>add</mat-icon>
+        Nuevo Rol
+      </button>
+    }
+  </div>
+
+  <!-- Barra de búsqueda simple -->
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (keyup)="applyFilter()" 
+      placeholder="Buscar por nombre del rol..."
+      class="search-input"
+    >
+    @if (searchTerm) {
+      <button class="clear-search" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando roles...</p>
+    </div>
+  } @else if (filteredRoles.length === 0) {
+    <div class="empty-state">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <p>No hay roles registrados</p>
+      @if (authService.hasPermission('roles.asignar')) {
+        <button class="btn-primary" (click)="abrirFormularioNuevo()">Crear primer rol</button>
+      }
+    </div>
+  } @else {
+    <div class="roles-grid">
+      @for (role of filteredRoles; track role.id_rol) {
+        <div class="role-card">
+          <div class="role-header">
+            <h3>{{ role.nombre_rol }}</h3>
+            <span class="status-badge">
+              <mat-icon>check_circle</mat-icon>
+              Activo
+            </span>
+          </div>
+
+          <div class="role-body">
+            <div class="role-desc">
+              {{ role.descripcion || 'Sin descripción' }}
+            </div>
+            <div class="role-stats">
+              <div class="stat">
+                <div class="stat-value">{{ role.permisos_count || 0 }}</div>
+                <div class="stat-label">Permisos</div>
+              </div>
+              <div class="stat">
+                <div class="stat-value">{{ role.usuarios?.length || 0 }}</div>
+                <div class="stat-label">Usuarios</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="role-actions">
+            @if (authService.hasPermission('roles.asignar')) {
+              <button class="btn-edit" (click)="editarRol(role)" title="Editar rol">
+                <mat-icon>edit</mat-icon> Editar
+              </button>
+              <button class="btn-permisos" [routerLink]="['/roles', role.id_rol, 'permisos']" title="Gestionar permisos">
+                <mat-icon>lock</mat-icon> Permisos
+              </button>
+              <button class="btn-delete" (click)="eliminarRol(role)" title="Eliminar rol">
+                <mat-icon>delete</mat-icon> Eliminar
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

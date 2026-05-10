@@ -116,9 +116,9 @@ export class EstructuraListComponent implements OnInit, AfterViewInit {
 
 
   startEdit(estructura: Estructura, field: keyof Estructura): void {
-    if (field === 'idestructura') return;
+    if (field === 'id_estructura') return;
     this.editingCell = {
-      id: estructura.idestructura,
+      id: estructura.id_estructura,
       field: field,
       value: estructura[field]?.toString() || ''
     };
@@ -128,7 +128,7 @@ export class EstructuraListComponent implements OnInit, AfterViewInit {
   saveEdit(): void {
     if (!this.editingCell) return;
 
-    const updated = this.estructuras.find(e => e.idestructura === this.editingCell!.id);
+    const updated = this.estructuras.find(e => e.id_estructura === this.editingCell!.id);
     if (!updated) return;
 
     const updateData = {
@@ -138,7 +138,7 @@ export class EstructuraListComponent implements OnInit, AfterViewInit {
 
     this.estructuraService.update(this.editingCell.id, updateData).subscribe({
       next: () => {
-        const index = this.estructuras.findIndex(e => e.idestructura === this.editingCell!.id);
+        const index = this.estructuras.findIndex(e => e.id_estructura === this.editingCell!.id);
         if (index !== -1) {
           this.estructuras[index] = { ...this.estructuras[index], [this.editingCell!.field]: this.tempValue };
           this.dataSource.data = [...this.estructuras];
@@ -167,7 +167,7 @@ export class EstructuraListComponent implements OnInit, AfterViewInit {
   }
 
   isEditing(estructura: Estructura, field: keyof Estructura): boolean {
-    return this.editingCell?.id === estructura.idestructura && this.editingCell?.field === field;
+    return this.editingCell?.id === estructura.id_estructura && this.editingCell?.field === field;
   }
 
   onKeyDown(event: KeyboardEvent): void {
@@ -211,7 +211,7 @@ export class EstructuraListComponent implements OnInit, AfterViewInit {
       `¿Está seguro de eliminar la estructura "${estructura.nombre_estructura}"?`
     ).then(confirmado => {
       if (confirmado) {
-        this.estructuraService.delete(estructura.idestructura).subscribe({
+        this.estructuraService.delete(estructura.id_estructura).subscribe({
           next: () => {
             this.cargarEstructuras();
             this.notificacionService.mostrarMensaje(

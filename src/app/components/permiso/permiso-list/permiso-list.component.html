@@ -1,0 +1,95 @@
+<div class="permisos-container">
+  <div class="page-header">
+    <div>
+      <h1>Permisos del Sistema</h1>
+      <p>Gestión de permisos disponibles en el sistema</p>
+    </div>
+    @if (authService.hasPermission('permisos.crear')) {
+      <button class="btn-primary" (click)="abrirFormularioNuevo()">
+        <mat-icon>add</mat-icon>
+        Nuevo Permiso
+      </button>
+    }
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <mat-icon>search</mat-icon>
+    <input 
+      type="text" 
+      [(ngModel)]="searchTerm" 
+      (keyup)="applyFilter()" 
+      placeholder="Buscar por nombre, código o descripción..."
+      class="search-input"
+    >
+    @if (searchTerm) {
+      <button class="clear-search" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    }
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando permisos...</p>
+    </div>
+  } @else if (filteredTarjetas.length === 0) {
+    <div class="empty-state">
+      <mat-icon>lock_open</mat-icon>
+      <p>No hay permisos registrados</p>
+      @if (authService.hasPermission('permisos.crear')) {
+        <button class="btn-primary" (click)="abrirFormularioNuevo()">Crear primer permiso</button>
+      }
+    </div>
+  } @else {
+    <div class="permisos-grid">
+      @for (tarjeta of filteredTarjetas; track tarjeta.nombre) {
+        <div class="permiso-card">
+          <div class="card-header">
+            <mat-icon>{{ tarjeta.icono }}</mat-icon>
+            <div class="card-title">
+              <h3>{{ tarjeta.nombre }}</h3>
+              <p>{{ tarjeta.descripcion }}</p>
+            </div>
+            <div class="card-actions">
+              @if (authService.hasPermission('permisos.editar')) {
+                <button class="btn-icon-header" (click)="editarTarjeta(tarjeta)" matTooltip="Agregar permiso a este grupo">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+              }
+              <span class="permiso-count">{{ tarjeta.permisos.length }} permisos</span>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="permisos-list">
+              @for (permiso of tarjeta.permisos; track permiso.id_permiso) {
+                <div class="permiso-item">
+                  <div class="permiso-info">
+                    <div class="permiso-nombre">
+                      {{ permiso.nombre }}
+                      <span class="permiso-codigo">{{ permiso.codigo }}</span>
+                    </div>
+                    <div class="permiso-desc">{{ permiso.descripcion }}</div>
+                  </div>
+                  <div class="permiso-actions">
+                    @if (authService.hasPermission('permisos.editar')) {
+                      <button class="btn-icon" (click)="editarPermiso(permiso)" matTooltip="Editar permiso">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                    }
+                    @if (authService.hasPermission('permisos.eliminar')) {
+                      <button class="btn-icon delete" (click)="eliminarPermiso(permiso)" matTooltip="Eliminar permiso">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

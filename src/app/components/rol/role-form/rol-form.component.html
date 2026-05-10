@@ -1,0 +1,60 @@
+<div class="dialog-container">
+  <div class="dialog-header">
+    <mat-icon class="header-icon">{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>
+    <h2>{{ isEditMode ? 'Editar Rol' : 'Nuevo Rol' }}</h2>
+    <button mat-icon-button class="close-btn" (click)="cerrar()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    @if (errorMessage) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <div class="form-group">
+      <label>
+        <mat-icon>badge</mat-icon>
+        Nombre del Rol *
+      </label>
+      <input 
+        type="text" 
+        [(ngModel)]="formData.nombre_rol" 
+        placeholder="Ej: Administrador, Creador, Invitado"
+        class="form-input"
+      >
+      <small class="helper-text">Nombre único que identificará al rol</small>
+    </div>
+
+    <div class="form-group">
+      <label>
+        <mat-icon>description</mat-icon>
+        Descripción
+      </label>
+      <textarea 
+        [(ngModel)]="formData.descripcion" 
+        rows="3" 
+        placeholder="Describe las responsabilidades de este rol..."
+        class="form-textarea"
+      ></textarea>
+      <small class="helper-text">Descripción opcional del rol</small>
+    </div>
+  </div>
+
+  <div class="dialog-actions">
+    <button type="button" class="btn-cancel" (click)="cerrar()">
+      <mat-icon>cancel</mat-icon>
+      Cancelar
+    </button>
+    <button type="submit" class="btn-save" [disabled]="isSaving" (click)="onSubmit()">
+      @if (isSaving) {
+        <div class="spinner-small"></div>
+      }
+      <mat-icon>{{ isEditMode ? 'save' : 'add' }}</mat-icon>
+      {{ isEditMode ? 'Guardar Cambios' : 'Crear Rol' }}
+    </button>
+  </div>
+</div>
